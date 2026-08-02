@@ -14,7 +14,7 @@ const DOWNLOAD_URL = `${SITE_URL}/download`;
 const APK_URL = process.env.NEXT_PUBLIC_APK_URL || '';
 
 const STEPS = [
-  { title: '点击下载 APK', desc: '点上方「下载安卓版」按钮，获取安装包（约 xx MB）' },
+  { title: '点击下载 APK', desc: '点上方「下载安卓版」按钮，获取安装包（约 4 MB）' },
   { title: '允许安装未知来源', desc: '安卓系统会提示「禁止安装未知应用」，点击「设置」→ 允许来自此来源的安装' },
   { title: '安装并打开', desc: '安装完成后打开「只有猫」，登录账号即可开始云吸猫' },
 ];

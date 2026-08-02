@@ -349,21 +349,23 @@ function CommentSheet({
 
   useEffect(() => {
     let cancelled = false;
-    createClient()
-      .from('comments')
-      .select('*, author:profiles(*)')
-      .eq('note_id', noteId)
-      .order('created_at', { ascending: false })
-      .limit(100)
-      .then(({ data }) => {
+    (async () => {
+      try {
+        const { data } = await createClient()
+          .from('comments')
+          .select('*, author:profiles(*)')
+          .eq('note_id', noteId)
+          .order('created_at', { ascending: false })
+          .limit(100);
         if (!cancelled) {
           setComments((data ?? []) as CommentItem[]);
-          setLoading(false);
         }
-      })
-      .catch(() => {
+      } catch {
+        // 忽略加载失败
+      } finally {
         if (!cancelled) setLoading(false);
-      });
+      }
+    })();
     return () => {
       cancelled = true;
     };

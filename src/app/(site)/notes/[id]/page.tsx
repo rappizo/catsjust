@@ -182,17 +182,15 @@ export default async function NotePage({ params }: { params: { id: string } }) {
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-6 sm:px-6">
-      {/* 非公开状态提示 */}
-      {typed.status !== 'published' && (
-        <div className="mb-4 flex flex-wrap items-center gap-3 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-700">
-          <StatusBadge status={typed.status} />
-          {typed.status === 'pending' && <span>该内容正在审核中，通过后将公开展示</span>}
-          {typed.status === 'rejected' && (
-            <span>该内容未通过审核：{typed.reject_reason || '未注明原因'}</span>
-          )}
-          {typed.status === 'removed' && <span>该内容已被下架</span>}
-        </div>
-      )}
+      {/* 非公开状态提示（已发布已在上方早退，此处必为非公开） */}
+      <div className="mb-4 flex flex-wrap items-center gap-3 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-700">
+        <StatusBadge status={typed.status} />
+        {typed.status === 'pending' && <span>该内容正在审核中，通过后将公开展示</span>}
+        {typed.status === 'rejected' && (
+          <span>该内容未通过审核：{typed.reject_reason || '未注明原因'}</span>
+        )}
+        {typed.status === 'removed' && <span>该内容已被下架</span>}
+      </div>
 
       <div className="grid gap-6 md:grid-cols-[1.25fr_1fr]">
         {/* 媒体区 */}

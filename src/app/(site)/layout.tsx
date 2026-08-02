@@ -15,17 +15,21 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
       data: { user },
     } = await supabase.auth.getUser();
     if (user) {
-      const [profileRes, unreadRes] = await Promise.all([
+      const [profileRes, unreadRes, dmUnreadRes] = await Promise.all([
         supabase.from('profiles').select('username').eq('id', user.id).maybeSingle(),
         supabase
           .from('notifications')
           .select('id', { count: 'exact', head: true })
           .eq('user_id', user.id)
           .eq('read', false),
+        supabase
+          .from('conversations')
+          .select('id', { count: 'exact', head: true })
+          .or(`and(user_a.eq.${user.id},unread_a.gt.0),and(user_b.eq.${user.id},unread_b.gt.0)`),
       ]);
       username = profileRes.data?.username ?? null;
-      // 消息未读 = 通知未读（私信未读在 L2 接入 conversations 表后并入）
-      unreadCount = unreadRes.count ?? 0;
+      // 消息未读 = 通知未读 + 私信未读
+      unreadCount = (unreadRes.count ?? 0) + (dmUnreadRes.count ?? 0);
     }
   }
 

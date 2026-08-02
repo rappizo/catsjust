@@ -201,7 +201,9 @@ export const ja = {
     "commentedOn": "コメントしました",
     "untitled": "無題",
     "noCats": "まだ猫のプロフィールを作成していません",
-    "createCat": "猫のプロフィールを作成する"
+    "createCat": "猫のプロフィールを作成する",
+    "message": "DMを送る",
+    "msgFailed": "操作に失敗しました。もう一度お試しください"
   },
   "feed": {
     "back": "戻る",
@@ -298,7 +300,16 @@ export const ja = {
     "dm": "DM",
     "notifications": "通知",
     "dmEmptyTitle": "DM機能は近日公開予定",
-    "dmEmptyDesc": "その際は、気に入った飼い主さんと1対1でチャットできます。ぜひお楽しみに！"
+    "dmEmptyDesc": "その際は、気に入った飼い主さんと1対1でチャットできます。ぜひお楽しみに！",
+    "reply": "コメント返信",
+    "likes": "いいね",
+    "follows": "フォロー",
+    "system": "システム",
+    "unknownUser": "不明なユーザー",
+    "noMessagesYet": "挨拶してみよう～",
+    "chatEmpty": "まだメッセージはありません。挨拶してみましょう",
+    "chatPlaceholder": "メッセージを入力…",
+    "send": "送信"
   },
   "userList": {
     "empty": "ここにはまだ誰もいません"

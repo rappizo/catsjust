@@ -201,7 +201,9 @@ export const de = {
     "commentedOn": "hat kommentiert",
     "untitled": "Ohne Titel",
     "noCats": "Noch kein Katzenprofil erstellt",
-    "createCat": "Katzenprofil erstellen"
+    "createCat": "Katzenprofil erstellen",
+    "message": "Private Nachricht senden",
+    "msgFailed": "Aktion fehlgeschlagen, bitte erneut versuchen"
   },
   "feed": {
     "back": "Zurück",
@@ -298,7 +300,16 @@ export const de = {
     "dm": "Direktnachrichten",
     "notifications": "Benachrichtigungen",
     "dmEmptyTitle": "Direktnachrichten bald verfügbar",
-    "dmEmptyDesc": "Bald kannst du mit deinen Lieblings-Katzenhaltern direkt chatten. Sei gespannt!"
+    "dmEmptyDesc": "Bald kannst du mit deinen Lieblings-Katzenhaltern direkt chatten. Sei gespannt!",
+    "reply": "Antwort auf Kommentar",
+    "likes": "Gefällt mir",
+    "follows": "Folgen",
+    "system": "System",
+    "unknownUser": "Unbekannter Benutzer",
+    "noMessagesYet": "Sag doch Hallo～",
+    "chatEmpty": "Noch keine Nachrichten. Sag doch mal Hallo!",
+    "chatPlaceholder": "Nachricht eingeben…",
+    "send": "Senden"
   },
   "userList": {
     "empty": "Hier ist noch nichts."

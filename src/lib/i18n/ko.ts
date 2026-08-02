@@ -201,7 +201,9 @@ export const ko = {
     "commentedOn": "댓글을 남겼습니다",
     "untitled": "제목 없음",
     "noCats": "아직 고양이 프로필을 만들지 않았습니다",
-    "createCat": "고양이 프로필 만들기"
+    "createCat": "고양이 프로필 만들기",
+    "message": "쪽지 보내기",
+    "msgFailed": "작업 실패, 다시 시도해 주세요"
   },
   "feed": {
     "back": "뒤로",
@@ -298,7 +300,16 @@ export const ko = {
     "dm": "DM",
     "notifications": "알림",
     "dmEmptyTitle": "DM 기능이 곧 출시됩니다",
-    "dmEmptyDesc": "그때부터 마음에 드는 집사와 1:1로 대화할 수 있어요. 기대해 주세요!"
+    "dmEmptyDesc": "그때부터 마음에 드는 집사와 1:1로 대화할 수 있어요. 기대해 주세요!",
+    "reply": "댓글 답글",
+    "likes": "좋아요",
+    "follows": "팔로우",
+    "system": "시스템",
+    "unknownUser": "알 수 없는 사용자",
+    "noMessagesYet": "인사해 보세요~",
+    "chatEmpty": "아직 메시지가 없습니다. 인사해 보세요.",
+    "chatPlaceholder": "메시지 입력…",
+    "send": "보내기"
   },
   "userList": {
     "empty": "여기는 텅 비어 있어요"

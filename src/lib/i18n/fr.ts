@@ -201,7 +201,9 @@ export const fr = {
     "commentedOn": "a commenté",
     "untitled": "Sans titre",
     "noCats": "Aucun profil de chat pour l'instant",
-    "createCat": "Créer un profil de chat"
+    "createCat": "Créer un profil de chat",
+    "message": "Envoyer un message privé",
+    "msgFailed": "Échec de l'opération, veuillez réessayer"
   },
   "feed": {
     "back": "Retour",
@@ -298,7 +300,16 @@ export const fr = {
     "dm": "Messages privés",
     "notifications": "Notifications",
     "dmEmptyTitle": "La messagerie privée arrive bientôt",
-    "dmEmptyDesc": "Vous pourrez bientôt discuter en privé avec vos propriétaires de chats préférés. Restez à l'écoute !"
+    "dmEmptyDesc": "Vous pourrez bientôt discuter en privé avec vos propriétaires de chats préférés. Restez à l'écoute !",
+    "reply": "Réponse à un commentaire",
+    "likes": "J'aime",
+    "follows": "Abonnements",
+    "system": "Système",
+    "unknownUser": "Utilisateur inconnu",
+    "noMessagesYet": "Dites bonjour !",
+    "chatEmpty": "Aucun message pour le moment. Dites bonjour !",
+    "chatPlaceholder": "Écrivez un message…",
+    "send": "Envoyer"
   },
   "userList": {
     "empty": "C'est vide ici"

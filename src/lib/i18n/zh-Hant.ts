@@ -201,7 +201,9 @@ export const zhHant = {
     "commentedOn": "評論了",
     "untitled": "未命名",
     "noCats": "尚未建立貓咪檔案",
-    "createCat": "前往建立貓咪檔案"
+    "createCat": "前往建立貓咪檔案",
+    "message": "發送私訊",
+    "msgFailed": "操作失敗，請重試"
   },
   "feed": {
     "back": "返回",
@@ -298,7 +300,16 @@ export const zhHant = {
     "dm": "私訊",
     "notifications": "通知",
     "dmEmptyTitle": "私訊功能即將上線",
-    "dmEmptyDesc": "屆時你可以和喜歡的鏟屎官一對一私聊，敬請期待"
+    "dmEmptyDesc": "屆時你可以和喜歡的鏟屎官一對一私聊，敬請期待",
+    "reply": "留言回覆",
+    "likes": "按讚",
+    "follows": "追蹤",
+    "system": "系統",
+    "unknownUser": "未知用戶",
+    "noMessagesYet": "打個招呼吧～",
+    "chatEmpty": "還沒有訊息，打個招呼吧",
+    "chatPlaceholder": "輸入訊息…",
+    "send": "傳送"
   },
   "userList": {
     "empty": "這裡空空如也"

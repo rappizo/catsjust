@@ -201,7 +201,9 @@ export const en = {
     "commentedOn": "commented on",
     "untitled": "Untitled",
     "noCats": "No cat profiles yet",
-    "createCat": "Create a cat profile"
+    "createCat": "Create a cat profile",
+    "message": "Send private message",
+    "msgFailed": "Operation failed, please try again"
   },
   "feed": {
     "back": "Back",
@@ -298,7 +300,16 @@ export const en = {
     "dm": "DMs",
     "notifications": "Notifications",
     "dmEmptyTitle": "Direct messaging coming soon",
-    "dmEmptyDesc": "You'll be able to chat one-on-one with your favorite cat parents. Stay tuned!"
+    "dmEmptyDesc": "You'll be able to chat one-on-one with your favorite cat parents. Stay tuned!",
+    "reply": "Replies",
+    "likes": "Likes",
+    "follows": "Follows",
+    "system": "System",
+    "unknownUser": "Unknown user",
+    "noMessagesYet": "Say hi~",
+    "chatEmpty": "No messages yet. Say hello!",
+    "chatPlaceholder": "Type a message…",
+    "send": "Send"
   },
   "userList": {
     "empty": "Nothing here yet"

@@ -201,7 +201,9 @@ export const es = {
     "commentedOn": "comentó en",
     "untitled": "Sin título",
     "noCats": "Aún no has creado ningún perfil de gato",
-    "createCat": "Ve a crear un perfil de gato"
+    "createCat": "Ve a crear un perfil de gato",
+    "message": "Enviar mensaje privado",
+    "msgFailed": "La operación falló, inténtalo de nuevo"
   },
   "feed": {
     "back": "Volver",
@@ -298,7 +300,16 @@ export const es = {
     "dm": "Mensajes directos",
     "notifications": "Notificaciones",
     "dmEmptyTitle": "La mensajería directa estará disponible pronto",
-    "dmEmptyDesc": "Entonces podrás chatear en privado con tus dueños de gatos favoritos. ¡Muy pronto!"
+    "dmEmptyDesc": "Entonces podrás chatear en privado con tus dueños de gatos favoritos. ¡Muy pronto!",
+    "reply": "Respuesta a comentario",
+    "likes": "Me gusta",
+    "follows": "Seguidores",
+    "system": "Sistema",
+    "unknownUser": "Usuario desconocido",
+    "noMessagesYet": "¡Saluda!",
+    "chatEmpty": "Aún no hay mensajes, saluda",
+    "chatPlaceholder": "Escribe un mensaje…",
+    "send": "Enviar"
   },
   "userList": {
     "empty": "No hay nada aquí"

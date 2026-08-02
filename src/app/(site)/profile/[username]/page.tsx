@@ -5,6 +5,7 @@ import { createClient } from '@/lib/supabase/server';
 import { Avatar } from '@/components/Avatar';
 import { CopyId } from '@/components/CopyId';
 import { FollowButton } from '@/components/FollowButton';
+import { MessageButton } from '@/components/MessageButton';
 import { ProfileTabs } from '@/components/ProfileTabs';
 import { formatDate } from '@/lib/utils';
 import { isSupabaseConfigured } from '@/lib/config';
@@ -186,13 +187,14 @@ export default async function ProfilePage({ params }: { params: { username: stri
               </Link>
             ) : (
               user && (
-                <div className="mb-1">
+                <div className="mb-1 flex items-center gap-2">
                   <FollowButton
                     targetUserId={typedProfile.id}
                     targetUsername={typedProfile.username}
                     initialFollowing={initialFollowing}
                     initialCounts={followCounts}
                   />
+                  <MessageButton targetUserId={typedProfile.id} />
                 </div>
               )
             )}

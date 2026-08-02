@@ -201,7 +201,9 @@ export const it = {
     "commentedOn": "ha commentato",
     "untitled": "senza titolo",
     "noCats": "nessun profilo di gatto creato",
-    "createCat": "crea profilo di gatto"
+    "createCat": "crea profilo di gatto",
+    "message": "Invia un messaggio privato",
+    "msgFailed": "Operazione fallita, riprova"
   },
   "feed": {
     "back": "Indietro",
@@ -298,7 +300,16 @@ export const it = {
     "dm": "Messaggi diretti",
     "notifications": "Notifiche",
     "dmEmptyTitle": "Presto disponibili i messaggi diretti",
-    "dmEmptyDesc": "Potrai chattare in privato, uno a uno, con i gattari che preferisci. Resta sintonizzato!"
+    "dmEmptyDesc": "Potrai chattare in privato, uno a uno, con i gattari che preferisci. Resta sintonizzato!",
+    "reply": "Risposta al commento",
+    "likes": "Mi piace",
+    "follows": "Nuovi follower",
+    "system": "Sistema",
+    "unknownUser": "Utente sconosciuto",
+    "noMessagesYet": "Fai un saluto!",
+    "chatEmpty": "Ancora nessun messaggio. Fai un saluto!",
+    "chatPlaceholder": "Scrivi un messaggio…",
+    "send": "Invia"
   },
   "userList": {
     "empty": "Qui non c'è ancora nessuno"

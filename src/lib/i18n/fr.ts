@@ -47,7 +47,8 @@ export const fr = {
     "pickCat": "Choisir un chat",
     "followingLoginTitle": "Connectez-vous pour voir votre fil d'abonnements",
     "followingLoginDesc": "Suivez les cat parents que vous aimez et découvrez leurs nouvelles publications en premier.",
-    "loginToSee": "Se connecter"
+    "loginToSee": "Se connecter",
+    "notInterested": "Pas intéressé(e)"
   },
   "topics": {
     "title": "Place des sujets",
@@ -293,7 +294,9 @@ export const fr = {
     "subtitle": "Découvrez chaque chat unique · Parcourez par race",
     "searchPlaceholder": "Rechercher des chats / races / propriétaires…",
     "empty": "Aucun profil de chat pour le moment",
-    "emptyDesc": "Soyez le premier à créer un profil de chat !"
+    "emptyDesc": "Soyez le premier à créer un profil de chat !",
+    "hot": "Tendance",
+    "latest": "Récents"
   },
   "messages": {
     "title": "Messages",
@@ -309,9 +312,20 @@ export const fr = {
     "noMessagesYet": "Dites bonjour !",
     "chatEmpty": "Aucun message pour le moment. Dites bonjour !",
     "chatPlaceholder": "Écrivez un message…",
-    "send": "Envoyer"
+    "send": "Envoyer",
+    "read": "Lu"
   },
   "userList": {
     "empty": "C'est vide ici"
+  },
+  "interests": {
+    "title": "Sélectionnez vos centres d'intérêt (détermine votre fil de recommandations)",
+    "optional": "Choisissez vos centres d'intérêt (facultatif, vous pouvez passer)",
+    "topics": "Sujets chats",
+    "breeds": "Races de chats",
+    "hint": "Plus vous en choisissez, plus la page Découverte vous comprend ; vous pouvez modifier à tout moment dans les « Paramètres ».",
+    "settingsTitle": "Centres d'intérêt",
+    "saved": "Vos centres d'intérêt ont été sauvegardés, les recommandations vous comprendront mieux.",
+    "save": "Enregistrer vos centres d'intérêt"
   }
 };

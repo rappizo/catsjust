@@ -5,6 +5,7 @@ import { Cake, PawPrint } from 'lucide-react';
 import { createClient } from '@/lib/supabase/server';
 import { Waterfall } from '@/components/Waterfall';
 import { Avatar } from '@/components/Avatar';
+import { CatEditButton } from '@/components/CatEditButton';
 import { formatDate } from '@/lib/utils';
 import { isSupabaseConfigured } from '@/lib/config';
 import { getLocaleFromCookies } from '@/lib/i18n/cookies';
@@ -51,6 +52,10 @@ export default async function CatPage({ params }: { params: { id: string } }) {
   const typedCat = cat as Cat & { owner?: { id: string; nickname: string; username: string; avatar_url: string | null } };
   const isOwner = user?.id === typedCat.owner_id;
 
+  // 品种列表（供编辑档案用）
+  const { data: breedsRes } = await supabase.from('breeds').select('name').order('name');
+  const breeds = (breedsRes ?? []).map((b: any) => b.name);
+
   const { data: notes } = await supabase
     .from('notes')
     .select('*, author:profiles(*)')
@@ -84,9 +89,14 @@ export default async function CatPage({ params }: { params: { id: string } }) {
                   </span>
                 )}
               </h1>
-              {typedCat.owner && (
-                <LinkToOwner owner={typedCat.owner} />
-              )}
+              <div className="mt-1.5 flex items-center gap-2">
+                {typedCat.owner && (
+                  <LinkToOwner owner={typedCat.owner} />
+                )}
+                {isOwner && (
+                  <CatEditButton catId={typedCat.id} cat={typedCat} breeds={breeds} />
+                )}
+              </div>
             </div>
           </div>
 

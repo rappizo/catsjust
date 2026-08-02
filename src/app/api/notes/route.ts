@@ -26,6 +26,28 @@ export async function GET(request: Request) {
     data: { user },
   } = await supabase.auth.getUser();
 
+  // 个性化推荐流（登录用户）：调用 recommend_notes RPC，offset 分页
+  if (feed === 'recommend') {
+    if (!user) return NextResponse.json({ notes: [] });
+    let offset = 0;
+    if (cursorRaw) {
+      try {
+        offset = Number(JSON.parse(cursorRaw).offset || 0);
+      } catch {
+        return NextResponse.json({ error: 'cursor 参数无效' }, { status: 400 });
+      }
+    }
+    const { data, error } = await supabase.rpc('recommend_notes', {
+      p_user: user.id,
+      p_limit: limit,
+      p_offset: offset,
+    });
+    if (error) {
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+    return NextResponse.json({ notes: data ?? [] });
+  }
+
   const isHot = sort === 'hot';
 
   let query = supabase

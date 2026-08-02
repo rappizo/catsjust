@@ -63,6 +63,24 @@ export async function signUp(
   const languageRaw = String(formData.get('language') ?? '').trim();
   const language: LocaleCode = isLocale(languageRaw) ? languageRaw : DEFAULT_LOCALE;
 
+  // 可选兴趣（注册时一步选择，可跳过）
+  let interests: Array<{ type: 'topic' | 'breed'; value: string }> = [];
+  try {
+    const raw = String(formData.get('interests') ?? '[]');
+    const parsed = JSON.parse(raw);
+    if (Array.isArray(parsed)) {
+      interests = parsed.filter(
+        (i) =>
+          i &&
+          (i.type === 'topic' || i.type === 'breed') &&
+          typeof i.value === 'string' &&
+          i.value.trim() !== ''
+      );
+    }
+  } catch {
+    // 忽略非法 JSON
+  }
+
   if (!email || !password) {
     return { ok: false, error: '请输入邮箱和密码' };
   }
@@ -78,7 +96,7 @@ export async function signUp(
     email,
     password,
     options: {
-      data: { nickname, language },
+      data: { nickname, language, ...(interests.length ? { interests } : {}) },
     },
   });
 

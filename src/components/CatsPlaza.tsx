@@ -15,6 +15,8 @@ export interface CatCardData {
   bio: string | null;
   avatar_url: string | null;
   note_count?: number;
+  /** 热度：其笔记总点赞数 */
+  hot?: number;
   owner?: { id: string; username: string; nickname: string | null; avatar_url: string | null } | null;
 }
 
@@ -23,15 +25,16 @@ interface CatsPlazaProps {
   breeds: string[];
 }
 
-/** 猫咪广场：品种筛选 + 搜索 + 猫咪卡片流（供首页「选猫」Tab 与 /cats 页共用） */
+/** 猫咪广场：品种筛选 + 搜索 + 热门/最新排序 + 猫咪卡片流 */
 export function CatsPlaza({ cats, breeds }: CatsPlazaProps) {
   const { t } = useI18n();
   const [breed, setBreed] = useState<string>('全部');
   const [query, setQuery] = useState('');
+  const [sort, setSort] = useState<'hot' | 'latest'>('hot');
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return cats.filter((c) => {
+    const list = cats.filter((c) => {
       if (breed !== '全部' && (c.breed ?? '其他') !== breed) return false;
       if (!q) return true;
       return (
@@ -41,19 +44,41 @@ export function CatsPlaza({ cats, breeds }: CatsPlazaProps) {
         (c.owner?.username ?? '').toLowerCase().includes(q)
       );
     });
-  }, [cats, breed, query]);
+    return [...list].sort((a, b) => (sort === 'hot' ? (b.hot ?? 0) - (a.hot ?? 0) : 0));
+  }, [cats, breed, query, sort]);
 
   return (
     <div className="space-y-4">
-      {/* 搜索 */}
-      <div className="relative">
-        <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-stone-300" />
-        <input
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder={t('cats', 'searchPlaceholder')}
-          className="w-full rounded-xl border border-stone-200 bg-white py-2.5 pl-9 pr-4 text-sm outline-none transition focus:border-brand-400 focus:ring-2 focus:ring-brand-100"
-        />
+      {/* 搜索 + 排序 */}
+      <div className="flex items-center gap-2">
+        <div className="relative min-w-0 flex-1">
+          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-stone-300" />
+          <input
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder={t('cats', 'searchPlaceholder')}
+            className="w-full rounded-xl border border-stone-200 bg-white py-2.5 pl-9 pr-4 text-sm outline-none transition focus:border-brand-400 focus:ring-2 focus:ring-brand-100"
+          />
+        </div>
+        <div className="flex shrink-0 gap-1 rounded-xl bg-stone-100 p-1">
+          {(
+            [
+              { key: 'hot', label: t('cats', 'hot') },
+              { key: 'latest', label: t('cats', 'latest') },
+            ] as { key: 'hot' | 'latest'; label: string }[]
+          ).map((s) => (
+            <button
+              key={s.key}
+              onClick={() => setSort(s.key)}
+              className={cn(
+                'rounded-lg px-3 py-1.5 text-xs font-medium transition',
+                sort === s.key ? 'bg-white text-brand-600 shadow-sm' : 'text-stone-500'
+              )}
+            >
+              {s.label}
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* 品种筛选 */}
@@ -99,6 +124,11 @@ export function CatsPlaza({ cats, breeds }: CatsPlazaProps) {
                   />
                 ) : (
                   <span className="text-5xl">🐱</span>
+                )}
+                {(cat.hot ?? 0) > 0 && (
+                  <span className="absolute left-2 top-2 flex items-center gap-0.5 rounded-full bg-gradient-to-r from-orange-500 to-rose-500 px-2 py-0.5 text-[11px] font-bold text-white shadow">
+                    🔥 {cat.hot}
+                  </span>
                 )}
               </div>
               <div className="p-3">

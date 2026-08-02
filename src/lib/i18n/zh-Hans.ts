@@ -48,6 +48,7 @@ export const zhHans = {
     followingEmptyDesc: '去关注一些喵友，第一时间看到他们的新内容吧',
     end: '— 到底啦，没有更多内容 —',
     loadingFail: '内容加载失败：',
+    notInterested: '不感兴趣',
   },
   topics: {
     title: '话题广场',
@@ -292,6 +293,8 @@ export const zhHans = {
     title: '猫咪广场',
     subtitle: '发现每一只独特的猫 · 按品种浏览',
     searchPlaceholder: '搜索猫咪 / 品种 / 铲屎官…',
+    hot: '热门',
+    latest: '最新',
     empty: '还没有猫咪档案',
     emptyDesc: '成为第一个创建猫咪档案的人吧',
   },
@@ -310,9 +313,20 @@ export const zhHans = {
     chatEmpty: '还没有消息，打个招呼吧',
     chatPlaceholder: '输入消息…',
     send: '发送',
+    read: '已读',
   },
   userList: {
     empty: '这里空空如也',
+  },
+  interests: {
+    title: '选择你感兴趣的内容（决定推荐流）',
+    optional: '选择兴趣（可选，可跳过）',
+    topics: '猫咪话题',
+    breeds: '猫咪品种',
+    hint: '选择越多，发现页越懂你；随时可在「设置」中修改',
+    settingsTitle: '兴趣偏好',
+    saved: '兴趣已保存，推荐会更懂你',
+    save: '保存兴趣',
   },
 } as const;
 

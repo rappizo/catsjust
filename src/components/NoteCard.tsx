@@ -1,22 +1,38 @@
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
-import { Heart, MessageCircle, Play } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { Heart, Loader2, MessageCircle, Play, X } from 'lucide-react';
 import type { Note } from '@/lib/types';
 import { cn, formatCount } from '@/lib/utils';
 import { useI18n } from '@/lib/i18n';
+import { addNotInterested } from '@/lib/actions/interests';
 import { Avatar } from './Avatar';
 
 interface NoteCardProps {
   note: Note;
   priority?: boolean;
+  /** 推荐流中显示「不感兴趣」按钮 */
+  dismissable?: boolean;
 }
 
-export function NoteCard({ note, priority = false }: NoteCardProps) {
+export function NoteCard({ note, priority = false, dismissable = false }: NoteCardProps) {
+  const router = useRouter();
   const { t } = useI18n();
+  const [dismissing, setDismissing] = useState(false);
   const cover = note.cover_url || note.media?.[0]?.url;
   const isVideo = note.media_type === 'video';
   const authorName = note.author?.nickname || note.author?.username || t('note', 'authorFallback');
+
+  async function handleDismiss(e: React.MouseEvent) {
+    e.preventDefault();
+    e.stopPropagation();
+    if (dismissing) return;
+    setDismissing(true);
+    await addNotInterested(note.id);
+    router.refresh();
+  }
 
   return (
     <Link
@@ -25,6 +41,17 @@ export function NoteCard({ note, priority = false }: NoteCardProps) {
     >
       {/* 封面 */}
       <div className="relative w-full overflow-hidden">
+        {dismissable && (
+          <button
+            onClick={handleDismiss}
+            disabled={dismissing}
+            className="absolute right-1.5 top-1.5 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-black/40 text-white opacity-0 backdrop-blur-sm transition group-hover:opacity-100 hover:bg-black/60"
+            aria-label={t('home', 'notInterested')}
+            title={t('home', 'notInterested')}
+          >
+            {dismissing ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <X className="h-3.5 w-3.5" />}
+          </button>
+        )}
         {cover ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img

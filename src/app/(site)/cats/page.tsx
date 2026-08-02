@@ -51,6 +51,22 @@ export default async function CatsPlazaPage() {
       owner: owner ?? null,
     };
   });
+
+  // 猫咪热度：其已发布笔记的总点赞数
+  const { data: catLikes } = await supabase
+    .from('notes')
+    .select('cat_id, like_count')
+    .eq('status', 'published')
+    .not('cat_id', 'is', null)
+    .limit(5000);
+  const hotMap: Record<string, number> = {};
+  (catLikes ?? []).forEach((n: any) => {
+    if (n.cat_id) hotMap[n.cat_id] = (hotMap[n.cat_id] ?? 0) + (n.like_count ?? 0);
+  });
+  cats.forEach((c) => {
+    c.hot = hotMap[c.id] ?? 0;
+  });
+
   const breeds = (breedsRes.data ?? []).map((b: any) => b.name);
 
   return (

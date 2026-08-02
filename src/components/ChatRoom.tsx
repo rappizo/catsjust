@@ -47,7 +47,7 @@ export function ChatRoom({
     markConversationRead(conversationId);
   }, [conversationId]);
 
-  // Realtime 订阅新消息
+  // Realtime 订阅新消息 + 已读状态变更
   useEffect(() => {
     const supabase = createClient();
     const channel = supabase
@@ -71,6 +71,22 @@ export function ChatRoom({
           }
         }
       )
+      .on(
+        'postgres_changes',
+        {
+          event: 'UPDATE',
+          schema: 'public',
+          table: 'messages',
+          filter: `conversation_id=eq.${conversationId}`,
+        },
+        (payload) => {
+          const row = payload.new as ChatMessage;
+          // 对方已读 → 同步已读状态
+          setMessages((prev) =>
+            prev.map((m) => (m.id === row.id ? { ...m, read: row.read } : m))
+          );
+        }
+      )
       .subscribe();
 
     return () => {
@@ -78,7 +94,7 @@ export function ChatRoom({
     };
   }, [conversationId, currentUserId]);
 
-  // 轮询兜底：Realtime 断线/不可用时仍能收到新消息
+  // 轮询兜底：Realtime 断线/不可用时仍能收到新消息与已读状态
   const messagesRef = useRef(messages);
   messagesRef.current = messages;
   useEffect(() => {
@@ -90,7 +106,15 @@ export function ChatRoom({
         .eq('conversation_id', conversationId)
         .order('created_at', { ascending: true })
         .limit(200);
-      if (data && data.length > messagesRef.current.length) {
+      if (!data) return;
+      const prev = messagesRef.current;
+      const changed =
+        data.length !== prev.length ||
+        data.some((m, i) => {
+          const p = prev[i];
+          return !p || p.id !== m.id || p.read !== m.read || p.content !== m.content;
+        });
+      if (changed) {
         setMessages(data as ChatMessage[]);
       }
     }, 8000);
@@ -111,7 +135,7 @@ export function ChatRoom({
     try {
       const res = await sendMessage(conversationId, text);
       if (res.ok) {
-        // 乐观追加本地消息（Realtime 会去重，无需等待推送）
+        // 乐观追加本地消息（Realtime 可能已先送达同一条，需去重）
         const optimistic: ChatMessage = {
           id: res.messageId || `tmp-${Date.now()}`,
           conversation_id: conversationId,
@@ -120,7 +144,9 @@ export function ChatRoom({
           read: false,
           created_at: new Date().toISOString(),
         };
-        setMessages((prev) => [...prev, optimistic]);
+        setMessages((prev) =>
+          prev.some((m) => m.id === optimistic.id) ? prev : [...prev, optimistic]
+        );
         setInput('');
       } else {
         setError('error' in res ? res.error : t('messages', 'sendFailed'));
@@ -175,7 +201,11 @@ export function ChatRoom({
                       mine ? 'text-white/60' : 'text-stone-300'
                     )}
                   >
-                    {timeAgo(m.created_at)}
+                    {mine && m.read ? (
+                      <span className="text-white/80">{t('messages', 'read')}</span>
+                    ) : (
+                      timeAgo(m.created_at)
+                    )}
                   </p>
                 </div>
               </div>

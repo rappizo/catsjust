@@ -47,7 +47,8 @@ export const de = {
     "pickCat": "Katze wählen",
     "followingLoginTitle": "Melde dich an, um deinen Feed zu sehen",
     "followingLoginDesc": "Folge deinen Lieblings-Katzeneltern, um ihre neuen Inhalte sofort zu sehen.",
-    "loginToSee": "Jetzt anmelden"
+    "loginToSee": "Jetzt anmelden",
+    "notInterested": "Nicht interessiert"
   },
   "topics": {
     "title": "Themenplatz",
@@ -293,7 +294,9 @@ export const de = {
     "subtitle": "Entdecke jede einzigartige Katze · Nach Rasse stöbern",
     "searchPlaceholder": "Katzen / Rassen / Katzenhalter suchen…",
     "empty": "Noch keine Katzenprofile",
-    "emptyDesc": "Sei der Erste, der ein Katzenprofil erstellt."
+    "emptyDesc": "Sei der Erste, der ein Katzenprofil erstellt.",
+    "hot": "Beliebt",
+    "latest": "Neueste"
   },
   "messages": {
     "title": "Nachrichten",
@@ -309,9 +312,20 @@ export const de = {
     "noMessagesYet": "Sag doch Hallo～",
     "chatEmpty": "Noch keine Nachrichten. Sag doch mal Hallo!",
     "chatPlaceholder": "Nachricht eingeben…",
-    "send": "Senden"
+    "send": "Senden",
+    "read": "Gelesen"
   },
   "userList": {
     "empty": "Hier ist noch nichts."
+  },
+  "interests": {
+    "title": "Wähle Inhalte, die dich interessieren (bestimmt deinen Feed)",
+    "optional": "Interessen wählen (optional, überspringbar)",
+    "topics": "Katzenthemen",
+    "breeds": "Katzenrassen",
+    "hint": "Je mehr du wählst, desto besser versteht dich die Entdecken-Seite; jederzeit in den Einstellungen änderbar",
+    "settingsTitle": "Interessenpräferenzen",
+    "saved": "Interessen gespeichert, Empfehlungen werden besser auf dich abgestimmt",
+    "save": "Interessen speichern"
   }
 };

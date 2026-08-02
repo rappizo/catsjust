@@ -47,7 +47,8 @@ export const zhHant = {
     "pickCat": "選貓",
     "followingLoginTitle": "登入後查看追蹤動態",
     "followingLoginDesc": "追蹤你喜歡的鏟屎官，第一時間看到他們的新內容",
-    "loginToSee": "去登入"
+    "loginToSee": "去登入",
+    "notInterested": "不感興趣"
   },
   "topics": {
     "title": "話題廣場",
@@ -293,7 +294,9 @@ export const zhHant = {
     "subtitle": "發現每一隻獨特的貓 · 按品種瀏覽",
     "searchPlaceholder": "搜尋貓咪 / 品種 / 鏟屎官…",
     "empty": "還沒有貓咪檔案",
-    "emptyDesc": "成為第一個建立貓咪檔案的人吧"
+    "emptyDesc": "成為第一個建立貓咪檔案的人吧",
+    "hot": "熱門",
+    "latest": "最新"
   },
   "messages": {
     "title": "訊息",
@@ -309,9 +312,20 @@ export const zhHant = {
     "noMessagesYet": "打個招呼吧～",
     "chatEmpty": "還沒有訊息，打個招呼吧",
     "chatPlaceholder": "輸入訊息…",
-    "send": "傳送"
+    "send": "傳送",
+    "read": "已讀"
   },
   "userList": {
     "empty": "這裡空空如也"
+  },
+  "interests": {
+    "title": "選擇你感興趣的內容（決定推薦流）",
+    "optional": "選擇興趣（可選，可跳過）",
+    "topics": "貓咪話題",
+    "breeds": "貓咪品種",
+    "hint": "選擇越多，發現頁越懂你；隨時可在「設定」中修改",
+    "settingsTitle": "興趣偏好",
+    "saved": "興趣已保存，推薦會更懂你",
+    "save": "保存興趣"
   }
 };

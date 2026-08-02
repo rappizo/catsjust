@@ -12,10 +12,12 @@ interface WaterfallProps {
   emptyDescription?: string;
   /** 附加过滤条件（如按用户/猫咪/话题筛选时，本组件不做加载更多） */
   staticMode?: boolean;
-  /** 加载更多的 feed 类型（all / following） */
-  apiFeed?: 'all' | 'following';
-  /** 排序方式（hot / latest） */
-  apiSort?: 'hot' | 'latest';
+  /** 加载更多的 feed 类型（all / following / recommend） */
+  apiFeed?: 'all' | 'following' | 'recommend';
+  /** 排序方式（hot / latest / recommend） */
+  apiSort?: 'hot' | 'latest' | 'recommend';
+  /** 推荐流显示「不感兴趣」按钮 */
+  showDismiss?: boolean;
 }
 
 /** 双列瀑布流 + 无限滚动 */
@@ -26,6 +28,7 @@ export function Waterfall({
   staticMode = false,
   apiFeed = 'all',
   apiSort = 'latest',
+  showDismiss = false,
 }: WaterfallProps) {
   const { t } = useI18n();
   const [notes, setNotes] = useState<Note[]>(initialNotes);
@@ -42,11 +45,14 @@ export function Waterfall({
         setHasMore(false);
         return;
       }
-      const cursor = JSON.stringify(
-        apiSort === 'hot'
-          ? { hot: (last as Note & { hot_score?: number }).hot_score ?? 0, created_at: last.created_at, id: last.id }
-          : { created_at: last.created_at, id: last.id }
-      );
+      const cursor =
+        apiFeed === 'recommend'
+          ? JSON.stringify({ offset: notes.length })
+          : JSON.stringify(
+              apiSort === 'hot'
+                ? { hot: (last as Note & { hot_score?: number }).hot_score ?? 0, created_at: last.created_at, id: last.id }
+                : { created_at: last.created_at, id: last.id }
+            );
       const res = await fetch(`/api/notes?cursor=${encodeURIComponent(cursor)}&limit=12&feed=${apiFeed}&sort=${apiSort}`);
       const data = await res.json();
       const newNotes: Note[] = data.notes ?? [];
@@ -92,7 +98,7 @@ export function Waterfall({
     <>
       <div className="masonry">
         {notes.map((note, i) => (
-          <NoteCard key={note.id} note={note} priority={i < 4} />
+          <NoteCard key={note.id} note={note} priority={i < 4} dismissable={showDismiss} />
         ))}
       </div>
 

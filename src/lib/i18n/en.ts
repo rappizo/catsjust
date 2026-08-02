@@ -47,7 +47,8 @@ export const en = {
     "pickCat": "Pick a Cat",
     "followingLoginTitle": "Log in to view your following feed",
     "followingLoginDesc": "Follow cat lovers you like and see their new posts first",
-    "loginToSee": "Log in"
+    "loginToSee": "Log in",
+    "notInterested": "Not interested"
   },
   "topics": {
     "title": "Topic Square",
@@ -293,7 +294,9 @@ export const en = {
     "subtitle": "Discover every unique cat · Browse by breed",
     "searchPlaceholder": "Search cats / breeds / cat parents…",
     "empty": "No cat profiles yet",
-    "emptyDesc": "Be the first to create a cat profile"
+    "emptyDesc": "Be the first to create a cat profile",
+    "hot": "Hot",
+    "latest": "Latest"
   },
   "messages": {
     "title": "Messages",
@@ -309,9 +312,20 @@ export const en = {
     "noMessagesYet": "Say hi~",
     "chatEmpty": "No messages yet. Say hello!",
     "chatPlaceholder": "Type a message…",
-    "send": "Send"
+    "send": "Send",
+    "read": "Read"
   },
   "userList": {
     "empty": "Nothing here yet"
+  },
+  "interests": {
+    "title": "Choose what you're interested in (determines your feed)",
+    "optional": "Choose interests (optional, can skip)",
+    "topics": "Cat Topics",
+    "breeds": "Cat Breeds",
+    "hint": "The more you choose, the better the Discover page knows you; you can change this anytime in Settings",
+    "settingsTitle": "Interest Preferences",
+    "saved": "Interests saved, recommendations will now know you better",
+    "save": "Save Interests"
   }
 };

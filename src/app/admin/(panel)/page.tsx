@@ -6,6 +6,10 @@ import {
   FileClock,
   Flag,
   Flame,
+  Hash,
+  MessageSquare,
+  PawPrint,
+  Send,
   TrendingUp,
   Users,
 } from 'lucide-react';
@@ -48,6 +52,8 @@ export default async function AdminDashboard() {
     { count: totalLikes },
     { count: totalFavorites },
     { count: openReports },
+    { count: totalConversations },
+    { count: totalMessages },
   ] = await Promise.all([
     supabase.from('profiles').select('*', { count: 'exact', head: true }),
     supabase.from('notes').select('*', { count: 'exact', head: true }).eq('status', 'pending'),
@@ -57,6 +63,8 @@ export default async function AdminDashboard() {
     supabase.from('likes').select('*', { count: 'exact', head: true }),
     supabase.from('favorites').select('*', { count: 'exact', head: true }),
     supabase.from('reports').select('*', { count: 'exact', head: true }).in('status', ['open', 'processing']),
+    supabase.from('conversations').select('*', { count: 'exact', head: true }),
+    supabase.from('messages').select('*', { count: 'exact', head: true }),
   ]);
 
   const { data: recentPending } = await supabase
@@ -108,6 +116,22 @@ export default async function AdminDashboard() {
   const imageCount = publishedAll.filter((n) => n.media_type !== 'video').length;
   const videoCount = publishedAll.filter((n) => n.media_type === 'video').length;
 
+  // 5) 兴趣标签分布
+  const { data: interestRows } = await supabase
+    .from('profile_interests')
+    .select('interest_type, interest_value')
+    .limit(5000);
+  const topicCounts: Record<string, number> = {};
+  const breedCounts: Record<string, number> = {};
+  (interestRows ?? []).forEach((r) => {
+    const target = r.interest_type === 'breed' ? breedCounts : topicCounts;
+    target[r.interest_value] = (target[r.interest_value] ?? 0) + 1;
+  });
+  const topTopics = Object.entries(topicCounts).sort((a, b) => b[1] - a[1]).slice(0, 8);
+  const topBreeds = Object.entries(breedCounts).sort((a, b) => b[1] - a[1]).slice(0, 8);
+  const maxTopic = Math.max(...topTopics.map(([, c]) => c), 1);
+  const maxBreed = Math.max(...topBreeds.map(([, c]) => c), 1);
+
   const stats = [
     { label: '总用户数', value: totalUsers ?? 0, icon: Users, color: 'text-blue-500 bg-blue-50' },
     { label: '今日新增用户', value: todayRegistered ?? 0, icon: Users, color: 'text-sky-500 bg-sky-50' },
@@ -116,6 +140,8 @@ export default async function AdminDashboard() {
     { label: '今日发布', value: todayPublished ?? 0, icon: FileCheck, color: 'text-brand-500 bg-brand-50' },
     { label: '总点赞数', value: formatCount(totalLikes ?? 0), icon: ArrowRight, color: 'text-rose-500 bg-rose-50' },
     { label: '总收藏数', value: formatCount(totalFavorites ?? 0), icon: Bookmark, color: 'text-violet-500 bg-violet-50' },
+    { label: '私信会话', value: formatCount(totalConversations ?? 0), icon: MessageSquare, color: 'text-teal-500 bg-teal-50' },
+    { label: '总消息量', value: formatCount(totalMessages ?? 0), icon: Send, color: 'text-cyan-500 bg-cyan-50' },
     { label: '待处理举报', value: openReports ?? 0, icon: Flag, color: 'text-red-500 bg-red-50' },
   ];
 
@@ -127,7 +153,7 @@ export default async function AdminDashboard() {
       </div>
 
       {/* 数据卡片 */}
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 xl:grid-cols-8">
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 xl:grid-cols-5">
         {stats.map((s) => (
           <div key={s.label} className="rounded-2xl border border-stone-200/60 bg-white p-4 shadow-card">
             <span className={`mb-3 inline-flex h-9 w-9 items-center justify-center rounded-xl ${s.color}`}>
@@ -257,6 +283,63 @@ export default async function AdminDashboard() {
                 );
               })}
               <p className="pt-1 text-xs text-stone-400">共 {imageCount + videoCount} 篇</p>
+            </div>
+          )}
+        </section>
+      </div>
+
+      {/* 兴趣标签分布 */}
+      <div className="grid gap-4 lg:grid-cols-2">
+        <section className="rounded-2xl border border-stone-200/60 bg-white p-5 shadow-card">
+          <h2 className="mb-4 flex items-center gap-1.5 font-semibold text-ink">
+            <Hash className="h-4 w-4 text-brand-500" />
+            热门话题兴趣 Top 8
+          </h2>
+          {!topTopics.length ? (
+            <p className="py-6 text-center text-sm text-stone-400">暂无数据</p>
+          ) : (
+            <div className="space-y-2.5">
+              {topTopics.map(([name, count]) => (
+                <div key={name} className="flex items-center gap-3">
+                  <span className="w-24 shrink-0 truncate text-sm text-stone-600">{name}</span>
+                  <div className="h-2.5 flex-1 overflow-hidden rounded-full bg-stone-100">
+                    <div
+                      className="h-full rounded-full bg-gradient-to-r from-brand-500 to-accent-400"
+                      style={{ width: `${Math.max((count / maxTopic) * 100, 6)}%` }}
+                    />
+                  </div>
+                  <span className="w-10 shrink-0 text-right text-xs font-semibold text-stone-500">
+                    {count}
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
+        </section>
+
+        <section className="rounded-2xl border border-stone-200/60 bg-white p-5 shadow-card">
+          <h2 className="mb-4 flex items-center gap-1.5 font-semibold text-ink">
+            <PawPrint className="h-4 w-4 text-orange-400" />
+            热门品种兴趣 Top 8
+          </h2>
+          {!topBreeds.length ? (
+            <p className="py-6 text-center text-sm text-stone-400">暂无数据</p>
+          ) : (
+            <div className="space-y-2.5">
+              {topBreeds.map(([name, count]) => (
+                <div key={name} className="flex items-center gap-3">
+                  <span className="w-24 shrink-0 truncate text-sm text-stone-600">{name}</span>
+                  <div className="h-2.5 flex-1 overflow-hidden rounded-full bg-stone-100">
+                    <div
+                      className="h-full rounded-full bg-gradient-to-r from-orange-400 to-amber-300"
+                      style={{ width: `${Math.max((count / maxBreed) * 100, 6)}%` }}
+                    />
+                  </div>
+                  <span className="w-10 shrink-0 text-right text-xs font-semibold text-stone-500">
+                    {count}
+                  </span>
+                </div>
+              ))}
             </div>
           )}
         </section>

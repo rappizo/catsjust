@@ -24,21 +24,30 @@ export default async function HomePage() {
 
   if (isSupabaseConfigured()) {
     const supabase = createClient();
-    const [hotRes, userResult] = await Promise.all([
-      supabase
+    const { data: userResult } = await supabase.auth.getUser();
+    const user = userResult.user;
+    isLoggedIn = !!user;
+
+    // 发现流：登录用户走个性化推荐 RPC，游客按热度
+    if (user) {
+      const { data: recNotes } = await supabase.rpc('recommend_notes', {
+        p_user: user.id,
+        p_limit: PAGE_SIZE,
+        p_offset: 0,
+      });
+      hotNotes = (recNotes ?? []) as Note[];
+    } else {
+      const hotRes = await supabase
         .from('notes')
         .select('*, author:profiles(*), cat:cats(*), topic:topics(*)')
         .eq('status', 'published')
         .order('hot_score', { ascending: false })
         .order('created_at', { ascending: false })
-        .limit(PAGE_SIZE),
-      supabase.auth.getUser(),
-    ]);
-    hotNotes = (hotRes.data ?? []) as Note[];
-    feedError = hotRes.error?.message ?? null;
+        .limit(PAGE_SIZE);
+      hotNotes = (hotRes.data ?? []) as Note[];
+      feedError = hotRes.error?.message ?? null;
+    }
 
-    const user = userResult.data.user;
-    isLoggedIn = !!user;
     // 登录后拉取关注流首屏
     if (user) {
       const { data: follows } = await supabase
@@ -111,6 +120,7 @@ export default async function HomePage() {
         hotNotes={hotNotes}
         followingNotes={followingNotes}
         isLoggedIn={isLoggedIn}
+        discoverRecommend={isLoggedIn}
         cats={cats}
         breeds={breeds}
       />

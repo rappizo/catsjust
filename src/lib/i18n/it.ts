@@ -47,7 +47,8 @@ export const it = {
     "pickCat": "Scegli gatto",
     "followingLoginTitle": "Accedi per vedere il feed dei seguiti",
     "followingLoginDesc": "Segui i proprietari di gatti che preferisci e scopri subito i loro nuovi contenuti",
-    "loginToSee": "Accedi"
+    "loginToSee": "Accedi",
+    "notInterested": "Non mi interessa"
   },
   "topics": {
     "title": "Piazza dei topic",
@@ -293,7 +294,9 @@ export const it = {
     "subtitle": "Scopri ogni gatto unico · Sfoglia per razza",
     "searchPlaceholder": "Cerca gatti / razze / gattari…",
     "empty": "Ancora nessun profilo di gatto",
-    "emptyDesc": "Diventa il primo a creare un profilo di gatto"
+    "emptyDesc": "Diventa il primo a creare un profilo di gatto",
+    "hot": "Popolari",
+    "latest": "Recenti"
   },
   "messages": {
     "title": "Messaggi",
@@ -309,9 +312,20 @@ export const it = {
     "noMessagesYet": "Fai un saluto!",
     "chatEmpty": "Ancora nessun messaggio. Fai un saluto!",
     "chatPlaceholder": "Scrivi un messaggio…",
-    "send": "Invia"
+    "send": "Invia",
+    "read": "Letto"
   },
   "userList": {
     "empty": "Qui non c'è ancora nessuno"
+  },
+  "interests": {
+    "title": "Scegli i contenuti che ti interessano (determina il feed dei suggerimenti)",
+    "optional": "Seleziona gli interessi (facoltativo, puoi saltare)",
+    "topics": "Argomenti felini",
+    "breeds": "Razze di gatti",
+    "hint": "Più selezioni, più la pagina di scoperta ti capisce; puoi modificarle in qualsiasi momento nelle Impostazioni.",
+    "settingsTitle": "Preferenze sugli interessi",
+    "saved": "Interessi salvati, i suggerimenti ti capiranno meglio.",
+    "save": "Salva gli interessi"
   }
 };

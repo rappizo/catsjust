@@ -47,7 +47,8 @@ export const ko = {
     "pickCat": "고양이 고르기",
     "followingLoginTitle": "로그인 후 팔로우 피드 확인",
     "followingLoginDesc": "마음에 드는 집사를 팔로우하고 새로운 콘텐츠를 가장 먼저 만나보세요",
-    "loginToSee": "로그인하기"
+    "loginToSee": "로그인하기",
+    "notInterested": "관심 없음"
   },
   "topics": {
     "title": "토픽 광장",
@@ -293,7 +294,9 @@ export const ko = {
     "subtitle": "특별한 고양이를 만나보세요 · 품종별로 둘러보기",
     "searchPlaceholder": "고양이 / 품종 / 집사 검색…",
     "empty": "아직 고양이 프로필이 없습니다",
-    "emptyDesc": "고양이 프로필을 가장 먼저 만들어 보세요!"
+    "emptyDesc": "고양이 프로필을 가장 먼저 만들어 보세요!",
+    "hot": "인기",
+    "latest": "최신"
   },
   "messages": {
     "title": "메시지",
@@ -309,9 +312,20 @@ export const ko = {
     "noMessagesYet": "인사해 보세요~",
     "chatEmpty": "아직 메시지가 없습니다. 인사해 보세요.",
     "chatPlaceholder": "메시지 입력…",
-    "send": "보내기"
+    "send": "보내기",
+    "read": "읽음"
   },
   "userList": {
     "empty": "여기는 텅 비어 있어요"
+  },
+  "interests": {
+    "title": "관심 있는 콘텐츠를 선택하세요 (추천 피드가 결정됩니다)",
+    "optional": "관심사 선택 (선택 사항, 건너뛸 수 있음)",
+    "topics": "고양이 토픽",
+    "breeds": "고양이 품종",
+    "hint": "많이 선택할수록 발견 페이지가 당신을 더 잘 이해합니다. 언제든지 '설정'에서 수정할 수 있습니다.",
+    "settingsTitle": "관심사 설정",
+    "saved": "관심사를 저장했습니다. 추천이 더 정확해집니다.",
+    "save": "관심사 저장"
   }
 };

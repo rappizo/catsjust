@@ -47,7 +47,8 @@ export const ja = {
     "pickCat": "猫を選ぶ",
     "followingLoginTitle": "ログインしてフォロー中の投稿を見る",
     "followingLoginDesc": "お気に入りの猫飼いをフォローして、最新の投稿をいち早くチェックしましょう",
-    "loginToSee": "ログインする"
+    "loginToSee": "ログインする",
+    "notInterested": "興味なし"
   },
   "topics": {
     "title": "話題広場",
@@ -293,7 +294,9 @@ export const ja = {
     "subtitle": "個性豊かな猫たちを見つけよう · 品種で探す",
     "searchPlaceholder": "猫 / 品種 / 飼い主さんを検索…",
     "empty": "まだ猫のプロフィールはありません",
-    "emptyDesc": "最初の猫のプロフィールを作成しましょう"
+    "emptyDesc": "最初の猫のプロフィールを作成しましょう",
+    "hot": "人気",
+    "latest": "最新"
   },
   "messages": {
     "title": "メッセージ",
@@ -309,9 +312,20 @@ export const ja = {
     "noMessagesYet": "挨拶してみよう～",
     "chatEmpty": "まだメッセージはありません。挨拶してみましょう",
     "chatPlaceholder": "メッセージを入力…",
-    "send": "送信"
+    "send": "送信",
+    "read": "既読"
   },
   "userList": {
     "empty": "ここにはまだ誰もいません"
+  },
+  "interests": {
+    "title": "興味のあるコンテンツを選択（おすすめに反映）",
+    "optional": "興味を選択（任意・スキップ可）",
+    "topics": "猫のトピック",
+    "breeds": "猫の品種",
+    "hint": "多く選ぶほど、発見ページがあなたに合った内容になります。後で「設定」から変更できます",
+    "settingsTitle": "興味の設定",
+    "saved": "興味を保存しました。おすすめがあなたに合ったものになります",
+    "save": "興味を保存"
   }
 };

@@ -47,7 +47,8 @@ export const pt = {
     "pickCat": "Escolher Gato",
     "followingLoginTitle": "Faça login para ver o feed de quem você segue",
     "followingLoginDesc": "Siga seus tutores de gatos favoritos e veja as novidades deles em primeira mão",
-    "loginToSee": "Fazer login"
+    "loginToSee": "Fazer login",
+    "notInterested": "Não tenho interesse"
   },
   "topics": {
     "title": "Praça de Tópicos",
@@ -293,7 +294,9 @@ export const pt = {
     "subtitle": "Descubra cada gato único · Navegue por raça",
     "searchPlaceholder": "Pesquisar gatos / raças / tutores…",
     "empty": "Nenhum perfil de gato ainda",
-    "emptyDesc": "Seja o primeiro a criar um perfil de gato"
+    "emptyDesc": "Seja o primeiro a criar um perfil de gato",
+    "hot": "Em alta",
+    "latest": "Recentes"
   },
   "messages": {
     "title": "Mensagens",
@@ -309,9 +312,20 @@ export const pt = {
     "noMessagesYet": "Mande um oi!",
     "chatEmpty": "Ainda não há mensagens. Mande um oi!",
     "chatPlaceholder": "Digite uma mensagem…",
-    "send": "Enviar"
+    "send": "Enviar",
+    "read": "Lido"
   },
   "userList": {
     "empty": "Nada por aqui"
+  },
+  "interests": {
+    "title": "Escolha o que você gosta (define o feed de recomendações)",
+    "optional": "Selecione interesses (opcional, pode pular)",
+    "topics": "Tópicos sobre gatos",
+    "breeds": "Raças de gatos",
+    "hint": "Quanto mais você seleciona, melhor o feed te entende; você pode alterar a qualquer momento em 'Configurações'",
+    "settingsTitle": "Preferências de interesses",
+    "saved": "Interesses salvos! As recomendações vão te entender melhor",
+    "save": "Salvar interesses"
   }
 };

@@ -9,12 +9,14 @@ import { CatsPlaza, type CatCardData } from './CatsPlaza';
 import type { Note } from '@/lib/types';
 
 interface HomeTabsProps {
-  /** 发现流首屏数据（热度排序） */
+  /** 发现流首屏数据（热度排序或个性化推荐） */
   hotNotes: Note[];
   /** 关注流首屏数据（仅登录时传入） */
   followingNotes?: Note[];
   /** 是否已登录（未登录时关注流提示登录） */
   isLoggedIn?: boolean;
+  /** 发现流是否走个性化推荐接口（登录用户） */
+  discoverRecommend?: boolean;
   /** 选猫数据 */
   cats?: CatCardData[];
   /** 品种列表 */
@@ -28,6 +30,7 @@ export function HomeTabs({
   hotNotes,
   followingNotes = [],
   isLoggedIn = false,
+  discoverRecommend = false,
   cats = [],
   breeds = [],
 }: HomeTabsProps) {
@@ -91,8 +94,9 @@ export function HomeTabs({
         <Waterfall
           key={`discover-${hotNotes.length}`}
           initialNotes={hotNotes}
-          apiFeed="all"
-          apiSort="hot"
+          apiFeed={discoverRecommend ? 'recommend' : 'all'}
+          apiSort={discoverRecommend ? 'recommend' : 'hot'}
+          showDismiss={discoverRecommend}
           emptyTitle={t('home', 'emptyTitle')}
           emptyDescription={t('home', 'emptyDesc')}
         />

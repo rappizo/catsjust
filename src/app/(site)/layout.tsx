@@ -1,13 +1,16 @@
 import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
 import { BottomTabBar } from '@/components/BottomTabBar';
+import { RealtimeUnreadSync } from '@/components/RealtimeUnreadSync';
 import { createClient } from '@/lib/supabase/server';
 import { isSupabaseConfigured } from '@/lib/config';
 
 /** 前台站点布局：导航 + 内容 + 页脚 + 底部 Tab 栏（App 骨架） */
 export default async function SiteLayout({ children }: { children: React.ReactNode }) {
   let username: string | null = null;
-  let unreadCount = 0;
+  let notifUnread = 0;
+  let dmUnread = 0;
+  let userId: string | null = null;
 
   if (isSupabaseConfigured()) {
     const supabase = createClient();
@@ -15,6 +18,7 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
       data: { user },
     } = await supabase.auth.getUser();
     if (user) {
+      userId = user.id;
       const [profileRes, unreadRes, dmUnreadRes] = await Promise.all([
         supabase.from('profiles').select('username').eq('id', user.id).maybeSingle(),
         supabase
@@ -28,8 +32,8 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
           .or(`and(user_a.eq.${user.id},unread_a.gt.0),and(user_b.eq.${user.id},unread_b.gt.0)`),
       ]);
       username = profileRes.data?.username ?? null;
-      // 消息未读 = 通知未读 + 私信未读
-      unreadCount = (unreadRes.count ?? 0) + (dmUnreadRes.count ?? 0);
+      notifUnread = unreadRes.count ?? 0;
+      dmUnread = dmUnreadRes.count ?? 0;
     }
   }
 
@@ -38,7 +42,16 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
       <Navbar />
       <main className="flex-1 pb-20">{children}</main>
       <Footer />
-      <BottomTabBar username={username} unreadCount={unreadCount} />
+      {userId ? (
+        <RealtimeUnreadSync
+          username={username}
+          initialNotifUnread={notifUnread}
+          initialDmUnread={dmUnread}
+          userId={userId}
+        />
+      ) : (
+        <BottomTabBar username={username} unreadCount={0} />
+      )}
     </div>
   );
 }

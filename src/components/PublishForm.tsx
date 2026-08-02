@@ -9,6 +9,7 @@ import {
   ImagePlus,
   Loader2,
   Plus,
+  Save,
   Send,
   Video as VideoIcon,
   X,
@@ -16,11 +17,11 @@ import {
 import { createClient } from '@/lib/supabase/client';
 import { uploadFile } from '@/lib/storage';
 import { createCat } from '@/lib/actions/cats';
-import { publishNote } from '@/lib/actions/notes';
+import { publishNote, saveDraft, editNote as editNoteAction } from '@/lib/actions/notes';
 import { CAT_BREEDS, CAT_PERSONALITY_TAGS, LIMITS } from '@/lib/constants';
 import { captureVideoFrame, cn, isImageFile, isVideoFile, readVideoDuration } from '@/lib/utils';
 import { useI18n } from '@/lib/i18n';
-import type { CatGender, MediaType, Topic } from '@/lib/types';
+import type { CatGender, MediaType, Note, Topic } from '@/lib/types';
 
 interface PublishFormProps {
   userId: string;
@@ -34,6 +35,8 @@ interface PublishFormProps {
     avatar_url: string | null;
   }>;
   topics: Array<{ id: string; name: string }>;
+  /** 编辑模式：传入待编辑笔记 */
+  editNote?: Note | null;
 }
 
 interface ImageItem {
@@ -49,19 +52,20 @@ interface VideoItem {
   duration: number;
 }
 
-export function PublishForm({ userId, initialCats, topics }: PublishFormProps) {
+export function PublishForm({ userId, initialCats, topics, editNote }: PublishFormProps) {
   const router = useRouter();
   const { t } = useI18n();
   const imageInputRef = useRef<HTMLInputElement>(null);
   const videoInputRef = useRef<HTMLInputElement>(null);
+  const isEditing = !!editNote;
 
   const [mediaType, setMediaType] = useState<MediaType>('image');
   const [images, setImages] = useState<ImageItem[]>([]);
   const [video, setVideo] = useState<VideoItem | null>(null);
   const [videoError, setVideoError] = useState('');
 
-  const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
+  const [title, setTitle] = useState(editNote?.title ?? '');
+  const [content, setContent] = useState(editNote?.content ?? '');
 
   const [cats, setCats] = useState(initialCats);
   const [catMode, setCatMode] = useState<'select' | 'create'>('select');
@@ -77,9 +81,10 @@ export function PublishForm({ userId, initialCats, topics }: PublishFormProps) {
     avatarPreview: null as string | null,
   });
 
-  const [topicId, setTopicId] = useState<string | null>(topics[0]?.id ?? null);
+  const [topicId, setTopicId] = useState<string | null>(editNote?.topic_id ?? topics[0]?.id ?? null);
   const [dragIndex, setDragIndex] = useState<number | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [savingDraft, setSavingDraft] = useState(false);
   const [error, setError] = useState('');
   const [notice, setNotice] = useState<{ text: string; tone: 'green' | 'amber' | 'red' } | null>(null);
 
@@ -207,6 +212,18 @@ export function PublishForm({ userId, initialCats, topics }: PublishFormProps) {
     const client = createClient();
 
     try {
+      // 编辑模式：媒体保持不变，仅提交标题/正文/话题重新送审
+      if (isEditing && editNote) {
+        const res = await editNoteAction(editNote.id, { title, content, topicId });
+        if (!res.ok) throw new Error(res.error);
+        setNotice({ text: res.message || t('publish', 'submitted'), tone: 'amber' });
+        setTimeout(() => {
+          router.push(`/notes/${editNote.id}`);
+          router.refresh();
+        }, 2000);
+        return;
+      }
+
       let catId: string | null = selectedCatId;
 
       // 1. 创建新猫咪档案
@@ -274,8 +291,78 @@ export function PublishForm({ userId, initialCats, topics }: PublishFormProps) {
     }
   }
 
+  /* ---------- 存草稿 ---------- */
+  async function handleSaveDraft() {
+    if (savingDraft) return;
+    setError('');
+    if (!title.trim() && !content.trim()) {
+      setError(t('publish', 'needTextError'));
+      return;
+    }
+    setSavingDraft(true);
+    const client = createClient();
+    try {
+      let catId: string | null = selectedCatId;
+      if (catMode === 'create') {
+        let avatarUrl: string | null = null;
+        if (newCat.avatarFile) {
+          avatarUrl = await uploadFile(client, newCat.avatarFile, userId, 'covers');
+        }
+        const res = await createCat({
+          name: newCat.name,
+          breed: newCat.breed || null,
+          gender: newCat.gender,
+          birthday: newCat.birthday || null,
+          personalityTags: newCat.tags,
+          bio: newCat.bio,
+          avatarUrl,
+        });
+        if (!res.ok) throw new Error(res.error);
+        catId = res.id ?? null;
+      }
+
+      let media: Array<{ url: string; type: MediaType; poster?: string | null }> = [];
+      let coverUrl = '';
+      if (mediaType === 'image') {
+        for (const item of images) {
+          const url = await uploadFile(client, item.file, userId, 'images');
+          media.push({ url, type: 'image' });
+        }
+        coverUrl = media[0]?.url ?? '';
+      } else if (video) {
+        const videoUrl = await uploadFile(client, video.file, userId, 'videos');
+        let posterUrl: string | null = null;
+        if (video.poster) {
+          const posterFile = new File([video.poster], 'poster.jpg', { type: 'image/jpeg' });
+          posterUrl = await uploadFile(client, posterFile, userId, 'covers');
+        }
+        media = [{ url: videoUrl, type: 'video', poster: posterUrl }];
+        coverUrl = posterUrl || videoUrl;
+      }
+
+      const res = await saveDraft({
+        title,
+        content,
+        media,
+        mediaType,
+        coverUrl,
+        catId,
+        topicId,
+      });
+      if (!res.ok) throw new Error(res.error);
+      setNotice({ text: res.message || t('publish', 'savedDraft'), tone: 'green' });
+      router.refresh();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : t('publish', 'failed'));
+    } finally {
+      setSavingDraft(false);
+    }
+  }
+
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
+      {!isEditing && (
+        <>
       {/* 媒体类型切换 */}
       <div className="grid grid-cols-2 gap-2 rounded-2xl bg-stone-100 p-1.5">
         <button
@@ -287,7 +374,7 @@ export function PublishForm({ userId, initialCats, topics }: PublishFormProps) {
           )}
         >
           <ImagePlus className="h-4 w-4" />
-          图片笔记
+          {t('publish', 'imageNote')}
         </button>
         <button
           type="button"
@@ -422,6 +509,8 @@ export function PublishForm({ userId, initialCats, topics }: PublishFormProps) {
             }}
           />
         </section>
+      )}
+      </>
       )}
 
       {/* 标题与正文 */}
@@ -683,23 +772,39 @@ export function PublishForm({ userId, initialCats, topics }: PublishFormProps) {
         <p className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-500">{error}</p>
       )}
 
-      <button
-        type="submit"
-        disabled={submitting}
-        className="flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-brand-500 to-accent-500 py-3.5 text-sm font-bold text-white shadow-lg shadow-neon-green transition hover:from-brand-600 hover:to-accent-600 disabled:opacity-60"
-      >
-        {submitting ? (
-          <>
+      <div className="flex gap-3">
+        <button
+          type="button"
+          onClick={handleSaveDraft}
+          disabled={savingDraft}
+          className="flex w-36 items-center justify-center gap-2 rounded-2xl border border-stone-300 bg-white py-3.5 text-sm font-semibold text-stone-600 transition hover:border-brand-400 hover:text-brand-600 disabled:opacity-60"
+        >
+          {savingDraft ? (
             <Loader2 className="h-4 w-4 animate-spin" />
-            {t('publish', 'submitting')}
-          </>
-        ) : (
-          <>
-            <Send className="h-4 w-4" />
-            {t('publish', 'submit')}
-          </>
-        )}
-      </button>
+          ) : (
+            <Save className="h-4 w-4" />
+          )}
+          {t('publish', 'saveDraft')}
+        </button>
+
+        <button
+          type="submit"
+          disabled={submitting}
+          className="flex flex-1 items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-brand-500 to-accent-500 py-3.5 text-sm font-bold text-white shadow-lg shadow-neon-green transition hover:from-brand-600 hover:to-accent-600 disabled:opacity-60"
+        >
+          {submitting ? (
+            <>
+              <Loader2 className="h-4 w-4 animate-spin" />
+              {t('publish', 'submitting')}
+            </>
+          ) : (
+            <>
+              <Send className="h-4 w-4" />
+              {t('publish', 'submit')}
+            </>
+          )}
+        </button>
+      </div>
       <p className="text-center text-xs text-stone-400">
         {t('publish', 'notice')}
       </p>

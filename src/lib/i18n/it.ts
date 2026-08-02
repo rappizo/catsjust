@@ -12,7 +12,8 @@ export const it = {
     "submit": "Invia",
     "optional": "(opzionale)",
     "notFoundTitle": "404 · Pagina non trovata",
-    "notFoundDesc": "Questo gatto potrebbe essere andato altrove"
+    "notFoundDesc": "Questo gatto potrebbe essere andato altrove",
+    "cancel": "Annulla"
   },
   "nav": {
     "home": "Home",
@@ -109,7 +110,11 @@ export const it = {
     "traitsLabel": "Etichette di personalità (selezione multipla)",
     "introLabel": "Introduzione",
     "introPlaceholder": "Presenta il tuo gatto",
-    "catAvatarAlt": "Avatar del gatto"
+    "catAvatarAlt": "Avatar del gatto",
+    "saveDraft": "Salva bozza",
+    "savedDraft": "Bozza salvata",
+    "myDrafts": "Le mie bozze",
+    "noDrafts": "Ancora nessuna bozza"
   },
   "auth": {
     "loginWelcome": "Benvenuto di nuovo su Solo Gatti",
@@ -193,7 +198,9 @@ export const it = {
     "like": "Mi piace",
     "favorite": "Preferiti",
     "comments": "Commenti",
-    "share": "Condividi"
+    "share": "Condividi",
+    "reply": "Rispondi",
+    "replyPlaceholder": "Rispondi con gentilezza…"
   },
   "note": {
     "pending": "Questo contenuto è in revisione, sarà visibile pubblicamente dopo l'approvazione",
@@ -202,7 +209,10 @@ export const it = {
     "noTitle": "(Senza titolo)",
     "authorFallback": "Amico felino",
     "deleteNote": "Elimina",
-    "confirmDelete": "Confermi l'eliminazione?"
+    "confirmDelete": "Confermi l'eliminazione?",
+    "edit": "Modifica",
+    "publishDraft": "Pubblica bozza",
+    "draftSavedAt": "Bozza salvata il"
   },
   "cat": {
     "gender": "Sesso",

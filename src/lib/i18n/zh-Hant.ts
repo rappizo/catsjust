@@ -12,7 +12,8 @@ export const zhHant = {
     "submit": "提交",
     "optional": "（可選）",
     "notFoundTitle": "404 · 頁面走失了",
-    "notFoundDesc": "這隻貓可能跑到別處去了"
+    "notFoundDesc": "這隻貓可能跑到別處去了",
+    "cancel": "取消"
   },
   "nav": {
     "home": "首頁",
@@ -109,7 +110,11 @@ export const zhHant = {
     "traitsLabel": "性格標籤（可多選）",
     "introLabel": "簡介",
     "introPlaceholder": "介紹一下你的貓",
-    "catAvatarAlt": "貓咪頭像"
+    "catAvatarAlt": "貓咪頭像",
+    "saveDraft": "儲存草稿",
+    "savedDraft": "草稿已儲存",
+    "myDrafts": "我的草稿",
+    "noDrafts": "還沒有草稿"
   },
   "auth": {
     "loginWelcome": "歡迎回到只有貓",
@@ -193,7 +198,9 @@ export const zhHant = {
     "like": "按讚",
     "favorite": "收藏",
     "comments": "評論",
-    "share": "分享"
+    "share": "分享",
+    "reply": "回覆",
+    "replyPlaceholder": "友善地回覆…"
   },
   "note": {
     "pending": "該內容正在審核中，通過後將公開展示",
@@ -202,7 +209,10 @@ export const zhHant = {
     "noTitle": "（無標題）",
     "authorFallback": "喵友",
     "deleteNote": "刪除",
-    "confirmDelete": "確認刪除？"
+    "confirmDelete": "確認刪除？",
+    "edit": "編輯",
+    "publishDraft": "發布草稿",
+    "draftSavedAt": "草稿儲存於"
   },
   "cat": {
     "gender": "性別",

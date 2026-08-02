@@ -12,7 +12,8 @@ export const pt = {
     "submit": "Enviar",
     "optional": "(Opcional)",
     "notFoundTitle": "404 · Página não encontrada",
-    "notFoundDesc": "Este gato pode ter ido para outro lugar"
+    "notFoundDesc": "Este gato pode ter ido para outro lugar",
+    "cancel": "Cancelar"
   },
   "nav": {
     "home": "Início",
@@ -109,7 +110,11 @@ export const pt = {
     "traitsLabel": "Tags de personalidade (selecione várias)",
     "introLabel": "Descrição",
     "introPlaceholder": "Conte sobre o seu gato",
-    "catAvatarAlt": "Avatar do gato"
+    "catAvatarAlt": "Avatar do gato",
+    "saveDraft": "Salvar rascunho",
+    "savedDraft": "Rascunho salvo",
+    "myDrafts": "Meus rascunhos",
+    "noDrafts": "Ainda não há rascunhos"
   },
   "auth": {
     "loginWelcome": "Bem-vindo de volta ao Só Gatos",
@@ -193,7 +198,9 @@ export const pt = {
     "like": "Curtir",
     "favorite": "Favoritos",
     "comments": "Comentários",
-    "share": "Compartilhar"
+    "share": "Compartilhar",
+    "reply": "Responder",
+    "replyPlaceholder": "Responda com gentileza…"
   },
   "note": {
     "pending": "Este conteúdo está em análise e será exibido publicamente após aprovação",
@@ -202,7 +209,10 @@ export const pt = {
     "noTitle": "(sem título)",
     "authorFallback": "Amigo felino",
     "deleteNote": "Excluir",
-    "confirmDelete": "Confirmar exclusão?"
+    "confirmDelete": "Confirmar exclusão?",
+    "edit": "Editar",
+    "publishDraft": "Publicar rascunho",
+    "draftSavedAt": "Rascunho salvo em"
   },
   "cat": {
     "gender": "Sexo",

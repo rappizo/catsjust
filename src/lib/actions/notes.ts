@@ -229,7 +229,8 @@ export async function toggleFavorite(noteId: string): Promise<
 /** 发表评论 */
 export async function addComment(
   noteId: string,
-  content: string
+  content: string,
+  parentId?: string | null
 ): Promise<
   | { ok: true; comment: { id: string; created_at: string } }
   | { ok: false; error: string }
@@ -248,7 +249,12 @@ export async function addComment(
 
   const { data, error } = await supabase
     .from('comments')
-    .insert({ note_id: noteId, user_id: user.id, content: text })
+    .insert({
+      note_id: noteId,
+      user_id: user.id,
+      content: text,
+      ...(parentId ? { parent_id: parentId } : {}),
+    })
     .select('id, created_at')
     .single();
 
@@ -256,4 +262,159 @@ export async function addComment(
 
   revalidatePath(`/notes/${noteId}`);
   return { ok: true, comment: data };
+}
+
+/** 评论点赞 / 取消点赞 */
+export async function toggleCommentLike(
+  commentId: string
+): Promise<{ ok: true; liked: boolean; count: number } | { ok: false; error: string }> {
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { ok: false, error: '请先登录' };
+
+  const { data: existing } = await supabase
+    .from('comment_likes')
+    .select('id')
+    .eq('user_id', user.id)
+    .eq('comment_id', commentId)
+    .maybeSingle();
+
+  if (existing) {
+    await supabase.from('comment_likes').delete().eq('id', existing.id);
+  } else {
+    await supabase.from('comment_likes').insert({ user_id: user.id, comment_id: commentId });
+  }
+
+  const { data: comment } = await supabase
+    .from('comments')
+    .select('like_count')
+    .eq('id', commentId)
+    .maybeSingle();
+
+  return { ok: true, liked: !existing, count: comment?.like_count ?? 0 };
+}
+
+/** 保存草稿（不入审核，仅作者可见） */
+export async function saveDraft(input: {
+  title: string;
+  content: string;
+  media: NoteMedia[];
+  mediaType: MediaType;
+  coverUrl: string;
+  catId?: string | null;
+  topicId?: string | null;
+}): Promise<ActionResult> {
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { ok: false, error: '请先登录' };
+
+  const { data, error } = await supabase
+    .from('notes')
+    .insert({
+      author_id: user.id,
+      title: input.title.trim(),
+      content: input.content.trim(),
+      media: input.media,
+      media_type: input.mediaType,
+      cover_url: input.coverUrl,
+      cat_id: input.catId,
+      topic_id: input.topicId,
+      status: 'draft',
+    })
+    .select('id')
+    .single();
+
+  if (error) return { ok: false, error: `保存草稿失败：${error.message}` };
+  return { ok: true, message: '草稿已保存', id: data.id };
+}
+
+/** 从草稿发布（送审） */
+export async function publishDraft(noteId: string): Promise<ActionResult> {
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { ok: false, error: '请先登录' };
+
+  const { data: draft } = await supabase
+    .from('notes')
+    .select('*')
+    .eq('id', noteId)
+    .eq('author_id', user.id)
+    .eq('status', 'draft')
+    .maybeSingle();
+  if (!draft) return { ok: false, error: '草稿不存在' };
+
+  // 更新为待审 + AI 自动审核
+  const { error: upErr } = await supabase
+    .from('notes')
+    .update({ status: 'pending', updated_at: new Date().toISOString() })
+    .eq('id', noteId)
+    .eq('author_id', user.id);
+  if (upErr) return { ok: false, error: upErr.message };
+
+  const review = await aiReviewNote({
+    title: draft.title ?? '',
+    content: draft.content ?? '',
+    imageUrl: draft.cover_url,
+    mediaType: draft.media_type as 'image' | 'video',
+  });
+  if (review) {
+    if (review.verdict === 'approve') {
+      await supabase.from('notes').update({ status: 'published' }).eq('id', noteId);
+      revalidatePath(`/notes/${noteId}`);
+      return { ok: true, message: '发布成功', id: noteId, status: 'published' };
+    }
+    if (review.verdict === 'reject') {
+      await supabase
+        .from('notes')
+        .update({ status: 'rejected', reject_reason: review.reason })
+        .eq('id', noteId);
+      return { ok: true, message: `未通过审核：${review.reason}`, id: noteId, status: 'rejected' };
+    }
+  }
+  return { ok: true, message: '已提交审核，请耐心等待', id: noteId, status: 'pending' };
+}
+
+/** 编辑自己的笔记（改后重新送审） */
+export async function editNote(
+  noteId: string,
+  input: { title: string; content: string; topicId?: string | null }
+): Promise<ActionResult> {
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { ok: false, error: '请先登录' };
+
+  const { data: note } = await supabase
+    .from('notes')
+    .select('id')
+    .eq('id', noteId)
+    .eq('author_id', user.id)
+    .maybeSingle();
+  if (!note) return { ok: false, error: '只能编辑自己的笔记' };
+
+  const { error } = await supabase
+    .from('notes')
+    .update({
+      title: input.title.trim(),
+      content: input.content.trim(),
+      ...(input.topicId !== undefined ? { topic_id: input.topicId } : {}),
+      status: 'pending', // 编辑后重新送审
+      reject_reason: null,
+      updated_at: new Date().toISOString(),
+    })
+    .eq('id', noteId)
+    .eq('author_id', user.id);
+
+  if (error) return { ok: false, error: `编辑失败：${error.message}` };
+
+  revalidatePath(`/notes/${noteId}`);
+  revalidatePath(`/profile/${user.id}`);
+  return { ok: true, message: '已提交编辑，等待审核', id: noteId, status: 'pending' };
 }

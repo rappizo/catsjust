@@ -12,7 +12,8 @@ export const ja = {
     "submit": "送信",
     "optional": "（任意）",
     "notFoundTitle": "404 · ページが迷子になりました",
-    "notFoundDesc": "この猫はどこかへ行ってしまったかもしれません。"
+    "notFoundDesc": "この猫はどこかへ行ってしまったかもしれません。",
+    "cancel": "キャンセル"
   },
   "nav": {
     "home": "ホーム",
@@ -109,7 +110,11 @@ export const ja = {
     "traitsLabel": "性格タグ（複数選択可）",
     "introLabel": "紹介文",
     "introPlaceholder": "あなたの猫を紹介してください",
-    "catAvatarAlt": "猫のアバター"
+    "catAvatarAlt": "猫のアバター",
+    "saveDraft": "下書きを保存",
+    "savedDraft": "下書きを保存しました",
+    "myDrafts": "自分の下書き",
+    "noDrafts": "下書きはまだありません"
   },
   "auth": {
     "loginWelcome": "猫だけの世界へおかえりなさい",
@@ -193,7 +198,9 @@ export const ja = {
     "like": "いいね",
     "favorite": "お気に入り",
     "comments": "コメント",
-    "share": "シェア"
+    "share": "シェア",
+    "reply": "返信",
+    "replyPlaceholder": "やさしく返信…"
   },
   "note": {
     "pending": "この内容は審査中です。通過後、公開されます。",
@@ -202,7 +209,10 @@ export const ja = {
     "noTitle": "（タイトルなし）",
     "authorFallback": "にゃん友",
     "deleteNote": "削除",
-    "confirmDelete": "削除しますか？"
+    "confirmDelete": "削除しますか？",
+    "edit": "編集",
+    "publishDraft": "下書きを公開",
+    "draftSavedAt": "下書き保存日時："
   },
   "cat": {
     "gender": "性別",

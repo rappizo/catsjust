@@ -12,7 +12,8 @@ export const fr = {
     "submit": "Envoyer",
     "optional": "(optionnel)",
     "notFoundTitle": "404 · Page introuvable",
-    "notFoundDesc": "Ce chat a dû aller se promener ailleurs"
+    "notFoundDesc": "Ce chat a dû aller se promener ailleurs",
+    "cancel": "Annuler"
   },
   "nav": {
     "home": "Accueil",
@@ -109,7 +110,11 @@ export const fr = {
     "traitsLabel": "Étiquettes de personnalité (choix multiple)",
     "introLabel": "Présentation",
     "introPlaceholder": "Présentez votre chat",
-    "catAvatarAlt": "Avatar du chat"
+    "catAvatarAlt": "Avatar du chat",
+    "saveDraft": "Enregistrer le brouillon",
+    "savedDraft": "Brouillon enregistré",
+    "myDrafts": "Mes brouillons",
+    "noDrafts": "Aucun brouillon pour le moment"
   },
   "auth": {
     "loginWelcome": "Bon retour sur Only Cats",
@@ -193,7 +198,9 @@ export const fr = {
     "like": "J'aime",
     "favorite": "Favoris",
     "comments": "Commentaires",
-    "share": "Partager"
+    "share": "Partager",
+    "reply": "Répondre",
+    "replyPlaceholder": "Répondre gentiment…"
   },
   "note": {
     "pending": "Ce contenu est en cours de vérification, il sera visible publiquement une fois approuvé",
@@ -202,7 +209,10 @@ export const fr = {
     "noTitle": "(Sans titre)",
     "authorFallback": "Ami félin",
     "deleteNote": "Supprimer",
-    "confirmDelete": "Confirmer la suppression ?"
+    "confirmDelete": "Confirmer la suppression ?",
+    "edit": "Modifier",
+    "publishDraft": "Publier le brouillon",
+    "draftSavedAt": "Brouillon enregistré à"
   },
   "cat": {
     "gender": "Sexe",

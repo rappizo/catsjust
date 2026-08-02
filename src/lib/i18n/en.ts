@@ -12,7 +12,8 @@ export const en = {
     "submit": "Submit",
     "optional": "(Optional)",
     "notFoundTitle": "404 · Page Not Found",
-    "notFoundDesc": "This cat may have wandered off somewhere else"
+    "notFoundDesc": "This cat may have wandered off somewhere else",
+    "cancel": "Cancel"
   },
   "nav": {
     "home": "Home",
@@ -109,7 +110,11 @@ export const en = {
     "traitsLabel": "Personality tags (select all that apply)",
     "introLabel": "Bio",
     "introPlaceholder": "Tell us about your cat",
-    "catAvatarAlt": "Cat avatar"
+    "catAvatarAlt": "Cat avatar",
+    "saveDraft": "Save Draft",
+    "savedDraft": "Draft saved",
+    "myDrafts": "My Drafts",
+    "noDrafts": "No drafts yet"
   },
   "auth": {
     "loginWelcome": "Welcome back to Cats Only",
@@ -193,7 +198,9 @@ export const en = {
     "like": "Like",
     "favorite": "Favorite",
     "comments": "Comments",
-    "share": "Share"
+    "share": "Share",
+    "reply": "Reply",
+    "replyPlaceholder": "Reply kindly..."
   },
   "note": {
     "pending": "This content is under review and will be publicly displayed once approved.",
@@ -202,7 +209,10 @@ export const en = {
     "noTitle": "(No title)",
     "authorFallback": "Cat friend",
     "deleteNote": "Delete",
-    "confirmDelete": "Confirm deletion?"
+    "confirmDelete": "Confirm deletion?",
+    "edit": "Edit",
+    "publishDraft": "Publish Draft",
+    "draftSavedAt": "Draft saved at"
   },
   "cat": {
     "gender": "Gender",

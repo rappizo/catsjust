@@ -12,7 +12,8 @@ export const de = {
     "submit": "Absenden",
     "optional": "(optional)",
     "notFoundTitle": "404 · Seite nicht gefunden",
-    "notFoundDesc": "Diese Katze ist vielleicht an einen anderen Ort gelaufen."
+    "notFoundDesc": "Diese Katze ist vielleicht an einen anderen Ort gelaufen.",
+    "cancel": "Abbrechen"
   },
   "nav": {
     "home": "Startseite",
@@ -109,7 +110,11 @@ export const de = {
     "traitsLabel": "Charaktereigenschaften (Mehrfachauswahl möglich)",
     "introLabel": "Kurzbeschreibung",
     "introPlaceholder": "Stell deine Katze vor",
-    "catAvatarAlt": "Profilbild der Katze"
+    "catAvatarAlt": "Profilbild der Katze",
+    "saveDraft": "Entwurf speichern",
+    "savedDraft": "Entwurf gespeichert",
+    "myDrafts": "Meine Entwürfe",
+    "noDrafts": "Noch keine Entwürfe"
   },
   "auth": {
     "loginWelcome": "Willkommen zurück bei Nur Katzen",
@@ -193,7 +198,9 @@ export const de = {
     "like": "Gefällt mir",
     "favorite": "Favorisieren",
     "comments": "Kommentare",
-    "share": "Teilen"
+    "share": "Teilen",
+    "reply": "Antworten",
+    "replyPlaceholder": "Freundlich antworten …"
   },
   "note": {
     "pending": "Dieser Inhalt wird derzeit geprüft und nach Freigabe veröffentlicht.",
@@ -202,7 +209,10 @@ export const de = {
     "noTitle": "(Ohne Titel)",
     "authorFallback": "Katzenfreund",
     "deleteNote": "Löschen",
-    "confirmDelete": "Wirklich löschen?"
+    "confirmDelete": "Wirklich löschen?",
+    "edit": "Bearbeiten",
+    "publishDraft": "Entwurf veröffentlichen",
+    "draftSavedAt": "Entwurf gespeichert am"
   },
   "cat": {
     "gender": "Geschlecht",

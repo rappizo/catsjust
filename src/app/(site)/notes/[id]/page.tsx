@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { cookies } from 'next/headers';
-import { CalendarDays, ChevronRight } from 'lucide-react';
+import { CalendarDays, ChevronRight, PenSquare } from 'lucide-react';
 import { createClient } from '@/lib/supabase/server';
 import { MediaCarousel } from '@/components/MediaCarousel';
 import { VideoPlayer } from '@/components/VideoPlayer';
@@ -211,7 +211,18 @@ export default async function NotePage({ params }: { params: { id: string } }) {
             <h1 className="text-xl font-bold leading-snug text-ink sm:text-2xl">
               {typed.title || t('note', 'noTitle')}
             </h1>
-            {isOwner && <NoteDeleteButton noteId={typed.id} />}
+            {isOwner && (
+              <div className="flex shrink-0 items-center gap-2">
+                <Link
+                  href={`/publish?edit=${typed.id}`}
+                  className="flex items-center gap-1 rounded-full border border-stone-200 px-3 py-1.5 text-xs font-medium text-stone-500 transition hover:border-brand-400 hover:text-brand-600"
+                >
+                  <PenSquare className="h-3.5 w-3.5" />
+                  {t('note', 'edit')}
+                </Link>
+                <NoteDeleteButton noteId={typed.id} />
+              </div>
+            )}
           </div>
 
           {typed.content && (

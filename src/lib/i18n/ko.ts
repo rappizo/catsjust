@@ -12,7 +12,8 @@ export const ko = {
     "submit": "제출",
     "optional": "(선택 사항)",
     "notFoundTitle": "404 · 페이지를 찾을 수 없음",
-    "notFoundDesc": "이 고양이는 다른 곳으로 갔을지도 몰라요"
+    "notFoundDesc": "이 고양이는 다른 곳으로 갔을지도 몰라요",
+    "cancel": "취소"
   },
   "nav": {
     "home": "홈",
@@ -109,7 +110,11 @@ export const ko = {
     "traitsLabel": "성격 태그 (복수 선택 가능)",
     "introLabel": "소개",
     "introPlaceholder": "고양이를 소개해 주세요",
-    "catAvatarAlt": "고양이 프로필 사진"
+    "catAvatarAlt": "고양이 프로필 사진",
+    "saveDraft": "임시저장",
+    "savedDraft": "임시저장되었습니다",
+    "myDrafts": "내 임시저장 글",
+    "noDrafts": "아직 임시저장된 글이 없습니다"
   },
   "auth": {
     "loginWelcome": "고양이만의 세상에 다시 오신 것을 환영합니다",
@@ -193,7 +198,9 @@ export const ko = {
     "like": "좋아요",
     "favorite": "즐겨찾기",
     "comments": "댓글",
-    "share": "공유"
+    "share": "공유",
+    "reply": "답글",
+    "replyPlaceholder": "상냥하게 답글을 남겨주세요…"
   },
   "note": {
     "pending": "이 콘텐츠는 검토 중입니다. 통과되면 공개됩니다.",
@@ -202,7 +209,10 @@ export const ko = {
     "noTitle": "(제목 없음)",
     "authorFallback": "냥이 친구",
     "deleteNote": "삭제",
-    "confirmDelete": "삭제하시겠습니까?"
+    "confirmDelete": "삭제하시겠습니까?",
+    "edit": "수정",
+    "publishDraft": "임시저장 글 게시",
+    "draftSavedAt": "임시저장 시각"
   },
   "cat": {
     "gender": "성별",

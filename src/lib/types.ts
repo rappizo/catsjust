@@ -76,8 +76,10 @@ export interface CommentItem {
   user_id: string;
   parent_id: string | null;
   content: string;
+  like_count?: number;
   created_at: string;
   author?: Profile | null;
+  replies?: CommentItem[];
 }
 
 export interface Follow {

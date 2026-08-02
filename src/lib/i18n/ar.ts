@@ -12,7 +12,8 @@ export const ar = {
     "submit": "إرسال",
     "optional": "(اختياري)",
     "notFoundTitle": "404 · الصفحة ضاعت",
-    "notFoundDesc": "ربما هربت هذه القطة إلى مكان آخر"
+    "notFoundDesc": "ربما هربت هذه القطة إلى مكان آخر",
+    "cancel": "إلغاء"
   },
   "nav": {
     "home": "الرئيسية",
@@ -109,7 +110,11 @@ export const ar = {
     "traitsLabel": "السمات (اختيار متعدد)",
     "introLabel": "نبذة",
     "introPlaceholder": "قدّم قطتك",
-    "catAvatarAlt": "صورة القطة"
+    "catAvatarAlt": "صورة القطة",
+    "saveDraft": "حفظ المسودة",
+    "savedDraft": "تم حفظ المسودة",
+    "myDrafts": "مسوداتي",
+    "noDrafts": "لا توجد مسودات بعد"
   },
   "auth": {
     "loginWelcome": "مرحبًا بعودتك إلى القطط فقط",
@@ -193,7 +198,9 @@ export const ar = {
     "like": "إعجاب",
     "favorite": "حفظ",
     "comments": "تعليقات",
-    "share": "مشاركة"
+    "share": "مشاركة",
+    "reply": "رد",
+    "replyPlaceholder": "رد بلطف…"
   },
   "note": {
     "pending": "هذا المحتوى قيد المراجعة، سيتم عرضه بشكل عام بعد الموافقة",
@@ -202,7 +209,10 @@ export const ar = {
     "noTitle": "（بدون عنوان）",
     "authorFallback": "صديق القطط",
     "deleteNote": "حذف",
-    "confirmDelete": "تأكيد الحذف؟"
+    "confirmDelete": "تأكيد الحذف؟",
+    "edit": "تعديل",
+    "publishDraft": "نشر المسودة",
+    "draftSavedAt": "حُفظت المسودة في"
   },
   "cat": {
     "gender": "الجنس",

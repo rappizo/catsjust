@@ -63,6 +63,7 @@ export interface Note {
   like_count: number;
   comment_count: number;
   favorite_count: number;
+  hot_score?: number;
   created_at: string;
   updated_at: string;
   author?: Profile | null;

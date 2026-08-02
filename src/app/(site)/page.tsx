@@ -14,14 +14,22 @@ export const metadata = {
 
 export default async function HomePage() {
   const t = getT(getLocaleFromCookies());
-  let notes: Note[] = [];
+  let hotNotes: Note[] = [];
+  let latestNotes: Note[] = [];
   let followingNotes: Note[] = [];
   let isLoggedIn = false;
   let feedError: string | null = null;
 
   if (isSupabaseConfigured()) {
     const supabase = createClient();
-    const [notesResult, userResult] = await Promise.all([
+    const [hotRes, latestRes, userResult] = await Promise.all([
+      supabase
+        .from('notes')
+        .select('*, author:profiles(*), cat:cats(*), topic:topics(*)')
+        .eq('status', 'published')
+        .order('hot_score', { ascending: false })
+        .order('created_at', { ascending: false })
+        .limit(PAGE_SIZE),
       supabase
         .from('notes')
         .select('*, author:profiles(*), cat:cats(*), topic:topics(*)')
@@ -30,8 +38,9 @@ export default async function HomePage() {
         .limit(PAGE_SIZE),
       supabase.auth.getUser(),
     ]);
-    notes = (notesResult.data ?? []) as Note[];
-    feedError = notesResult.error?.message ?? null;
+    hotNotes = (hotRes.data ?? []) as Note[];
+    latestNotes = (latestRes.data ?? []) as Note[];
+    feedError = hotRes.error?.message ?? null;
 
     const user = userResult.data.user;
     isLoggedIn = !!user;
@@ -89,7 +98,7 @@ export default async function HomePage() {
       )}
 
       {/* 内容流 */}
-      <HomeTabs initialNotes={notes} followingNotes={followingNotes} isLoggedIn={isLoggedIn} />
+      <HomeTabs hotNotes={hotNotes} latestNotes={latestNotes} followingNotes={followingNotes} isLoggedIn={isLoggedIn} />
     </div>
   );
 }

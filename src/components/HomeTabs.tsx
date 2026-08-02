@@ -7,7 +7,10 @@ import { Waterfall } from './Waterfall';
 import type { Note } from '@/lib/types';
 
 interface HomeTabsProps {
-  initialNotes: Note[];
+  /** 推荐流首屏数据（热度排序） */
+  hotNotes: Note[];
+  /** 最新流首屏数据（时间排序） */
+  latestNotes: Note[];
   /** 关注流首屏数据（仅登录时传入） */
   followingNotes?: Note[];
   /** 是否已登录（登录后展示「关注」Tab） */
@@ -16,8 +19,13 @@ interface HomeTabsProps {
 
 type TabKey = 'recommend' | 'latest' | 'following';
 
-/** 首页 Tab：推荐 / 最新 / 关注（P2：推荐=热度排序，最新=时间，关注=关注流） */
-export function HomeTabs({ initialNotes, followingNotes = [], isLoggedIn = false }: HomeTabsProps) {
+/** 首页 Tab：推荐(热度) / 最新(时间) / 关注(关注流) */
+export function HomeTabs({
+  hotNotes,
+  latestNotes,
+  followingNotes = [],
+  isLoggedIn = false,
+}: HomeTabsProps) {
   const { t } = useI18n();
   const [tab, setTab] = useState<TabKey>('recommend');
 
@@ -29,8 +37,11 @@ export function HomeTabs({ initialNotes, followingNotes = [], isLoggedIn = false
     tabs.push({ key: 'following', label: t('home', 'following') });
   }
 
-  const feedFor = (key: TabKey): Note[] =>
-    key === 'following' ? followingNotes : initialNotes;
+  const feedConfig: Record<TabKey, { notes: Note[]; sort: 'hot' | 'latest' | 'following' }> = {
+    recommend: { notes: hotNotes, sort: 'hot' },
+    latest: { notes: latestNotes, sort: 'latest' },
+    following: { notes: followingNotes, sort: 'following' },
+  };
 
   return (
     <div>
@@ -53,9 +64,10 @@ export function HomeTabs({ initialNotes, followingNotes = [], isLoggedIn = false
       </div>
 
       <Waterfall
-        key={`${tab}-${feedFor(tab).length}`}
-        initialNotes={feedFor(tab)}
+        key={`${tab}-${feedConfig[tab].notes.length}`}
+        initialNotes={feedConfig[tab].notes}
         apiFeed={tab === 'following' ? 'following' : 'all'}
+        apiSort={tab === 'latest' ? 'latest' : tab === 'recommend' ? 'hot' : 'latest'}
         emptyTitle={tab === 'following' ? t('home', 'followingEmptyTitle') : t('home', 'emptyTitle')}
         emptyDescription={
           tab === 'following' ? t('home', 'followingEmptyDesc') : t('home', 'emptyDesc')

@@ -4,14 +4,17 @@ import { isSupabaseConfigured } from '@/lib/config';
 
 /**
  * 首页瀑布流「加载更多」接口（游标分页）
- * GET /api/notes?cursor={"created_at":"...","id":"..."}&limit=12&feed=following
- * feed=following 时只返回当前登录用户所关注作者的内容
+ * GET /api/notes?cursor={...}&limit=12&feed=following&sort=hot|latest
+ * - sort=hot:    按热度分排序（推荐 Tab）
+ * - sort=latest: 按时间排序（最新 Tab，默认）
+ * - feed=following: 只返回当前登录用户所关注作者的内容
  */
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const limit = Math.min(Math.max(Number(searchParams.get('limit') || 12), 1), 24);
   const cursorRaw = searchParams.get('cursor');
   const feed = searchParams.get('feed') || 'all';
+  const sort = searchParams.get('sort') || 'latest';
 
   // 未配置 Supabase 时返回空列表（优雅降级）
   if (!isSupabaseConfigured()) {
@@ -23,10 +26,13 @@ export async function GET(request: Request) {
     data: { user },
   } = await supabase.auth.getUser();
 
+  const isHot = sort === 'hot';
+
   let query = supabase
     .from('notes')
     .select('*, author:profiles(*), cat:cats(*), topic:topics(*)')
     .eq('status', 'published')
+    .order(isHot ? 'hot_score' : 'created_at', { ascending: false })
     .order('created_at', { ascending: false })
     .order('id', { ascending: false })
     .limit(limit);
@@ -47,9 +53,18 @@ export async function GET(request: Request) {
   if (cursorRaw) {
     try {
       const cursor = JSON.parse(cursorRaw);
-      const ca = cursor.created_at as string;
-      const id = cursor.id as string;
-      query = query.or(`and(created_at.lt.${ca}),and(created_at.eq.${ca},id.lt.${id})`);
+      if (isHot) {
+        const hs = cursor.hot as number;
+        const ca = cursor.created_at as string;
+        const id = cursor.id as string;
+        query = query.or(
+          `and(hot_score.lt.${hs}),and(hot_score.eq.${hs},created_at.lt.${ca}),and(hot_score.eq.${hs},created_at.eq.${ca},id.lt.${id})`
+        );
+      } else {
+        const ca = cursor.created_at as string;
+        const id = cursor.id as string;
+        query = query.or(`and(created_at.lt.${ca}),and(created_at.eq.${ca},id.lt.${id})`);
+      }
     } catch {
       return NextResponse.json({ error: 'cursor 参数无效' }, { status: 400 });
     }

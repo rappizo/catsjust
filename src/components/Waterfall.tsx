@@ -14,6 +14,8 @@ interface WaterfallProps {
   staticMode?: boolean;
   /** 加载更多的 feed 类型（all / following） */
   apiFeed?: 'all' | 'following';
+  /** 排序方式（hot / latest） */
+  apiSort?: 'hot' | 'latest';
 }
 
 /** 双列瀑布流 + 无限滚动 */
@@ -23,6 +25,7 @@ export function Waterfall({
   emptyDescription = '成为第一个发布猫咪内容的人吧',
   staticMode = false,
   apiFeed = 'all',
+  apiSort = 'latest',
 }: WaterfallProps) {
   const { t } = useI18n();
   const [notes, setNotes] = useState<Note[]>(initialNotes);
@@ -39,8 +42,12 @@ export function Waterfall({
         setHasMore(false);
         return;
       }
-      const cursor = JSON.stringify({ created_at: last.created_at, id: last.id });
-      const res = await fetch(`/api/notes?cursor=${encodeURIComponent(cursor)}&limit=12&feed=${apiFeed}`);
+      const cursor = JSON.stringify(
+        apiSort === 'hot'
+          ? { hot: (last as Note & { hot_score?: number }).hot_score ?? 0, created_at: last.created_at, id: last.id }
+          : { created_at: last.created_at, id: last.id }
+      );
+      const res = await fetch(`/api/notes?cursor=${encodeURIComponent(cursor)}&limit=12&feed=${apiFeed}&sort=${apiSort}`);
       const data = await res.json();
       const newNotes: Note[] = data.notes ?? [];
       setNotes((prev) => {
@@ -53,7 +60,7 @@ export function Waterfall({
     } finally {
       setLoading(false);
     }
-  }, [loading, hasMore, notes, apiFeed]);
+  }, [loading, hasMore, notes, apiFeed, apiSort]);
 
   useEffect(() => {
     if (staticMode) return;

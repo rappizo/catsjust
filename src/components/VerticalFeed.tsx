@@ -114,7 +114,7 @@ function FeedMedia({
   const lastTap = useRef(0);
 
   if (note.media_type === 'video') {
-    return <VideoPlayer src={note.media?.[0]?.url ?? ''} poster={note.media?.[0]?.poster} />;
+    return <VideoPlayer src={note.media?.[0]?.url ?? ''} poster={note.media?.[0]?.poster} fill />;
   }
   if (images.length === 0) {
     return (
@@ -162,7 +162,7 @@ function FeedMedia({
       <img
         src={current.url}
         alt={note.title || '猫咪图片'}
-        className="max-h-full max-w-full object-contain"
+        className="h-full w-full object-cover"
         draggable={false}
       />
       {images.length > 1 && (
@@ -317,7 +317,7 @@ function FeedItem({
       </div>
 
       {/* 右侧操作栏 */}
-      <div className="absolute bottom-24 right-3 z-20">
+      <div className="absolute bottom-16 right-2 z-20">
         <div className="flex flex-col items-center gap-5">
           <FeedActions
             liked={liked}

@@ -7,7 +7,7 @@ import { CopyId } from '@/components/CopyId';
 import { FollowButton } from '@/components/FollowButton';
 import { MessageButton } from '@/components/MessageButton';
 import { ProfileTabs } from '@/components/ProfileTabs';
-import { formatDate } from '@/lib/utils';
+import { cn, formatDate } from '@/lib/utils';
 import { isSupabaseConfigured } from '@/lib/config';
 import { getLocaleFromCookies } from '@/lib/i18n/cookies';
 import { getT } from '@/lib/i18n/dictionaries';
@@ -144,25 +144,21 @@ export default async function ProfilePage({ params }: { params: { username: stri
     <div className="mx-auto max-w-7xl px-2 py-3 sm:px-3 sm:py-4">
       {/* 主页头部 */}
       <div className="overflow-hidden rounded-3xl border border-stone-200/60 bg-white shadow-card">
-        {/* 封面 */}
-        <div className="relative h-36 w-full bg-gradient-to-r from-brand-400 via-orange-300 to-amber-200 sm:h-48">
-          {typedProfile.cover_url ? (
-            // eslint-disable-next-line @next/next/no-img-element
+        {/* 封面（仅设置过封面时显示，无封面不再显示渐变占位色块） */}
+        {typedProfile.cover_url && (
+          <div className="relative h-36 w-full sm:h-48">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={typedProfile.cover_url}
               alt="封面"
               className="h-full w-full object-cover"
             />
-          ) : (
-            <span className="pointer-events-none absolute bottom-1 right-6 select-none text-7xl opacity-30">
-              🐱
-            </span>
-          )}
-        </div>
+          </div>
+        )}
 
-        <div className="px-6 pb-6">
-          <div className="-mt-10 flex flex-wrap items-end gap-4">
-            <span className="rounded-full border-4 border-white shadow">
+        <div className={cn(typedProfile.cover_url ? 'px-6 pb-6' : 'px-6 py-6')}>
+          <div className={cn('flex flex-wrap items-end gap-4', typedProfile.cover_url && '-mt-10')}>
+            <span className={cn('rounded-full shadow', typedProfile.cover_url && 'border-4 border-white')}>
               <Avatar src={typedProfile.avatar_url} alt={name} size="xl" />
             </span>
             <div className="min-w-0 flex-1 pb-1">

@@ -132,3 +132,26 @@ body {
 .animate-fade-in-up {
   animation: fadeInUp 0.3s ease-out both;
 }
+
+/* 双击点赞爱心弹出动画 */
+@keyframes heartPop {
+  0% {
+    transform: scale(0.2);
+    opacity: 0;
+  }
+  35% {
+    transform: scale(1.25);
+    opacity: 1;
+  }
+  70% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.4);
+    opacity: 0;
+  }
+}
+.animate-heart-pop {
+  animation: heartPop 0.7s ease-out both;
+}

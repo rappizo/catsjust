@@ -234,5 +234,22 @@ export const en = {
     "followedYou": "followed you",
     "system": "System notifications",
     "someone": "Someone"
+  },
+  "search": {
+    "title": "Search",
+    "placeholder": "Search cats, users, topics...",
+    "go": "Search",
+    "hint": "Enter keywords to search notes, users, topics, cats, breeds",
+    "notes": "Notes",
+    "users": "Users",
+    "topics": "Topics",
+    "cats": "Cats",
+    "breeds": "Breeds",
+    "noNotes": "No related notes",
+    "noUsers": "No related users",
+    "noTopics": "No related topics",
+    "noCats": "No related cats",
+    "noBreeds": "No related breeds",
+    "empty": "No content found related to \"{q}\""
   }
 };

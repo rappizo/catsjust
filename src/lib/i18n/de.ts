@@ -234,5 +234,22 @@ export const de = {
     "followedYou": "hat dir gefolgt",
     "system": "Systembenachrichtigung",
     "someone": "Jemand"
+  },
+  "search": {
+    "title": "Suche",
+    "placeholder": "Katzen, Nutzer und Themen suchen …",
+    "go": "Suchen",
+    "hint": "Stichwort eingeben, um Inhalte / Nutzer / Themen / Katzen / Rassen zu suchen",
+    "notes": "Inhalte",
+    "users": "Nutzer",
+    "topics": "Themen",
+    "cats": "Katzen",
+    "breeds": "Rassen",
+    "noNotes": "Keine passenden Inhalte",
+    "noUsers": "Keine passenden Nutzer",
+    "noTopics": "Keine passenden Themen",
+    "noCats": "Keine passenden Katzen",
+    "noBreeds": "Keine passenden Rassen",
+    "empty": "Keine passenden Inhalte zu „{q}“ gefunden"
   }
 };

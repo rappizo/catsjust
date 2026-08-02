@@ -234,5 +234,22 @@ export const it = {
     "followedYou": "ti ha seguito",
     "system": "Notifica di sistema",
     "someone": "Qualcuno"
+  },
+  "search": {
+    "title": "Ricerca",
+    "placeholder": "Cerca gatti, utenti, argomenti…",
+    "go": "Cerca",
+    "hint": "Inserisci una parola chiave per cercare contenuti, utenti, argomenti, gatti o razze.",
+    "notes": "Contenuti",
+    "users": "Utenti",
+    "topics": "Argomenti",
+    "cats": "Gatti",
+    "breeds": "Razze",
+    "noNotes": "Nessun contenuto trovato",
+    "noUsers": "Nessun utente trovato",
+    "noTopics": "Nessun argomento trovato",
+    "noCats": "Nessun gatto trovato",
+    "noBreeds": "Nessuna razza trovata",
+    "empty": "Nessun contenuto trovato per «{q}»"
   }
 };

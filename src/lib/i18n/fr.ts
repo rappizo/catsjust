@@ -234,5 +234,22 @@ export const fr = {
     "followedYou": "vous a suivi(e)",
     "system": "Notifications système",
     "someone": "Quelqu'un"
+  },
+  "search": {
+    "title": "Recherche",
+    "placeholder": "Rechercher des chats, des utilisateurs, des sujets…",
+    "go": "Rechercher",
+    "hint": "Saisissez des mots-clés pour rechercher du contenu, des utilisateurs, des sujets, des chats, des races",
+    "notes": "Contenu",
+    "users": "Utilisateurs",
+    "topics": "Sujets",
+    "cats": "Chats",
+    "breeds": "Races",
+    "noNotes": "Aucun contenu trouvé",
+    "noUsers": "Aucun utilisateur trouvé",
+    "noTopics": "Aucun sujet trouvé",
+    "noCats": "Aucun chat trouvé",
+    "noBreeds": "Aucune race trouvée",
+    "empty": "Aucun contenu trouvé pour « {q} »"
   }
 };

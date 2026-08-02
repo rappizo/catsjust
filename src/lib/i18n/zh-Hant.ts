@@ -234,5 +234,22 @@ export const zhHant = {
     "followedYou": "追蹤了你",
     "system": "系統通知",
     "someone": "有人"
+  },
+  "search": {
+    "title": "搜尋",
+    "placeholder": "搜尋貓咪、用戶、話題…",
+    "go": "搜尋",
+    "hint": "輸入關鍵字，搜尋內容 / 用戶 / 話題 / 貓咪 / 品種",
+    "notes": "內容",
+    "users": "用戶",
+    "topics": "話題",
+    "cats": "貓咪",
+    "breeds": "品種",
+    "noNotes": "沒有相關內容",
+    "noUsers": "沒有相關用戶",
+    "noTopics": "沒有相關話題",
+    "noCats": "沒有相關貓咪",
+    "noBreeds": "沒有相關品種",
+    "empty": "沒有找到與「{q}」相關的內容"
   }
 };

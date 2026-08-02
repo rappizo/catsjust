@@ -234,5 +234,22 @@ export const ko = {
     "followedYou": "나를 팔로우했습니다",
     "system": "시스템 알림",
     "someone": "누군가"
+  },
+  "search": {
+    "title": "검색",
+    "placeholder": "고양이, 사용자, 토픽 검색…",
+    "go": "검색",
+    "hint": "키워드를 입력해 게시물, 사용자, 토픽, 고양이, 품종을 검색하세요",
+    "notes": "게시물",
+    "users": "사용자",
+    "topics": "토픽",
+    "cats": "고양이",
+    "breeds": "품종",
+    "noNotes": "관련 게시물이 없습니다",
+    "noUsers": "관련 사용자가 없습니다",
+    "noTopics": "관련 토픽이 없습니다",
+    "noCats": "관련 고양이가 없습니다",
+    "noBreeds": "관련 품종이 없습니다",
+    "empty": "「{q}」와 관련된 내용을 찾지 못했습니다"
   }
 };

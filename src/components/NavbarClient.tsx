@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { Compass, LogIn, LogOut, Menu, PenSquare, Plus, Settings, Shield, Bell, User as UserIcon, X } from 'lucide-react';
+import { Compass, LogIn, LogOut, Menu, PenSquare, Plus, Settings, Shield, Bell, Search as SearchIcon, User as UserIcon, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useI18n } from '@/lib/i18n';
 import { Logo } from './Logo';
@@ -80,6 +80,14 @@ export function NavbarClient({ user, profile, unreadNotifications = 0 }: NavbarC
 
         {/* 右侧用户区 */}
         <div className="flex items-center gap-2">
+          {/* 搜索入口 */}
+          <Link
+            href="/search"
+            className="flex h-9 w-9 items-center justify-center rounded-full text-stone-500 transition hover:bg-stone-100 hover:text-stone-700"
+            aria-label="搜索"
+          >
+            <SearchIcon className="h-5 w-5" />
+          </Link>
           {user ? (
             <>
               {/* 通知铃铛 */}

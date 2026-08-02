@@ -234,5 +234,22 @@ export const es = {
     "followedYou": "Te siguió",
     "system": "Notificaciones del sistema",
     "someone": "Alguien"
+  },
+  "search": {
+    "title": "Buscar",
+    "placeholder": "Buscar gatos, usuarios, temas…",
+    "go": "Buscar",
+    "hint": "Introduce palabras clave para buscar contenido / usuarios / temas / gatos / razas",
+    "notes": "Contenido",
+    "users": "Usuarios",
+    "topics": "Temas",
+    "cats": "Gatos",
+    "breeds": "Razas",
+    "noNotes": "No hay contenido relacionado",
+    "noUsers": "No hay usuarios relacionados",
+    "noTopics": "No hay temas relacionados",
+    "noCats": "No hay gatos que coincidan",
+    "noBreeds": "No hay razas que coincidan",
+    "empty": "No se encontró contenido relacionado con «{q}»"
   }
 };

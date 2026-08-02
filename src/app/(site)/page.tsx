@@ -66,25 +66,7 @@ export default async function HomePage() {
   }
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6">
-      {/* 顶部横幅 */}
-      <section className="relative mb-6 overflow-hidden rounded-3xl bg-gradient-to-br from-brand-500 via-accent-500 to-fuchsia-600 px-6 py-10 text-white shadow-lg shadow-neon-green sm:px-10 sm:py-14">
-        <span className="pointer-events-none absolute -left-4 -top-6 select-none text-8xl opacity-20 sm:text-9xl">🐱</span>
-        <span className="pointer-events-none absolute right-6 top-4 select-none text-5xl opacity-25 sm:text-6xl">🐾</span>
-        <span className="pointer-events-none absolute bottom-2 right-24 hidden select-none text-6xl opacity-20 sm:block">😺</span>
-        <div className="relative max-w-xl">
-          <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-white/80">
-            {t('hero', 'eyebrow')}
-          </p>
-          <h1 className="text-3xl font-bold leading-tight sm:text-4xl">
-            {t('hero', 'title')}
-          </h1>
-          <p className="mt-3 text-sm leading-relaxed text-white/90 sm:text-base">
-            {t('hero', 'subtitle')}
-          </p>
-        </div>
-      </section>
-
+    <div className="mx-auto max-w-7xl px-3 py-3 sm:px-4 sm:py-4">
       {!isSupabaseConfigured() && (
         <div className="mb-5 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-700">
           ⚠️ Supabase 尚未配置。请填写 <code className="font-mono text-xs">.env.local</code>{' '}

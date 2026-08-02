@@ -45,7 +45,7 @@ export function HomeTabs({
 
   return (
     <div>
-      <div className="mb-5 flex items-center gap-1 border-b border-stone-200/70">
+      <div className="mb-2 flex items-center gap-1 border-b border-stone-200/70">
         {tabs.map((tItem) => (
           <button
             key={tItem.key}

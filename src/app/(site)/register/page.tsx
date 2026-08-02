@@ -7,6 +7,7 @@ import { useFormState } from 'react-dom';
 import { Cat as CatIcon, Loader2 } from 'lucide-react';
 import { signUp, type ActionResult } from '@/lib/actions/auth';
 import { useI18n } from '@/lib/i18n';
+import { HeroBanner } from '@/components/HeroBanner';
 
 const initialState: ActionResult | null = null;
 
@@ -38,13 +39,15 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="mx-auto flex min-h-[70vh] max-w-md flex-col justify-center px-4 py-12">
-      <div className="mb-8 text-center">
-        <span className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-400 to-brand-600 text-white shadow-lg shadow-brand-500/30">
-          <CatIcon className="h-7 w-7" />
-        </span>
-        <h1 className="text-2xl font-bold text-ink">{t('auth', 'registerWelcome')}</h1>
-        <p className="mt-1 text-sm text-stone-400">{t('auth', 'registerDesc')}</p>
+    <div className="mx-auto max-w-2xl px-4 py-8 sm:px-6">
+      <HeroBanner />
+      <div className="mx-auto flex min-h-[60vh] max-w-md flex-col justify-center py-6">
+        <div className="mb-8 text-center">
+          <span className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-400 to-brand-600 text-white shadow-lg shadow-brand-500/30">
+            <CatIcon className="h-7 w-7" />
+          </span>
+          <h1 className="text-2xl font-bold text-ink">{t('auth', 'registerWelcome')}</h1>
+          <p className="mt-1 text-sm text-stone-400">{t('auth', 'registerDesc')}</p>
       </div>
 
       <form action={formAction} onSubmit={handleSubmit} className="space-y-4">
@@ -132,6 +135,7 @@ export default function RegisterPage() {
           {t('auth', 'goLogin')}
         </Link>
       </p>
+      </div>
     </div>
   );
 }

@@ -14,30 +14,30 @@ body {
 }
 
 @layer utilities {
-  /* 瀑布流：CSS columns 实现双列/多列 masonry */
+  /* 瀑布流：CSS columns 实现双列/多列 masonry（卡片左右高度可不相等） */
   .masonry {
     columns: 2;
-    column-gap: 0.75rem;
+    column-gap: 0.5rem;
   }
   @media (min-width: 768px) {
     .masonry {
       columns: 3;
-      column-gap: 1rem;
+      column-gap: 0.625rem;
     }
   }
   @media (min-width: 1280px) {
     .masonry {
       columns: 4;
-      column-gap: 1rem;
+      column-gap: 0.75rem;
     }
   }
   .masonry-item {
     break-inside: avoid;
-    margin-bottom: 0.75rem;
+    margin-bottom: 0.5rem;
   }
   @media (min-width: 768px) {
     .masonry-item {
-      margin-bottom: 1rem;
+      margin-bottom: 0.625rem;
     }
   }
 

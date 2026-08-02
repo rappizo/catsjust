@@ -21,7 +21,7 @@ export function NoteCard({ note, priority = false }: NoteCardProps) {
   return (
     <Link
       href={`/notes/${note.id}`}
-      className="masonry-item group block overflow-hidden rounded-2xl border border-stone-200/60 bg-white shadow-card transition-all duration-200 hover:-translate-y-0.5 hover:shadow-card-hover"
+      className="masonry-item group block overflow-hidden rounded-xl border border-stone-200/60 bg-white shadow-card transition-all duration-200 hover:-translate-y-0.5 hover:shadow-card-hover"
     >
       {/* 封面 */}
       <div className="relative w-full overflow-hidden">
@@ -61,13 +61,13 @@ export function NoteCard({ note, priority = false }: NoteCardProps) {
 
       {/* 标题 */}
       {note.title && (
-        <p className="line-clamp-2 px-3 pt-2.5 text-sm font-medium leading-snug text-ink">
+        <p className="line-clamp-2 px-2.5 pt-2 text-sm font-medium leading-snug text-ink">
           {note.title}
         </p>
       )}
 
       {/* 作者与猫咪 */}
-      <div className="flex items-center gap-2 px-3 pb-3 pt-2">
+      <div className="flex items-center gap-2 px-2.5 pb-2.5 pt-1.5">
         <Avatar src={note.author?.avatar_url} alt={authorName} size="sm" />
         <span className="min-w-0 flex-1 truncate text-xs text-stone-500">{authorName}</span>
         {note.cat && (

@@ -20,6 +20,7 @@ import { useI18n } from '@/lib/i18n';
 import { Avatar } from './Avatar';
 import { VideoPlayer } from './VideoPlayer';
 import { CommentSection } from './CommentSection';
+import { ReportDialog } from './ReportDialog';
 import type { CommentItem, Note } from '@/lib/types';
 
 interface VerticalFeedProps {
@@ -317,19 +318,27 @@ function FeedItem({
 
       {/* 右侧操作栏 */}
       <div className="absolute bottom-24 right-3 z-20">
-        <FeedActions
-          liked={liked}
-          favorited={favorited}
-          likeCount={counts.like}
-          favoriteCount={counts.favorite}
-          commentCount={note.comment_count}
-          copied={copied}
-          busy={busy}
-          onLike={like}
-          onFavorite={favorite}
-          onComment={onOpenComments}
-          onShare={share}
-        />
+        <div className="flex flex-col items-center gap-5">
+          <FeedActions
+            liked={liked}
+            favorited={favorited}
+            likeCount={counts.like}
+            favoriteCount={counts.favorite}
+            commentCount={note.comment_count}
+            copied={copied}
+            busy={busy}
+            onLike={like}
+            onFavorite={favorite}
+            onComment={onOpenComments}
+            onShare={share}
+          />
+          <ReportDialog
+            noteId={note.id}
+            targetUserId={note.author_id}
+            variant="dark"
+            label="举报"
+          />
+        </div>
       </div>
     </section>
   );

@@ -7,7 +7,6 @@ import { useFormState } from 'react-dom';
 import { Cat as CatIcon, Loader2 } from 'lucide-react';
 import { signUp, type ActionResult } from '@/lib/actions/auth';
 import { useI18n } from '@/lib/i18n';
-import { LOCALES } from '@/lib/i18n/config';
 
 const initialState: ActionResult | null = null;
 
@@ -106,26 +105,6 @@ export default function RegisterPage() {
             className="w-full rounded-xl border border-stone-200 bg-white px-4 py-2.5 text-sm outline-none transition focus:border-brand-400 focus:ring-2 focus:ring-brand-100"
           />
           {confirmError && <p className="mt-1 text-xs text-red-500">{confirmError}</p>}
-        </div>
-
-        {/* 界面语言选择 */}
-        <div>
-          <label htmlFor="language" className="mb-1.5 block text-sm font-medium text-stone-600">
-            🌐 {t('auth', 'chooseLanguage')}
-          </label>
-          <select
-            id="language"
-            name="language"
-            defaultValue="zh-Hans"
-            className="w-full rounded-xl border border-stone-200 bg-white px-4 py-2.5 text-sm text-ink outline-none transition focus:border-brand-400 focus:ring-2 focus:ring-brand-100"
-          >
-            {LOCALES.map((l) => (
-              <option key={l.code} value={l.code}>
-                {l.label}
-              </option>
-            ))}
-          </select>
-          <p className="mt-1 text-xs text-stone-400">{t('auth', 'languageHint')}</p>
         </div>
 
         {state && !state.ok && (

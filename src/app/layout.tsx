@@ -1,8 +1,7 @@
 import type { Metadata } from 'next';
-import { cookies } from 'next/headers';
 import './globals.css';
 import { I18nProvider } from '@/lib/i18n';
-import { LOCALE_COOKIE, DEFAULT_LOCALE, isLocale, getLocaleRtl, type LocaleCode } from '@/lib/i18n/config';
+import { DEFAULT_LOCALE, getLocaleRtl, type LocaleCode } from '@/lib/i18n/config';
 
 export const metadata: Metadata = {
   title: {
@@ -23,8 +22,8 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const cookie = cookies().get(LOCALE_COOKIE)?.value;
-  const locale: LocaleCode = isLocale(cookie) ? cookie : DEFAULT_LOCALE;
+  // 多语言暂未开放：系统固定为简体中文。待整体完善后，再恢复从 cookie 读取用户语言偏好。
+  const locale: LocaleCode = DEFAULT_LOCALE;
   const dir = getLocaleRtl(locale) ? 'rtl' : 'ltr';
 
   return (

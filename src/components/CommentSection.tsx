@@ -9,6 +9,7 @@ import { cn, timeAgo } from '@/lib/utils';
 import { useI18n } from '@/lib/i18n';
 import { Avatar } from './Avatar';
 import { addComment, toggleCommentLike } from '@/lib/actions/notes';
+import { ReportDialog } from './ReportDialog';
 
 interface CommentSectionProps {
   noteId: string;
@@ -182,6 +183,7 @@ export function CommentSection({
                 <CommentRow
                   comment={comment}
                   currentUser={currentUser}
+                  noteId={noteId}
                   isReply={false}
                   onReply={() => setReplyingTo((cur) => (cur === comment.id ? null : comment.id))}
                   onLike={() => handleLike(comment.id)}
@@ -200,6 +202,7 @@ export function CommentSection({
                         <CommentRow
                           comment={reply}
                           currentUser={currentUser}
+                          noteId={noteId}
                           isReply
                           onLike={() => handleLike(reply.id)}
                         />
@@ -219,12 +222,14 @@ export function CommentSection({
 function CommentRow({
   comment,
   currentUser,
+  noteId,
   isReply,
   onReply,
   onLike,
 }: {
   comment: CommentItem;
   currentUser: { id: string; nickname: string; avatar_url: string | null } | null;
+  noteId: string;
   isReply: boolean;
   onReply?: () => void;
   onLike: () => void;
@@ -263,6 +268,13 @@ function CommentRow({
             <Heart className={cn('h-3 w-3', (comment.like_count ?? 0) > 0 && 'fill-rose-500')} />
             {comment.like_count ?? 0}
           </button>
+          <ReportDialog
+            noteId={noteId}
+            commentId={comment.id}
+            targetUserId={comment.user_id}
+            className="!border-transparent !px-1.5 !py-0 !text-[11px] !text-stone-300 hover:!text-red-500"
+            label="举报"
+          />
         </div>
       </div>
     </div>

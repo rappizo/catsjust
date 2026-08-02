@@ -51,6 +51,15 @@ export const LIMITS = {
   COMMENT_MAX: 500,
 } as const;
 
+/** 举报原因选项（前台弹窗 + 服务端校验共用） */
+export const REPORT_REASONS = [
+  '垃圾广告',
+  '色情低俗',
+  '人身攻击',
+  '内容与猫无关',
+  '其他违规',
+] as const;
+
 /** 错误消息映射 */
 export const ERROR_MESSAGES: Record<string, string> = {
   'Invalid login credentials': '邮箱或密码不正确',

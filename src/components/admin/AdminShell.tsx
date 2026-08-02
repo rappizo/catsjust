@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { Cat, FileCheck, LayoutDashboard, LogOut, MessageSquareWarning, ShieldCheck, Tags } from 'lucide-react';
+import { Cat, FileCheck, Flag, FolderSearch, LayoutDashboard, LogOut, PawPrint, ShieldAlert, ShieldCheck, Tags, Users } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Logo } from '@/components/Logo';
 import { adminLogout } from '@/lib/actions/admin-auth';
@@ -10,8 +10,12 @@ import { adminLogout } from '@/lib/actions/admin-auth';
 const NAV = [
   { href: '/admin', label: '仪表盘', icon: LayoutDashboard },
   { href: '/admin/review', label: '内容审核', icon: FileCheck },
-  { href: '/admin/users', label: '用户管理', icon: MessageSquareWarning },
+  { href: '/admin/reports', label: '举报处理', icon: Flag },
+  { href: '/admin/content', label: '内容管理', icon: FolderSearch },
+  { href: '/admin/users', label: '用户管理', icon: Users },
   { href: '/admin/topics', label: '话题管理', icon: Tags },
+  { href: '/admin/breeds', label: '品种管理', icon: PawPrint },
+  { href: '/admin/sensitive-words', label: '敏感词', icon: ShieldAlert },
 ];
 
 export function AdminShell({ children }: { children: React.ReactNode }) {

@@ -44,6 +44,16 @@ export async function publishNote(input: {
     return { ok: false, error: '请至少上传一张图片或一个视频' };
   }
 
+  // ---------- 敏感词校验（命中即拦截） ----------
+  const [titleHit, contentHit] = await Promise.all([
+    title ? supabase.rpc('has_sensitive_word', { v_text: title }) : Promise.resolve({ data: null }),
+    content ? supabase.rpc('has_sensitive_word', { v_text: content }) : Promise.resolve({ data: null }),
+  ]);
+  const hitWord = titleHit.data || contentHit.data;
+  if (hitWord) {
+    return { ok: false, error: `内容包含敏感词「${hitWord}」，请修改后再发布` };
+  }
+
   const { data, error } = await supabase
     .from('notes')
     .insert({
@@ -246,6 +256,12 @@ export async function addComment(
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) return { ok: false, error: '请先登录' };
+
+  // ---------- 敏感词校验（命中即拦截） ----------
+  const { data: hitWord } = await supabase.rpc('has_sensitive_word', { v_text: text });
+  if (hitWord) {
+    return { ok: false, error: `评论包含敏感词「${hitWord}」，请修改后再发表` };
+  }
 
   const { data, error } = await supabase
     .from('comments')

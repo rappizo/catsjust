@@ -8,7 +8,6 @@ import { uploadAvatar } from '@/lib/storage';
 import { updateProfile } from '@/lib/actions/auth';
 import { Avatar } from '@/components/Avatar';
 import { useI18n } from '@/lib/i18n';
-import { LOCALES, isLocale } from '@/lib/i18n/config';
 import { isImageFile } from '@/lib/utils';
 import type { Profile } from '@/lib/types';
 
@@ -24,7 +23,6 @@ export function SettingsForm({ profile }: SettingsFormProps) {
 
   const [nickname, setNickname] = useState(profile.nickname || '');
   const [bio, setBio] = useState(profile.bio || '');
-  const [language, setLanguage] = useState<string>(isLocale(profile.language) ? profile.language! : 'zh-Hans');
   const [avatarUrl, setAvatarUrl] = useState<string | null>(profile.avatar_url);
   const [coverUrl, setCoverUrl] = useState<string | null>(profile.cover_url);
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
@@ -77,7 +75,7 @@ export function SettingsForm({ profile }: SettingsFormProps) {
     const res = await updateProfile({
       nickname,
       bio,
-      language,
+      language: 'zh-Hans',
       avatarUrl: avatarUrl ?? null,
       coverUrl: coverUrl ?? null,
     });
@@ -190,25 +188,6 @@ export function SettingsForm({ profile }: SettingsFormProps) {
             className="w-full resize-none rounded-xl border border-stone-200 bg-white px-4 py-3 text-sm outline-none transition focus:border-brand-400 focus:ring-2 focus:ring-brand-100"
           />
           <div className="mt-1 text-right text-xs text-stone-300">{bio.length}/200</div>
-        </div>
-        {/* 界面语言 */}
-        <div>
-          <label htmlFor="language" className="mb-1.5 block text-sm font-medium text-stone-600">
-            🌐 {t('settings', 'language')}
-          </label>
-          <select
-            id="language"
-            value={language}
-            onChange={(e) => setLanguage(e.target.value)}
-            className="w-full rounded-xl border border-stone-200 bg-white px-4 py-2.5 text-sm text-ink outline-none transition focus:border-brand-400 focus:ring-2 focus:ring-brand-100"
-          >
-            {LOCALES.map((l) => (
-              <option key={l.code} value={l.code}>
-                {l.label}
-              </option>
-            ))}
-          </select>
-          <p className="mt-1 text-xs text-stone-400">{t('settings', 'languageHint')}</p>
         </div>
       </div>
 

@@ -157,14 +157,16 @@ export function NavbarClient({ user, profile, unreadNotifications = 0 }: NavbarC
             </div>
           )}
 
-          {/* 移动端菜单按钮 */}
-          <button
-            className="rounded-lg p-2 text-stone-600 hover:bg-stone-100 md:hidden"
-            onClick={() => setMenuOpen((v) => !v)}
-            aria-label="菜单"
-          >
-            {menuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-          </button>
+          {/* 移动端菜单按钮（仅未登录时显示；登录后底部 Tab 已有完整导航，避免右上角拥挤） */}
+          {!user && (
+            <button
+              className="rounded-lg p-2 text-stone-600 hover:bg-stone-100 md:hidden"
+              onClick={() => setMenuOpen((v) => !v)}
+              aria-label="菜单"
+            >
+              {menuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            </button>
+          )}
         </div>
       </div>
 

@@ -6,7 +6,7 @@
  *   2. 执行 supabase/migrations 下的迁移
  *   3. 校验表结构与种子数据
  */
-import { readFileSync } from 'node:fs';
+import { readFileSync, readdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import pg from 'pg';
@@ -58,28 +58,32 @@ async function testConnections() {
 // ---------- 2. 执行迁移 ----------
 async function runMigrations() {
   console.log('\n===== 2. 执行迁移 =====');
-  const files = ['0001_init.sql', '0002_anonymous_likes.sql'];
+  const files = readdirSync(join(root, 'supabase', 'migrations'))
+    .filter((f) => f.endsWith('.sql'))
+    .sort();
   const client = new pg.Client(clientOpts(configs.direct.url));
   await client.connect();
   try {
-    await client.query('BEGIN');
+    // 每个迁移独立事务：某条迁移已应用（幂等）或失败，不阻塞后续迁移
     for (const file of files) {
       const sql = readFileSync(join(root, 'supabase', 'migrations', file), 'utf8');
-      await client.query(sql);
-      console.log(`✅ 已执行 ${file}`);
+      try {
+        await client.query('BEGIN');
+        await client.query(sql);
+        await client.query('COMMIT');
+        console.log(`✅ 已执行 ${file}`);
+      } catch (e) {
+        await client.query('ROLLBACK').catch(() => {});
+        if (/(already exists|duplicate)/i.test(e.message || '')) {
+          console.log(`⏭️ ${file} —— 结构已存在，跳过（幂等）`);
+        } else {
+          console.error(`❌ ${file} 迁移失败: ${e.message}`);
+          console.error(`   提示: ${e.hint || '无'}`);
+          process.exitCode = 1;
+        }
+      }
     }
-    await client.query('COMMIT');
-    console.log('✅ 全部迁移执行成功');
-  } catch (e) {
-    await client.query('ROLLBACK').catch(() => {});
-    // 幂等处理：结构已存在（重复执行）时视为成功，由后面的校验兜底
-    if (/(already exists|duplicate)/i.test(e.message || '')) {
-      console.log(`⚠️ ${e.message} —— 结构已存在，跳过迁移（幂等）`);
-    } else {
-      console.error(`❌ 迁移失败: ${e.message}`);
-      console.error(`   提示: ${e.hint || '无'}`);
-      process.exitCode = 1;
-    }
+    console.log('✅ 迁移遍历完成');
   } finally {
     await client.end();
   }

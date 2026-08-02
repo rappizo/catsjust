@@ -4,9 +4,11 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Loader2, Trash2 } from 'lucide-react';
 import { deleteNote } from '@/lib/actions/notes';
+import { useI18n } from '@/lib/i18n';
 
 export function NoteDeleteButton({ noteId }: { noteId: string }) {
   const router = useRouter();
+  const { t } = useI18n();
   const [busy, setBusy] = useState(false);
   const [confirming, setConfirming] = useState(false);
 
@@ -43,7 +45,7 @@ export function NoteDeleteButton({ noteId }: { noteId: string }) {
       ) : (
         <Trash2 className="h-3.5 w-3.5" />
       )}
-      {confirming ? '确认删除？' : '删除'}
+      {confirming ? t('note', 'confirmDelete') : t('note', 'deleteNote')}
     </button>
   );
 }

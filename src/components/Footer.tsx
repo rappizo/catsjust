@@ -1,7 +1,10 @@
 import Link from 'next/link';
 import { Cat as CatIcon, Heart } from 'lucide-react';
+import { getLocaleFromCookies } from '@/lib/i18n/cookies';
+import { getT } from '@/lib/i18n/dictionaries';
 
 export function Footer() {
+  const t = getT(getLocaleFromCookies());
   return (
     <footer className="mt-16 border-t border-stone-200/70 bg-white/60">
       <div className="mx-auto flex max-w-7xl flex-col items-center gap-3 px-4 py-8 text-center sm:px-6">
@@ -15,17 +18,17 @@ export function Footer() {
           </span>
         </div>
         <p className="flex items-center gap-1 text-xs text-stone-400">
-          一个只属于猫咪的分享社区 · 纯展示 · 无商业
+          {t('footer', 'tagline')}
           <Heart className="h-3 w-3 text-rose-400" />
         </p>
         <div className="flex items-center gap-4 text-xs text-stone-400">
           <Link href="/topics" className="transition hover:text-brand-500">
-            话题广场
+            {t('footer', 'topics')}
           </Link>
           <span>·</span>
-          <span>用户协议（规划中）</span>
+          <span>{t('footer', 'tos')}</span>
           <span>·</span>
-          <span>隐私政策（规划中）</span>
+          <span>{t('footer', 'privacy')}</span>
         </div>
       </div>
     </footer>

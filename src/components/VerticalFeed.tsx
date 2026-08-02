@@ -16,6 +16,7 @@ import {
 import { createClient } from '@/lib/supabase/client';
 import { toggleFavorite, toggleLike } from '@/lib/actions/notes';
 import { cn, formatCount, timeAgo } from '@/lib/utils';
+import { useI18n } from '@/lib/i18n';
 import { Avatar } from './Avatar';
 import { VideoPlayer } from './VideoPlayer';
 import { CommentSection } from './CommentSection';
@@ -203,26 +204,27 @@ function FeedActions({
   onComment: () => void;
   onShare: () => void;
 }) {
+  const { t } = useI18n();
   const item =
     'flex flex-col items-center gap-1 text-white/90 transition hover:scale-110 hover:text-white';
 
   return (
     <div className="flex flex-col items-center gap-5">
-      <button onClick={onLike} disabled={busy} className={cn(item, liked && 'text-rose-500')} aria-label="点赞">
+      <button onClick={onLike} disabled={busy} className={cn(item, liked && 'text-rose-500')} aria-label={t('feed', 'like')}>
         <Heart className={cn('h-7 w-7 transition-transform', liked && 'scale-110 fill-rose-500')} />
         <span className="text-xs">{formatCount(likeCount)}</span>
       </button>
-      <button onClick={onFavorite} className={cn(item, favorited && 'text-brand-500')} aria-label="收藏">
+      <button onClick={onFavorite} className={cn(item, favorited && 'text-brand-500')} aria-label={t('feed', 'favorite')}>
         <Bookmark className={cn('h-7 w-7', favorited && 'fill-brand-500')} />
         <span className="text-xs">{formatCount(favoriteCount)}</span>
       </button>
-      <button onClick={onComment} className={item} aria-label="评论">
+      <button onClick={onComment} className={item} aria-label={t('feed', 'comments')}>
         <MessageCircle className="h-7 w-7" />
         <span className="text-xs">{formatCount(commentCount)}</span>
       </button>
-      <button onClick={onShare} className={cn(item, copied && 'text-emerald-400')} aria-label="分享">
+      <button onClick={onShare} className={cn(item, copied && 'text-emerald-400')} aria-label={t('feed', 'share')}>
         {copied ? <Check className="h-7 w-7" /> : <Share2 className="h-7 w-7" />}
-        <span className="text-xs">{copied ? '已复制' : '分享'}</span>
+        <span className="text-xs">{copied ? t('feed', 'copied') : t('feed', 'share')}</span>
       </button>
     </div>
   );
@@ -243,13 +245,14 @@ function FeedItem({
   onOpenComments: () => void;
 }) {
   const router = useRouter();
+  const { t } = useI18n();
   const { liked, favorited, counts, busy, copied, like, favorite, share } = useFeedInteractions(
     note,
     loggedIn,
     initialLiked,
     initialFavorited
   );
-  const authorName = note.author?.nickname || note.author?.username || '喵友';
+  const authorName = note.author?.nickname || note.author?.username || t('note', 'authorFallback');
   const profileHref = note.author ? `/profile/${note.author.username}` : '#';
 
   return (
@@ -259,7 +262,7 @@ function FeedItem({
         <button
           onClick={() => (window.history.length > 1 ? router.back() : router.push('/'))}
           className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-black/40 text-white backdrop-blur-sm transition hover:bg-black/60"
-          aria-label="返回"
+          aria-label={t('common', 'back')}
         >
           <ArrowLeft className="h-5 w-5" />
         </button>
@@ -346,6 +349,7 @@ function CommentSheet({
 }) {
   const [comments, setComments] = useState<CommentItem[] | null>(null);
   const [loading, setLoading] = useState(true);
+  const { t } = useI18n();
 
   useEffect(() => {
     let cancelled = false;
@@ -376,15 +380,15 @@ function CommentSheet({
       <button className="absolute inset-0 bg-black/60" onClick={onClose} aria-label="关闭评论" />
       <div className="animate-fade-in-up relative max-h-[75vh] overflow-hidden rounded-t-3xl bg-white shadow-2xl">
         <div className="flex items-center justify-between border-b border-stone-100 px-5 py-3.5">
-          <h3 className="text-sm font-semibold text-ink">评论</h3>
-          <button onClick={onClose} className="text-stone-400 transition hover:text-stone-600" aria-label="关闭">
+          <h3 className="text-sm font-semibold text-ink">{t('feed', 'commentTitle')}</h3>
+          <button onClick={onClose} className="text-stone-400 transition hover:text-stone-600" aria-label={t('common', 'close')}>
             <X className="h-5 w-5" />
           </button>
         </div>
         <div className="max-h-[65vh] overflow-y-auto">
           {loading ? (
             <div className="flex items-center justify-center gap-2 py-14 text-sm text-stone-400">
-              <Loader2 className="h-4 w-4 animate-spin" /> 加载中…
+              <Loader2 className="h-4 w-4 animate-spin" /> {t('feed', 'loadingComments')}
             </div>
           ) : (
             <CommentSection

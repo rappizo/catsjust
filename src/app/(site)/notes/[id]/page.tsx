@@ -14,6 +14,8 @@ import { NoteDeleteButton } from '@/components/NoteDeleteButton';
 import { Avatar } from '@/components/Avatar';
 import { timeAgo } from '@/lib/utils';
 import { isSupabaseConfigured } from '@/lib/config';
+import { getLocaleFromCookies } from '@/lib/i18n/cookies';
+import { getT } from '@/lib/i18n/dictionaries';
 import type { CommentItem, Note } from '@/lib/types';
 
 export async function generateMetadata({
@@ -39,6 +41,7 @@ export async function generateMetadata({
 export default async function NotePage({ params }: { params: { id: string } }) {
   if (!isSupabaseConfigured()) notFound();
 
+  const t = getT(getLocaleFromCookies());
   const supabase = createClient();
 
   const {
@@ -178,18 +181,18 @@ export default async function NotePage({ params }: { params: { id: string } }) {
     }
   }
   const isVideo = typed.media_type === 'video';
-  const authorName = typed.author?.nickname || typed.author?.username || '喵友';
+  const authorName = typed.author?.nickname || typed.author?.username || t('note', 'authorFallback');
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-6 sm:px-6">
       {/* 非公开状态提示（已发布已在上方早退，此处必为非公开） */}
       <div className="mb-4 flex flex-wrap items-center gap-3 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-700">
         <StatusBadge status={typed.status} />
-        {typed.status === 'pending' && <span>该内容正在审核中，通过后将公开展示</span>}
+        {typed.status === 'pending' && <span>{t('note', 'pending')}</span>}
         {typed.status === 'rejected' && (
-          <span>该内容未通过审核：{typed.reject_reason || '未注明原因'}</span>
+          <span>{t('note', 'rejected')}{typed.reject_reason || ''}</span>
         )}
-        {typed.status === 'removed' && <span>该内容已被下架</span>}
+        {typed.status === 'removed' && <span>{t('note', 'removed')}</span>}
       </div>
 
       <div className="grid gap-6 md:grid-cols-[1.25fr_1fr]">
@@ -206,7 +209,7 @@ export default async function NotePage({ params }: { params: { id: string } }) {
         <div className="min-w-0">
           <div className="flex items-start justify-between gap-3">
             <h1 className="text-xl font-bold leading-snug text-ink sm:text-2xl">
-              {typed.title || '猫咪笔记'}
+              {typed.title || t('note', 'noTitle')}
             </h1>
             {isOwner && <NoteDeleteButton noteId={typed.id} />}
           </div>
@@ -282,7 +285,7 @@ export default async function NotePage({ params }: { params: { id: string } }) {
               {typed.author?.bio ? (
                 <p className="line-clamp-1 text-xs text-stone-400">{typed.author.bio}</p>
               ) : (
-                <p className="text-xs text-stone-400">一位热爱猫咪的铲屎官</p>
+                <p className="text-xs text-stone-400">{t('profile', 'defaultBio')}</p>
               )}
             </div>
           </div>

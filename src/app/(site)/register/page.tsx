@@ -6,11 +6,14 @@ import { useRouter } from 'next/navigation';
 import { useFormState } from 'react-dom';
 import { Cat as CatIcon, Loader2 } from 'lucide-react';
 import { signUp, type ActionResult } from '@/lib/actions/auth';
+import { useI18n } from '@/lib/i18n';
+import { LOCALES } from '@/lib/i18n/config';
 
 const initialState: ActionResult | null = null;
 
 export default function RegisterPage() {
   const router = useRouter();
+  const { t } = useI18n();
   const [state, formAction] = useFormState(signUp, initialState);
   const [submitting, setSubmitting] = useState(false);
   const [confirmError, setConfirmError] = useState('');
@@ -28,7 +31,7 @@ export default function RegisterPage() {
     const confirm = String(form.confirmPassword.value ?? '');
     if (password !== confirm) {
       e.preventDefault();
-      setConfirmError('两次输入的密码不一致');
+      setConfirmError(t('auth', 'passwordMismatch'));
       return;
     }
     setConfirmError('');
@@ -41,14 +44,14 @@ export default function RegisterPage() {
         <span className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-400 to-brand-600 text-white shadow-lg shadow-brand-500/30">
           <CatIcon className="h-7 w-7" />
         </span>
-        <h1 className="text-2xl font-bold text-ink">加入只有猫</h1>
-        <p className="mt-1 text-sm text-stone-400">注册一个账号，开始记录你的猫</p>
+        <h1 className="text-2xl font-bold text-ink">{t('auth', 'registerWelcome')}</h1>
+        <p className="mt-1 text-sm text-stone-400">{t('auth', 'registerDesc')}</p>
       </div>
 
       <form action={formAction} onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label htmlFor="nickname" className="mb-1.5 block text-sm font-medium text-stone-600">
-            昵称
+            {t('auth', 'nickname')}
           </label>
           <input
             id="nickname"
@@ -56,13 +59,13 @@ export default function RegisterPage() {
             type="text"
             required
             maxLength={30}
-            placeholder="例如：铲屎官小张"
+            placeholder={t('auth', 'nicknamePlaceholder')}
             className="w-full rounded-xl border border-stone-200 bg-white px-4 py-2.5 text-sm outline-none transition focus:border-brand-400 focus:ring-2 focus:ring-brand-100"
           />
         </div>
         <div>
           <label htmlFor="email" className="mb-1.5 block text-sm font-medium text-stone-600">
-            邮箱
+            {t('auth', 'email')}
           </label>
           <input
             id="email"
@@ -70,13 +73,13 @@ export default function RegisterPage() {
             type="email"
             required
             autoComplete="email"
-            placeholder="you@example.com"
+            placeholder={t('auth', 'emailPlaceholder')}
             className="w-full rounded-xl border border-stone-200 bg-white px-4 py-2.5 text-sm outline-none transition focus:border-brand-400 focus:ring-2 focus:ring-brand-100"
           />
         </div>
         <div>
           <label htmlFor="password" className="mb-1.5 block text-sm font-medium text-stone-600">
-            密码
+            {t('auth', 'password')}
           </label>
           <input
             id="password"
@@ -85,13 +88,13 @@ export default function RegisterPage() {
             required
             minLength={6}
             autoComplete="new-password"
-            placeholder="至少 6 位"
+            placeholder={t('auth', 'passwordPlaceholder')}
             className="w-full rounded-xl border border-stone-200 bg-white px-4 py-2.5 text-sm outline-none transition focus:border-brand-400 focus:ring-2 focus:ring-brand-100"
           />
         </div>
         <div>
           <label htmlFor="confirmPassword" className="mb-1.5 block text-sm font-medium text-stone-600">
-            确认密码
+            {t('auth', 'confirmPassword')}
           </label>
           <input
             id="confirmPassword"
@@ -99,10 +102,30 @@ export default function RegisterPage() {
             type="password"
             required
             autoComplete="new-password"
-            placeholder="再次输入密码"
+            placeholder={t('auth', 'confirmPlaceholder')}
             className="w-full rounded-xl border border-stone-200 bg-white px-4 py-2.5 text-sm outline-none transition focus:border-brand-400 focus:ring-2 focus:ring-brand-100"
           />
           {confirmError && <p className="mt-1 text-xs text-red-500">{confirmError}</p>}
+        </div>
+
+        {/* 界面语言选择 */}
+        <div>
+          <label htmlFor="language" className="mb-1.5 block text-sm font-medium text-stone-600">
+            🌐 {t('auth', 'chooseLanguage')}
+          </label>
+          <select
+            id="language"
+            name="language"
+            defaultValue="zh-Hans"
+            className="w-full rounded-xl border border-stone-200 bg-white px-4 py-2.5 text-sm text-ink outline-none transition focus:border-brand-400 focus:ring-2 focus:ring-brand-100"
+          >
+            {LOCALES.map((l) => (
+              <option key={l.code} value={l.code}>
+                {l.label}
+              </option>
+            ))}
+          </select>
+          <p className="mt-1 text-xs text-stone-400">{t('auth', 'languageHint')}</p>
         </div>
 
         {state && !state.ok && (
@@ -117,17 +140,17 @@ export default function RegisterPage() {
         <button
           type="submit"
           disabled={submitting}
-          className="flex w-full items-center justify-center gap-2 rounded-xl bg-brand-500 py-2.5 text-sm font-semibold text-white shadow-md shadow-brand-500/30 transition hover:bg-brand-600 disabled:opacity-60"
+          className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-brand-500 to-accent-500 py-2.5 text-sm font-semibold text-white shadow-md shadow-neon-green transition hover:from-brand-600 hover:to-accent-600 disabled:opacity-60"
         >
           {submitting && <Loader2 className="h-4 w-4 animate-spin" />}
-          注册
+          {t('auth', 'registerBtn')}
         </button>
       </form>
 
       <p className="mt-6 text-center text-sm text-stone-400">
-        已有账号？
+        {t('auth', 'haveAccount')}
         <Link href="/login" className="font-medium text-brand-500 hover:text-brand-600">
-          去登录
+          {t('auth', 'goLogin')}
         </Link>
       </p>
     </div>

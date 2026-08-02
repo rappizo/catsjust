@@ -2,10 +2,13 @@ import { notFound } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { isSupabaseConfigured } from '@/lib/config';
 import { Waterfall } from '@/components/Waterfall';
+import { getLocaleFromCookies } from '@/lib/i18n/cookies';
+import { getT } from '@/lib/i18n/dictionaries';
 import type { Note } from '@/lib/types';
 
 export default async function TopicPage({ params }: { params: { slug: string } }) {
   if (!isSupabaseConfigured()) notFound();
+  const t = getT(getLocaleFromCookies());
 
   const supabase = createClient();
 
@@ -52,8 +55,8 @@ export default async function TopicPage({ params }: { params: { slug: string } }
       <Waterfall
         initialNotes={(notes ?? []) as Note[]}
         staticMode
-        emptyTitle="这个话题还没有内容"
-        emptyDescription="快去发布一条吧"
+        emptyTitle={t('topics', 'noContent')}
+        emptyDescription={t('topics', 'publishOne')}
       />
     </div>
   );

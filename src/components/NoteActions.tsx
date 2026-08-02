@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { Bookmark, Check, Heart, MessageCircle, Share2 } from 'lucide-react';
 import { cn, formatCount } from '@/lib/utils';
+import { useI18n } from '@/lib/i18n';
 import { toggleFavorite, toggleLike } from '@/lib/actions/notes';
 
 interface NoteActionsProps {
@@ -31,6 +32,7 @@ export function NoteActions({
   large = false,
 }: NoteActionsProps) {
   const router = useRouter();
+  const { t } = useI18n();
   const [liked, setLiked] = useState(initialLiked);
   const [favorited, setFavorited] = useState(initialFavorited);
   const [counts, setCounts] = useState({ like: likeCount, favorite: favoriteCount });
@@ -126,7 +128,7 @@ export function NoteActions({
         className={cn(btnBase, copied ? 'text-emerald-500' : 'text-stone-500 hover:bg-stone-100')}
       >
         {copied ? <Check className="h-6 w-6" /> : <Share2 className="h-6 w-6" />}
-        {copied ? '已复制' : '分享'}
+        {copied ? t('feed', 'copied') : t('feed', 'share')}
       </button>
     </div>
   );

@@ -1,6 +1,8 @@
 import { createClient } from '@/lib/supabase/server';
 import { isSupabaseConfigured } from '@/lib/config';
 import { HomeTabs } from '@/components/HomeTabs';
+import { getLocaleFromCookies } from '@/lib/i18n/cookies';
+import { getT } from '@/lib/i18n/dictionaries';
 import type { Note } from '@/lib/types';
 
 const PAGE_SIZE = 12;
@@ -11,6 +13,7 @@ export const metadata = {
 };
 
 export default async function HomePage() {
+  const t = getT(getLocaleFromCookies());
   let notes: Note[] = [];
   let feedError: string | null = null;
 
@@ -35,14 +38,13 @@ export default async function HomePage() {
         <span className="pointer-events-none absolute bottom-2 right-24 hidden select-none text-6xl opacity-20 sm:block">😺</span>
         <div className="relative max-w-xl">
           <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-white/80">
-            CATSJUST
+            {t('hero', 'eyebrow')}
           </p>
           <h1 className="text-3xl font-bold leading-tight sm:text-4xl">
-            只属于猫咪的分享社区
+            {t('hero', 'title')}
           </h1>
           <p className="mt-3 text-sm leading-relaxed text-white/90 sm:text-base">
-            晒出你的猫，记录每一只毛孩子的日常。
-            纯展示 · 无商业 · 垂直专业。
+            {t('hero', 'subtitle')}
           </p>
         </div>
       </section>
@@ -55,7 +57,7 @@ export default async function HomePage() {
       )}
       {feedError && (
         <div className="mb-5 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-500">
-          内容加载失败：{feedError}
+          {t('home', 'loadingFail')}{feedError}
         </div>
       )}
 

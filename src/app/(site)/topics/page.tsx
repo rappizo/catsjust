@@ -3,12 +3,15 @@ import { createClient } from '@/lib/supabase/server';
 import { isSupabaseConfigured } from '@/lib/config';
 import { cn } from '@/lib/utils';
 import { CAT_BREEDS } from '@/lib/constants';
+import { getLocaleFromCookies } from '@/lib/i18n/cookies';
+import { getT } from '@/lib/i18n/dictionaries';
 
 export const metadata = {
   title: '话题广场',
 };
 
 export default async function TopicsPage() {
+  const t = getT(getLocaleFromCookies());
   let topics: Array<{
     id: string;
     name: string;
@@ -34,8 +37,8 @@ export default async function TopicsPage() {
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-ink">话题广场</h1>
-        <p className="mt-1 text-sm text-stone-400">找到你感兴趣的话题，一起云吸猫</p>
+        <h1 className="text-2xl font-bold text-ink">{t('topics', 'title')}</h1>
+        <p className="mt-1 text-sm text-stone-400">{t('topics', 'subtitle')}</p>
       </div>
 
       {/* 按品种逛 */}
@@ -44,9 +47,9 @@ export default async function TopicsPage() {
           <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-accent-500 to-fuchsia-600 text-sm text-white shadow-neon-purple">
             🐱
           </span>
-          <h2 className="font-semibold text-ink">按品种逛</h2>
+          <h2 className="font-semibold text-ink">{t('topics', 'browseByBreed')}</h2>
           <span className="rounded-full bg-brand-500/15 px-2 py-0.5 text-[11px] font-medium text-brand-500">
-            霓虹品种标签
+            {t('topics', 'breedBadge')}
           </span>
         </div>
         <div className="flex flex-wrap gap-2">
@@ -68,7 +71,7 @@ export default async function TopicsPage() {
       </section>
 
       {!topics?.length ? (
-        <p className="py-16 text-center text-sm text-stone-400">暂无话题</p>
+        <p className="py-16 text-center text-sm text-stone-400">{t('topics', 'empty')}</p>
       ) : (
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
           {topics.map((topic) => (
@@ -99,7 +102,7 @@ export default async function TopicsPage() {
                     'mt-2 inline-block rounded-full bg-brand-50 px-2 py-0.5 text-[11px] font-medium text-brand-600'
                   )}
                 >
-                  进入话题 →
+                  {t('topics', 'enter')}
                 </span>
               </div>
             </Link>

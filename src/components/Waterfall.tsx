@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Loader2, Cat as CatIcon } from 'lucide-react';
+import { useI18n } from '@/lib/i18n';
 import type { Note } from '@/lib/types';
 import { NoteCard } from './NoteCard';
 
@@ -20,6 +21,7 @@ export function Waterfall({
   emptyDescription = '成为第一个发布猫咪内容的人吧',
   staticMode = false,
 }: WaterfallProps) {
+  const { t } = useI18n();
   const [notes, setNotes] = useState<Note[]>(initialNotes);
   const [hasMore, setHasMore] = useState(!staticMode && initialNotes.length >= 12);
   const [loading, setLoading] = useState(false);
@@ -89,11 +91,11 @@ export function Waterfall({
           {loading && (
             <span className="flex items-center gap-2 text-sm text-stone-400">
               <Loader2 className="h-4 w-4 animate-spin" />
-              喵粮加载中…
+              {t('common', 'loading')}
             </span>
           )}
           {!hasMore && notes.length > 0 && (
-            <span className="text-xs text-stone-300">— 到底啦，没有更多内容 —</span>
+            <span className="text-xs text-stone-300">{t('home', 'end')}</span>
           )}
         </div>
       )}

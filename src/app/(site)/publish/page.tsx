@@ -2,12 +2,16 @@ import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { isSupabaseConfigured } from '@/lib/config';
 import { PublishForm } from '@/components/PublishForm';
+import { getLocaleFromCookies } from '@/lib/i18n/cookies';
+import { getT } from '@/lib/i18n/dictionaries';
 
 export const metadata = {
   title: '发布内容',
 };
 
 export default async function PublishPage() {
+  const t = getT(getLocaleFromCookies());
+
   // 未配置 Supabase 时无法发布，先引导登录（登录页无需后端）
   if (!isSupabaseConfigured()) {
     redirect('/login?next=/publish');
@@ -38,24 +42,22 @@ export default async function PublishPage() {
   return (
     <div className="mx-auto max-w-3xl px-4 py-8 sm:px-6">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-ink">发布新内容</h1>
-        <p className="mt-1 text-sm text-stone-400">
-          发布后将进入审核，通过后公开展示给所有喵友
-        </p>
+        <h1 className="text-2xl font-bold text-ink">{t('publish', 'title')}</h1>
+        <p className="mt-1 text-sm text-stone-400">{t('publish', 'subtitle')}</p>
       </div>
 
       {/* 审核须知 */}
       <div className="mb-6 rounded-2xl border border-amber-500/30 bg-amber-500/10 p-4">
         <p className="mb-2 flex items-center gap-1.5 text-sm font-semibold text-amber-400">
-          📋 审核须知
+          📋 {t('publish', 'rulesTitle')}
           <span className="rounded-full bg-amber-500/15 px-2 py-0.5 text-[11px] font-medium">
-            纯猫咪 · 真实
+            {t('publish', 'badge')}
           </span>
         </p>
         <ul className="space-y-1 text-xs leading-relaxed text-stone-400">
-          <li>· 内容必须与猫咪相关，与猫无关将不通过审核</li>
-          <li>· 必须为真实拍摄，AI 生成的图片/视频将不通过审核</li>
-          <li>· 禁止直接广告宣传，产品可融入内容但不能直接推广</li>
+          <li>· {t('publish', 'rule1')}</li>
+          <li>· {t('publish', 'rule2')}</li>
+          <li>· {t('publish', 'rule3')}</li>
         </ul>
       </div>
 

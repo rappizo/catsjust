@@ -38,4 +38,7 @@ next-env.d.ts
 
 # Vercel CLI 生成的 env（保留 example 模板供他人参考）
 .env*
+
+# 词典生成日志
+scripts/gen-log.txt
 !.env.local.example

@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { Loader2, MessageCircle, Send } from 'lucide-react';
 import type { CommentItem } from '@/lib/types';
 import { cn, timeAgo } from '@/lib/utils';
+import { useI18n } from '@/lib/i18n';
 import { Avatar } from './Avatar';
 import { addComment } from '@/lib/actions/notes';
 
@@ -23,6 +24,7 @@ export function CommentSection({
   currentUser,
 }: CommentSectionProps) {
   const router = useRouter();
+  const { t } = useI18n();
   const [comments, setComments] = useState<CommentItem[]>(initialComments);
   const [count, setCount] = useState(initialCount);
   const [content, setContent] = useState('');
@@ -74,7 +76,7 @@ export function CommentSection({
     <section className="mt-6">
       <div className="mb-4 flex items-center gap-2 text-sm font-semibold text-ink">
         <MessageCircle className="h-4 w-4 text-brand-500" />
-        评论 {count > 0 && <span className="text-stone-400">({count})</span>}
+        {t('feed', 'comments')} {count > 0 && <span className="text-stone-400">({count})</span>}
       </div>
 
       {/* 输入框 */}
@@ -84,7 +86,7 @@ export function CommentSection({
             href="/login"
             className="block rounded-xl border border-dashed border-stone-300 bg-white px-4 py-3 text-center text-sm text-stone-400 transition hover:border-brand-300 hover:text-brand-500"
           >
-            登录后参与评论
+            {t('feed', 'loginToComment')}
           </Link>
         ) : (
           <div className="flex items-start gap-3">
@@ -93,7 +95,7 @@ export function CommentSection({
               <textarea
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
-                placeholder="友善地夸一夸这只猫吧～"
+                placeholder={t('feed', 'commentPlaceholder')}
                 rows={2}
                 maxLength={500}
                 className="w-full resize-none rounded-xl border border-stone-200 bg-white px-4 py-3 text-sm outline-none transition focus:border-brand-400 focus:ring-2 focus:ring-brand-100"
@@ -110,7 +112,7 @@ export function CommentSection({
                   ) : (
                     <Send className="h-3.5 w-3.5" />
                   )}
-                  发表评论
+                  {t('feed', 'submitComment')}
                 </button>
               </div>
             </div>
@@ -120,7 +122,7 @@ export function CommentSection({
 
       {/* 评论列表 */}
       {comments.length === 0 ? (
-        <p className="py-6 text-center text-sm text-stone-400">还没有评论，快来抢沙发～</p>
+        <p className="py-6 text-center text-sm text-stone-400">{t('feed', 'noComments')}</p>
       ) : (
         <ul className="space-y-4">
           {comments.map((comment) => (

@@ -19,6 +19,7 @@ import { createCat } from '@/lib/actions/cats';
 import { publishNote } from '@/lib/actions/notes';
 import { CAT_BREEDS, CAT_PERSONALITY_TAGS, LIMITS } from '@/lib/constants';
 import { captureVideoFrame, cn, isImageFile, isVideoFile, readVideoDuration } from '@/lib/utils';
+import { useI18n } from '@/lib/i18n';
 import type { CatGender, MediaType, Topic } from '@/lib/types';
 
 interface PublishFormProps {
@@ -50,6 +51,7 @@ interface VideoItem {
 
 export function PublishForm({ userId, initialCats, topics }: PublishFormProps) {
   const router = useRouter();
+  const { t } = useI18n();
   const imageInputRef = useRef<HTMLInputElement>(null);
   const videoInputRef = useRef<HTMLInputElement>(null);
 
@@ -86,17 +88,17 @@ export function PublishForm({ userId, initialCats, topics }: PublishFormProps) {
     if (!files) return;
     const valid = Array.from(files).filter(isImageFile);
     if (!valid.length) {
-      setError('只能上传图片文件');
+      setError(t('publish', 'imageOnlyError'));
       return;
     }
     const remaining = LIMITS.MAX_IMAGES - images.length;
     if (remaining <= 0) {
-      setError(`最多上传 ${LIMITS.MAX_IMAGES} 张图片`);
+      setError(t('publish', 'imageLimitError').replace('{max}', String(LIMITS.MAX_IMAGES)));
       return;
     }
     const oversized = valid.find((f) => f.size > LIMITS.MAX_IMAGE_SIZE);
     if (oversized) {
-      setError('单张图片不能超过 10MB');
+      setError(t('publish', 'imageSizeError'));
       return;
     }
     setError('');
@@ -130,18 +132,18 @@ export function PublishForm({ userId, initialCats, topics }: PublishFormProps) {
     if (!file) return;
     setVideoError('');
     if (!isVideoFile(file)) {
-      setVideoError('只能上传视频文件');
+      setVideoError(t('publish', 'videoOnlyError'));
       return;
     }
     if (file.size > LIMITS.MAX_VIDEO_SIZE) {
-      setVideoError('视频不能超过 200MB');
+      setVideoError(t('publish', 'videoSizeError'));
       return;
     }
     let duration = 0;
     try {
       duration = await readVideoDuration(file);
       if (duration > LIMITS.MAX_VIDEO_DURATION) {
-        setVideoError('视频时长不能超过 10 分钟');
+        setVideoError(t('publish', 'videoDurationError'));
         return;
       }
     } catch {
@@ -185,19 +187,19 @@ export function PublishForm({ userId, initialCats, topics }: PublishFormProps) {
     setError('');
 
     if (mediaType === 'image' && images.length === 0) {
-      setError('请至少添加一张图片');
+      setError(t('publish', 'needImageError'));
       return;
     }
     if (mediaType === 'video' && !video) {
-      setError('请上传一个视频');
+      setError(t('publish', 'needVideoError'));
       return;
     }
     if (!title.trim() && !content.trim()) {
-      setError('请填写标题或正文');
+      setError(t('publish', 'needTextError'));
       return;
     }
     if (catMode === 'create' && !newCat.name.trim()) {
-      setError('请填写猫咪名字');
+      setError(t('publish', 'needCatNameError'));
       return;
     }
 
@@ -261,13 +263,13 @@ export function PublishForm({ userId, initialCats, topics }: PublishFormProps) {
 
       // 展示 AI 自动审核结果，稍后跳转笔记页
       const tone = res.status === 'published' ? 'green' : res.status === 'rejected' ? 'red' : 'amber';
-      setNotice({ text: res.message || '已提交', tone });
+      setNotice({ text: res.message || t('publish', 'submitted'), tone });
       setTimeout(() => {
         router.push(`/notes/${res.id}`);
         router.refresh();
       }, 2000);
     } catch (err) {
-      setError(err instanceof Error ? err.message : '发布失败，请重试');
+      setError(err instanceof Error ? err.message : t('publish', 'failed'));
       setSubmitting(false);
     }
   }
@@ -296,7 +298,7 @@ export function PublishForm({ userId, initialCats, topics }: PublishFormProps) {
           )}
         >
           <VideoIcon className="h-4 w-4" />
-          视频笔记
+          {t('publish', 'videoNote')}
         </button>
       </div>
 
@@ -304,7 +306,7 @@ export function PublishForm({ userId, initialCats, topics }: PublishFormProps) {
       {mediaType === 'image' && (
         <section className="rounded-2xl border border-stone-200/60 bg-white p-4 shadow-card">
           <div className="mb-3 flex items-center justify-between">
-            <h3 className="text-sm font-semibold text-ink">上传图片（最多 {LIMITS.MAX_IMAGES} 张）</h3>
+            <h3 className="text-sm font-semibold text-ink">{t('publish', 'uploadImages').replace('{max}', String(LIMITS.MAX_IMAGES))}</h3>
             <span className="text-xs text-stone-400">{images.length}/{LIMITS.MAX_IMAGES}</span>
           </div>
 
@@ -328,7 +330,7 @@ export function PublishForm({ userId, initialCats, topics }: PublishFormProps) {
                 <img src={img.preview} alt="" className="h-full w-full object-cover" />
                 {i === 0 && (
                   <span className="absolute left-1.5 top-1.5 rounded bg-brand-500 px-1.5 py-0.5 text-[10px] font-semibold text-white">
-                    封面
+                    {t('publish', 'coverLabel')}
                   </span>
                 )}
                 <span className="absolute left-1.5 bottom-1.5 rounded bg-black/50 p-1 text-white opacity-0 transition group-hover:opacity-100">
@@ -338,7 +340,7 @@ export function PublishForm({ userId, initialCats, topics }: PublishFormProps) {
                   type="button"
                   onClick={() => removeImage(img.id)}
                   className="absolute right-1.5 top-1.5 flex h-6 w-6 items-center justify-center rounded-full bg-black/50 text-white transition hover:bg-red-500"
-                  aria-label="删除图片"
+                  aria-label={t('publish', 'deleteImage')}
                 >
                   <X className="h-3.5 w-3.5" />
                 </button>
@@ -352,7 +354,7 @@ export function PublishForm({ userId, initialCats, topics }: PublishFormProps) {
                 className="flex aspect-square flex-col items-center justify-center gap-1 rounded-xl border-2 border-dashed border-stone-200 text-stone-400 transition hover:border-brand-300 hover:text-brand-500"
               >
                 <ImagePlus className="h-6 w-6" />
-                <span className="text-xs">添加图片</span>
+                <span className="text-xs">{t('publish', 'addImage')}</span>
               </button>
             )}
           </div>
@@ -375,7 +377,7 @@ export function PublishForm({ userId, initialCats, topics }: PublishFormProps) {
       {/* 视频上传区 */}
       {mediaType === 'video' && (
         <section className="rounded-2xl border border-stone-200/60 bg-white p-4 shadow-card">
-          <h3 className="mb-3 text-sm font-semibold text-ink">上传视频</h3>
+          <h3 className="mb-3 text-sm font-semibold text-ink">{t('publish', 'uploadVideo')}</h3>
           {!video ? (
             <button
               type="button"
@@ -396,14 +398,14 @@ export function PublishForm({ userId, initialCats, topics }: PublishFormProps) {
               <div className="flex w-full items-center justify-between">
                 <span className="text-xs text-stone-400">
                   {video.duration ? `${Math.round(video.duration)} 秒` : ''}
-                  {video.poster ? ' · 已自动生成封面' : ''}
+                  {video.poster ? t('publish', 'autoCover') : ''}
                 </span>
                 <button
                   type="button"
                   onClick={removeVideo}
                   className="text-xs text-red-400 hover:text-red-600"
                 >
-                  移除视频
+                  {t('publish', 'removeVideo')}
                 </button>
               </div>
             </div>
@@ -426,21 +428,21 @@ export function PublishForm({ userId, initialCats, topics }: PublishFormProps) {
       <section className="space-y-4 rounded-2xl border border-stone-200/60 bg-white p-4 shadow-card">
         <div>
           <label htmlFor="title" className="mb-1.5 block text-sm font-semibold text-ink">
-            标题
+            {t('publish', 'titleLabel')}
           </label>
           <input
             id="title"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             maxLength={LIMITS.TITLE_MAX}
-            placeholder="给你的猫咪起个吸引人的标题～"
+            placeholder={t('publish', 'titlePlaceholder')}
             className="w-full rounded-xl border border-stone-200 bg-white px-4 py-2.5 text-sm outline-none transition focus:border-brand-400 focus:ring-2 focus:ring-brand-100"
           />
           <div className="mt-1 text-right text-xs text-stone-300">{title.length}/{LIMITS.TITLE_MAX}</div>
         </div>
         <div>
           <label htmlFor="content" className="mb-1.5 block text-sm font-semibold text-ink">
-            正文
+            {t('publish', 'contentLabel')}
           </label>
           <textarea
             id="content"
@@ -448,7 +450,7 @@ export function PublishForm({ userId, initialCats, topics }: PublishFormProps) {
             onChange={(e) => setContent(e.target.value)}
             maxLength={LIMITS.CONTENT_MAX}
             rows={5}
-            placeholder="讲讲你和猫咪的故事…"
+            placeholder={t('publish', 'contentPlaceholder')}
             className="w-full resize-none rounded-xl border border-stone-200 bg-white px-4 py-3 text-sm outline-none transition focus:border-brand-400 focus:ring-2 focus:ring-brand-100"
           />
           <div className="mt-1 text-right text-xs text-stone-300">{content.length}/{LIMITS.CONTENT_MAX}</div>
@@ -460,7 +462,7 @@ export function PublishForm({ userId, initialCats, topics }: PublishFormProps) {
         <div className="mb-3 flex items-center justify-between">
           <h3 className="flex items-center gap-1.5 text-sm font-semibold text-ink">
             <CatIcon className="h-4 w-4 text-brand-500" />
-            关联猫咪（可选）
+            {t('publish', 'catSection')}
           </h3>
           <button
             type="button"
@@ -469,11 +471,11 @@ export function PublishForm({ userId, initialCats, topics }: PublishFormProps) {
           >
             {catMode === 'select' ? (
               <>
-                <Plus className="h-3.5 w-3.5" /> 新建猫咪档案
+                <Plus className="h-3.5 w-3.5" /> {t('publish', 'newCat')}
               </>
             ) : (
               <>
-                <ChevronDown className="h-3.5 w-3.5" /> 返回选择
+                <ChevronDown className="h-3.5 w-3.5" /> {t('common', 'back')}
               </>
             )}
           </button>
@@ -482,7 +484,7 @@ export function PublishForm({ userId, initialCats, topics }: PublishFormProps) {
         {catMode === 'select' ? (
           cats.length === 0 ? (
             <p className="rounded-xl bg-stone-50 px-4 py-3 text-sm text-stone-400">
-              你还没有猫咪档案，
+              {t('publish', 'noCat')}
               <button
                 type="button"
                 onClick={() => setCatMode('create')}
@@ -534,7 +536,7 @@ export function PublishForm({ userId, initialCats, topics }: PublishFormProps) {
               >
                 {newCat.avatarPreview ? (
                   // eslint-disable-next-line @next/next/no-img-element
-                  <img src={newCat.avatarPreview} alt="猫咪头像" className="h-full w-full object-cover" />
+                  <img src={newCat.avatarPreview} alt={t('publish', 'catAvatarAlt')} className="h-full w-full object-cover" />
                 ) : (
                   <Plus className="h-6 w-6" />
                 )}
@@ -558,23 +560,23 @@ export function PublishForm({ userId, initialCats, topics }: PublishFormProps) {
               />
               <div className="grid flex-1 grid-cols-2 gap-3">
                 <div>
-                  <label className="mb-1 block text-xs font-medium text-stone-500">名字 *</label>
+                  <label className="mb-1 block text-xs font-medium text-stone-500">{t('publish', 'nameLabel')}</label>
                   <input
                     value={newCat.name}
                     onChange={(e) => setNewCat((c) => ({ ...c, name: e.target.value }))}
                     maxLength={20}
-                    placeholder="如：奶盖"
+                    placeholder={t('publish', 'namePlaceholder')}
                     className="w-full rounded-lg border border-stone-200 px-3 py-2 text-sm outline-none focus:border-brand-400"
                   />
                 </div>
                 <div>
-                  <label className="mb-1 block text-xs font-medium text-stone-500">品种</label>
+                  <label className="mb-1 block text-xs font-medium text-stone-500">{t('publish', 'breedLabel')}</label>
                   <select
                     value={newCat.breed}
                     onChange={(e) => setNewCat((c) => ({ ...c, breed: e.target.value }))}
                     className="w-full rounded-lg border border-stone-200 bg-white px-3 py-2 text-sm outline-none focus:border-brand-400"
                   >
-                    <option value="">选择品种</option>
+                    <option value="">{t('publish', 'breedPlaceholder')}</option>
                     {CAT_BREEDS.map((b) => (
                       <option key={b} value={b}>
                         {b}
@@ -583,19 +585,19 @@ export function PublishForm({ userId, initialCats, topics }: PublishFormProps) {
                   </select>
                 </div>
                 <div>
-                  <label className="mb-1 block text-xs font-medium text-stone-500">性别</label>
+                  <label className="mb-1 block text-xs font-medium text-stone-500">{t('publish', 'genderLabel')}</label>
                   <select
                     value={newCat.gender}
                     onChange={(e) => setNewCat((c) => ({ ...c, gender: e.target.value as CatGender }))}
                     className="w-full rounded-lg border border-stone-200 bg-white px-3 py-2 text-sm outline-none focus:border-brand-400"
                   >
-                    <option value="male">公猫</option>
-                    <option value="female">母猫</option>
-                    <option value="unknown">未知</option>
+                    <option value="male">{t('publish', 'genderMale')}</option>
+                    <option value="female">{t('publish', 'genderFemale')}</option>
+                    <option value="unknown">{t('publish', 'genderUnknown')}</option>
                   </select>
                 </div>
                 <div>
-                  <label className="mb-1 block text-xs font-medium text-stone-500">生日</label>
+                  <label className="mb-1 block text-xs font-medium text-stone-500">{t('publish', 'birthdayLabel')}</label>
                   <input
                     type="date"
                     value={newCat.birthday}
@@ -607,7 +609,7 @@ export function PublishForm({ userId, initialCats, topics }: PublishFormProps) {
             </div>
 
             <div>
-              <label className="mb-1.5 block text-xs font-medium text-stone-500">性格标签（可多选）</label>
+              <label className="mb-1.5 block text-xs font-medium text-stone-500">{t('publish', 'traitsLabel')}</label>
               <div className="flex flex-wrap gap-2">
                 {CAT_PERSONALITY_TAGS.map((tag) => (
                   <button
@@ -628,13 +630,13 @@ export function PublishForm({ userId, initialCats, topics }: PublishFormProps) {
             </div>
 
             <div>
-              <label className="mb-1 block text-xs font-medium text-stone-500">简介</label>
+              <label className="mb-1 block text-xs font-medium text-stone-500">{t('publish', 'introLabel')}</label>
               <textarea
                 value={newCat.bio}
                 onChange={(e) => setNewCat((c) => ({ ...c, bio: e.target.value }))}
                 maxLength={200}
                 rows={2}
-                placeholder="介绍一下你的猫"
+                placeholder={t('publish', 'introPlaceholder')}
                 className="w-full resize-none rounded-lg border border-stone-200 px-3 py-2 text-sm outline-none focus:border-brand-400"
               />
             </div>
@@ -644,7 +646,7 @@ export function PublishForm({ userId, initialCats, topics }: PublishFormProps) {
 
       {/* 话题 */}
       <section className="rounded-2xl border border-stone-200/60 bg-white p-4 shadow-card">
-        <h3 className="mb-3 text-sm font-semibold text-ink">选择话题（可选）</h3>
+        <h3 className="mb-3 text-sm font-semibold text-ink">{t('publish', 'topicSection')}</h3>
         <div className="flex flex-wrap gap-2">
           {topics.map((topic) => (
             <button
@@ -684,22 +686,22 @@ export function PublishForm({ userId, initialCats, topics }: PublishFormProps) {
       <button
         type="submit"
         disabled={submitting}
-        className="flex w-full items-center justify-center gap-2 rounded-2xl bg-brand-500 py-3.5 text-sm font-bold text-white shadow-lg shadow-brand-500/30 transition hover:bg-brand-600 disabled:opacity-60"
+        className="flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-brand-500 to-accent-500 py-3.5 text-sm font-bold text-white shadow-lg shadow-neon-green transition hover:from-brand-600 hover:to-accent-600 disabled:opacity-60"
       >
         {submitting ? (
           <>
             <Loader2 className="h-4 w-4 animate-spin" />
-            正在发布…
+            {t('publish', 'submitting')}
           </>
         ) : (
           <>
             <Send className="h-4 w-4" />
-            发布内容
+            {t('publish', 'submit')}
           </>
         )}
       </button>
       <p className="text-center text-xs text-stone-400">
-        发布即表示内容将经过审核，请勿发布违规内容
+        {t('publish', 'notice')}
       </p>
     </form>
   );

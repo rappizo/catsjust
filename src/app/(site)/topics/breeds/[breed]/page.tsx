@@ -5,6 +5,8 @@ import { isSupabaseConfigured } from '@/lib/config';
 import { Waterfall } from '@/components/Waterfall';
 import { CAT_BREEDS } from '@/lib/constants';
 import { cn } from '@/lib/utils';
+import { getLocaleFromCookies } from '@/lib/i18n/cookies';
+import { getT } from '@/lib/i18n/dictionaries';
 import type { Note } from '@/lib/types';
 
 export const metadata = {
@@ -12,6 +14,7 @@ export const metadata = {
 };
 
 export default async function BreedPage({ params }: { params: { breed: string } }) {
+  const t = getT(getLocaleFromCookies());
   const breed = decodeURIComponent(params.breed);
 
   if (!isSupabaseConfigured() || !(CAT_BREEDS as readonly string[]).includes(breed)) {
@@ -56,7 +59,7 @@ export default async function BreedPage({ params }: { params: { breed: string } 
           </h1>
         </div>
         <div className="flex flex-wrap items-center gap-2 px-6 py-4">
-          <span className="text-xs text-stone-500">按品种：</span>
+          <span className="text-xs text-stone-500">{t('topics', 'byBreed')}</span>
           {CAT_BREEDS.map((b) => (
             <Link
               key={b}
@@ -77,8 +80,8 @@ export default async function BreedPage({ params }: { params: { breed: string } 
       <Waterfall
         initialNotes={(notes ?? []) as Note[]}
         staticMode
-        emptyTitle="这个品种还没有内容"
-        emptyDescription="快去发布一条吧"
+        emptyTitle={t('topics', 'breedNoContent')}
+        emptyDescription={t('topics', 'publishOne')}
       />
     </div>
   );

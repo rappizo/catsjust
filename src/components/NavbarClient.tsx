@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { Compass, LogIn, LogOut, Menu, PenSquare, Plus, Settings, Shield, User as UserIcon, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useI18n } from '@/lib/i18n';
 import { Logo } from './Logo';
 import { Avatar } from './Avatar';
 import { signOut } from '@/lib/actions/auth';
@@ -15,14 +16,15 @@ interface NavbarClientProps {
 }
 
 const NAV_LINKS = [
-  { href: '/', label: '首页', icon: Compass },
-  { href: '/topics', label: '话题', icon: PenSquare },
-  { href: '/publish', label: '发布', icon: Plus },
+  { href: '/', labelKey: 'home', icon: Compass },
+  { href: '/topics', labelKey: 'topics', icon: PenSquare },
+  { href: '/publish', labelKey: 'publish', icon: Plus },
 ];
 
 export function NavbarClient({ user, profile }: NavbarClientProps) {
   const pathname = usePathname();
   const router = useRouter();
+  const { t } = useI18n();
   const [menuOpen, setMenuOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [signingOut, setSigningOut] = useState(false);
@@ -69,7 +71,7 @@ export function NavbarClient({ user, profile }: NavbarClientProps) {
                 )}
               >
                 <link.icon className="h-4 w-4" />
-                {link.label}
+                {t('nav', link.labelKey)}
               </Link>
             );
           })}
@@ -94,11 +96,11 @@ export function NavbarClient({ user, profile }: NavbarClientProps) {
                     <p className="truncate text-xs text-stone-400">{user.email}</p>
                   </div>
                   <div className="p-1.5">
-                    <DropdownItem href={profileHref} icon={UserIcon} label="我的主页" onClick={() => setDropdownOpen(false)} />
-                    <DropdownItem href="/publish" icon={PenSquare} label="发布内容" onClick={() => setDropdownOpen(false)} />
-                    <DropdownItem href="/settings" icon={Settings} label="个人设置" onClick={() => setDropdownOpen(false)} />
+                    <DropdownItem href={profileHref} icon={UserIcon} label={t('nav', 'myProfile')} onClick={() => setDropdownOpen(false)} />
+                    <DropdownItem href="/publish" icon={PenSquare} label={t('nav', 'publishContent')} onClick={() => setDropdownOpen(false)} />
+                    <DropdownItem href="/settings" icon={Settings} label={t('nav', 'settings')} onClick={() => setDropdownOpen(false)} />
                     {profile?.role === 'admin' && (
-                      <DropdownItem href="/admin" icon={Shield} label="管理后台" onClick={() => setDropdownOpen(false)} />
+                      <DropdownItem href="/admin" icon={Shield} label={t('nav', 'admin')} onClick={() => setDropdownOpen(false)} />
                     )}
                     <button
                       onClick={handleSignOut}
@@ -106,7 +108,7 @@ export function NavbarClient({ user, profile }: NavbarClientProps) {
                       className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-sm text-stone-600 transition hover:bg-red-50 hover:text-red-600"
                     >
                       <LogOut className="h-4 w-4" />
-                      {signingOut ? '退出中…' : '退出登录'}
+                      {signingOut ? t('nav', 'signOutIng') : t('nav', 'signOut')}
                     </button>
                   </div>
                 </div>
@@ -119,13 +121,13 @@ export function NavbarClient({ user, profile }: NavbarClientProps) {
                 className="flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-medium text-stone-600 transition hover:bg-stone-100"
               >
                 <LogIn className="h-4 w-4" />
-                登录
+                {t('nav', 'login')}
               </Link>
               <Link
                 href="/register"
                 className="rounded-full bg-gradient-to-r from-brand-500 to-accent-500 px-4 py-2 text-sm font-semibold text-white shadow-md shadow-neon-green transition hover:from-brand-600 hover:to-accent-600"
               >
-                注册
+                {t('nav', 'register')}
               </Link>
             </div>
           )}
@@ -153,7 +155,7 @@ export function NavbarClient({ user, profile }: NavbarClientProps) {
                 className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-medium text-stone-700 hover:bg-stone-100"
               >
                 <link.icon className="h-4 w-4" />
-                {link.label}
+                {t('nav', link.labelKey)}
               </Link>
             ))}
             {!user && (
@@ -164,14 +166,14 @@ export function NavbarClient({ user, profile }: NavbarClientProps) {
                   className="mt-1 flex items-center justify-center gap-2 rounded-xl border border-stone-200 bg-white px-3 py-2.5 text-sm font-medium text-stone-700"
                 >
                   <LogIn className="h-4 w-4" />
-                  登录
+                  {t('nav', 'login')}
                 </Link>
                 <Link
                   href="/register"
                   onClick={() => setMenuOpen(false)}
                   className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-brand-500 to-accent-500 px-3 py-2.5 text-sm font-semibold text-white"
                 >
-                  注册
+                  {t('nav', 'register')}
                 </Link>
               </>
             )}

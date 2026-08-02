@@ -1,5 +1,8 @@
 import type { Metadata } from 'next';
+import { cookies } from 'next/headers';
 import './globals.css';
+import { I18nProvider } from '@/lib/i18n';
+import { LOCALE_COOKIE, DEFAULT_LOCALE, isLocale, getLocaleRtl, type LocaleCode } from '@/lib/i18n/config';
 
 export const metadata: Metadata = {
   title: {
@@ -20,10 +23,14 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const cookie = cookies().get(LOCALE_COOKIE)?.value;
+  const locale: LocaleCode = isLocale(cookie) ? cookie : DEFAULT_LOCALE;
+  const dir = getLocaleRtl(locale) ? 'rtl' : 'ltr';
+
   return (
-    <html lang="zh-CN">
+    <html lang={locale} dir={dir}>
       <body className="min-h-screen font-sans antialiased">
-        {children}
+        <I18nProvider locale={locale}>{children}</I18nProvider>
       </body>
     </html>
   );

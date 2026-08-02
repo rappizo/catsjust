@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { Heart, MessageCircle, Play } from 'lucide-react';
 import type { Note } from '@/lib/types';
 import { cn, formatCount } from '@/lib/utils';
+import { useI18n } from '@/lib/i18n';
 import { Avatar } from './Avatar';
 
 interface NoteCardProps {
@@ -12,9 +13,10 @@ interface NoteCardProps {
 }
 
 export function NoteCard({ note, priority = false }: NoteCardProps) {
+  const { t } = useI18n();
   const cover = note.cover_url || note.media?.[0]?.url;
   const isVideo = note.media_type === 'video';
-  const authorName = note.author?.nickname || note.author?.username || '喵友';
+  const authorName = note.author?.nickname || note.author?.username || t('note', 'authorFallback');
 
   return (
     <Link

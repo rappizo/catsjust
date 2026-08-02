@@ -5,8 +5,10 @@ import { Cake, PawPrint } from 'lucide-react';
 import { createClient } from '@/lib/supabase/server';
 import { Waterfall } from '@/components/Waterfall';
 import { Avatar } from '@/components/Avatar';
-import { formatDate, genderLabel } from '@/lib/utils';
+import { formatDate } from '@/lib/utils';
 import { isSupabaseConfigured } from '@/lib/config';
+import { getLocaleFromCookies } from '@/lib/i18n/cookies';
+import { getT } from '@/lib/i18n/dictionaries';
 import type { Cat, Note } from '@/lib/types';
 
 export async function generateMetadata({
@@ -31,6 +33,7 @@ export async function generateMetadata({
 export default async function CatPage({ params }: { params: { id: string } }) {
   if (!isSupabaseConfigured()) notFound();
 
+  const t = getT(getLocaleFromCookies());
   const supabase = createClient();
 
   const {
@@ -89,13 +92,25 @@ export default async function CatPage({ params }: { params: { id: string } }) {
 
           {/* 信息卡 */}
           <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
-            <InfoCard label="性别" value={genderLabel(typedCat.gender)} />
             <InfoCard
-              label="生日"
-              value={typedCat.birthday ? formatDate(typedCat.birthday) : '未知'}
+              label={t('cat', 'gender')}
+              value={
+                typedCat.gender === 'male'
+                  ? t('cat', 'genderMale')
+                  : typedCat.gender === 'female'
+                    ? t('cat', 'genderFemale')
+                    : t('cat', 'genderUnknown')
+              }
             />
-            <InfoCard label="笔记数" value={`${typedNotes.length} 篇`} />
-            <InfoCard label="性格" value={typedCat.personality_tags.length ? typedCat.personality_tags.slice(0, 3).join(' · ') : '待解锁'} />
+            <InfoCard
+              label={t('cat', 'birthday')}
+              value={typedCat.birthday ? formatDate(typedCat.birthday) : t('cat', 'unknown')}
+            />
+            <InfoCard label={t('cat', 'noteCount')} value={`${typedNotes.length}`} />
+            <InfoCard
+              label={t('cat', 'personality')}
+              value={typedCat.personality_tags.length ? typedCat.personality_tags.slice(0, 3).join(' · ') : t('cat', 'locked')}
+            />
           </div>
 
           {typedCat.bio && (
@@ -125,13 +140,13 @@ export default async function CatPage({ params }: { params: { id: string } }) {
       <div className="mt-8">
         <h2 className="mb-4 flex items-center gap-2 text-lg font-bold text-ink">
           <Cake className="h-5 w-5 text-brand-500" />
-          {typedCat.name} 的日常
+          {t('cat', 'daily').replace('{name}', typedCat.name)}
         </h2>
         <Waterfall
           initialNotes={typedNotes}
           staticMode
-          emptyTitle="还没有 TA 的内容"
-          emptyDescription={isOwner ? '去发布关联这只猫的笔记吧' : '等待铲屎官更新中'}
+          emptyTitle={t('cat', 'noContent')}
+          emptyDescription={isOwner ? t('cat', 'ownerEmpty') : t('cat', 'visitorEmpty')}
         />
       </div>
     </div>

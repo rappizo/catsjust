@@ -13,6 +13,7 @@ export interface Profile {
   bio: string | null;
   role: Role;
   status: UserStatus;
+  language?: string | null;
   created_at: string;
 }
 

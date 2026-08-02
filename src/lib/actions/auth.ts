@@ -4,6 +4,8 @@ import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { ERROR_MESSAGES } from '@/lib/constants';
+import { setLocaleCookie } from '@/lib/i18n/cookies';
+import { isLocale, DEFAULT_LOCALE, type LocaleCode } from '@/lib/i18n/config';
 
 export type ActionResult =
   | { ok: true; message?: string; redirectTo?: string }
@@ -32,6 +34,21 @@ export async function signIn(
     return { ok: false, error: friendlyError(error.message) };
   }
 
+  // 登录成功后：把用户偏好语言同步到 cookie
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (user) {
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('language')
+      .eq('id', user.id)
+      .maybeSingle();
+    if (isLocale(profile?.language)) {
+      setLocaleCookie(profile.language as LocaleCode);
+    }
+  }
+
   return { ok: true, redirectTo: '/' };
 }
 
@@ -43,6 +60,8 @@ export async function signUp(
   const email = String(formData.get('email') ?? '').trim();
   const password = String(formData.get('password') ?? '');
   const nickname = String(formData.get('nickname') ?? '').trim();
+  const languageRaw = String(formData.get('language') ?? '').trim();
+  const language: LocaleCode = isLocale(languageRaw) ? languageRaw : DEFAULT_LOCALE;
 
   if (!email || !password) {
     return { ok: false, error: '请输入邮箱和密码' };
@@ -59,13 +78,16 @@ export async function signUp(
     email,
     password,
     options: {
-      data: { nickname },
+      data: { nickname, language },
     },
   });
 
   if (error) {
     return { ok: false, error: friendlyError(error.message) };
   }
+
+  // 记住注册时选择的语言
+  setLocaleCookie(language);
 
   return { ok: true, message: '注册成功，请前往邮箱完成验证后登录', redirectTo: '/login' };
 }
@@ -78,12 +100,13 @@ export async function signOut(): Promise<void> {
   redirect('/');
 }
 
-/** 更新个人资料 */
+/** 更新个人资料（含界面语言） */
 export async function updateProfile(input: {
   nickname: string;
   bio: string;
   avatarUrl?: string | null;
   coverUrl?: string | null;
+  language?: string | null;
 }): Promise<ActionResult> {
   const nickname = input.nickname.trim();
   if (!nickname) {
@@ -102,17 +125,23 @@ export async function updateProfile(input: {
   } = await supabase.auth.getUser();
   if (!user) return { ok: false, error: '请先登录' };
 
+  const language = isLocale(input.language) ? input.language : undefined;
+
   const { error } = await supabase
     .from('profiles')
     .update({
       nickname,
       bio: input.bio,
+      ...(language !== undefined ? { language } : {}),
       ...(input.avatarUrl !== undefined ? { avatar_url: input.avatarUrl } : {}),
       ...(input.coverUrl !== undefined ? { cover_url: input.coverUrl } : {}),
     })
     .eq('id', user.id);
 
   if (error) return { ok: false, error: friendlyError(error.message) };
+
+  // 语言变化立即同步到 cookie，界面即时切换
+  if (language !== undefined) setLocaleCookie(language);
 
   revalidatePath('/settings');
   revalidatePath(`/profile/${user.id}`);

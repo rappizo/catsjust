@@ -58,7 +58,7 @@ export function InterestsSection({ topics, breeds, initial }: InterestsSectionPr
       <button
         onClick={handleSave}
         disabled={saving}
-        className="mt-4 flex items-center gap-1.5 rounded-xl bg-brand-500 px-5 py-2 text-sm font-semibold text-white transition hover:bg-brand-600 disabled:opacity-60"
+        className="mt-4 flex items-center gap-1.5 rounded-xl bg-brand-500 px-5 py-2 text-sm font-semibold text-[#04281a] transition hover:bg-brand-600 disabled:opacity-60"
       >
         {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
         {t('interests', 'save')}

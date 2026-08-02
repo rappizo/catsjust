@@ -89,7 +89,7 @@ export function CatsPlaza({ cats, breeds }: CatsPlazaProps) {
             onClick={() => setBreed(b)}
             className={cn(
               'shrink-0 rounded-full px-3.5 py-1.5 text-xs font-medium transition',
-              breed === b ? 'bg-brand-500 text-white' : 'bg-white text-stone-500 ring-1 ring-stone-200 hover:bg-stone-50'
+              breed === b ? 'bg-brand-500 text-[#04281a]' : 'bg-white text-stone-500 ring-1 ring-stone-200 hover:bg-stone-50'
             )}
           >
             {b}

@@ -190,7 +190,7 @@ export function ChatRoom({
                   className={cn(
                     'max-w-[75%] rounded-2xl px-3.5 py-2.5 text-sm leading-relaxed shadow-sm',
                     mine
-                      ? 'rounded-br-md bg-gradient-to-br from-brand-500 to-brand-600 text-white'
+                      ? 'rounded-br-md bg-gradient-to-br from-brand-500 to-brand-600 text-[#04281a]'
                       : 'rounded-bl-md border border-stone-200/60 bg-white text-stone-700'
                   )}
                 >
@@ -198,11 +198,11 @@ export function ChatRoom({
                   <p
                     className={cn(
                       'mt-1 text-right text-[10px]',
-                      mine ? 'text-white/60' : 'text-stone-300'
+                      mine ? 'text-[#04281a]/60' : 'text-stone-300'
                     )}
                   >
                     {mine && m.read ? (
-                      <span className="text-white/80">{t('messages', 'read')}</span>
+                      <span className="text-[#04281a]/80">{t('messages', 'read')}</span>
                     ) : (
                       timeAgo(m.created_at)
                     )}
@@ -236,7 +236,7 @@ export function ChatRoom({
           <button
             type="submit"
             disabled={sending || !input.trim()}
-            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-brand-500 to-accent-500 text-white shadow-neon-green transition hover:brightness-110 disabled:opacity-50"
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-brand-500 to-accent-500 text-[#04281a] shadow-neon-green transition hover:brightness-110 disabled:opacity-50"
             aria-label={t('messages', 'send')}
           >
             {sending ? <Loader2 className="h-5 w-5 animate-spin" /> : <Send className="h-5 w-5" />}

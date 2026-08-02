@@ -206,7 +206,7 @@ export function SettingsForm({ profile }: SettingsFormProps) {
       <button
         type="submit"
         disabled={submitting}
-        className="flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-brand-500 to-accent-500 py-3 text-sm font-bold text-white shadow-lg shadow-neon-green transition hover:from-brand-600 hover:to-accent-600 disabled:opacity-60"
+        className="flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-brand-500 to-accent-500 py-3 text-sm font-bold text-[#04281a] shadow-lg shadow-neon-green transition hover:from-brand-600 hover:to-accent-600 disabled:opacity-60"
       >
         {submitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
         {submitting ? t('settings', 'save') : t('settings', 'save')}

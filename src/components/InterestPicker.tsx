@@ -32,7 +32,7 @@ export function InterestPicker({ topics, breeds, selected, onChange }: InterestP
   const chip = (on: boolean) =>
     cn(
       'shrink-0 rounded-full px-3.5 py-1.5 text-xs font-medium transition',
-      on ? 'bg-brand-500 text-white shadow-neon-green' : 'bg-stone-100 text-stone-500 hover:bg-stone-200'
+      on ? 'bg-brand-500 text-[#04281a] shadow-neon-green' : 'bg-stone-100 text-stone-500 hover:bg-stone-200'
     );
 
   return (

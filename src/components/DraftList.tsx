@@ -70,7 +70,7 @@ export function DraftList({ drafts }: { drafts: Note[] }) {
             <button
               onClick={() => handlePublish(d.id)}
               disabled={publishing === d.id}
-              className="flex items-center gap-1 rounded-full bg-gradient-to-r from-brand-500 to-accent-500 px-3 py-1.5 text-xs font-semibold text-white shadow transition hover:brightness-110 disabled:opacity-60"
+              className="flex items-center gap-1 rounded-full bg-gradient-to-r from-brand-500 to-accent-500 px-3 py-1.5 text-xs font-semibold text-[#04281a] shadow transition hover:brightness-110 disabled:opacity-60"
             >
               {publishing === d.id ? (
                 <Loader2 className="h-3 w-3 animate-spin" />

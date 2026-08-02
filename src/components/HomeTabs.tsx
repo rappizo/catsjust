@@ -73,7 +73,7 @@ export function HomeTabs({
             <p className="text-sm text-stone-400">{t('home', 'followingLoginDesc')}</p>
             <Link
               href="/login?next=/"
-              className="rounded-full bg-gradient-to-r from-brand-500 to-accent-500 px-5 py-2 text-sm font-semibold text-white shadow-neon-green transition hover:brightness-110"
+              className="rounded-full bg-gradient-to-r from-brand-500 to-accent-500 px-5 py-2 text-sm font-semibold text-[#04281a] shadow-neon-green transition hover:brightness-110"
             >
               {t('home', 'loginToSee')}
             </Link>

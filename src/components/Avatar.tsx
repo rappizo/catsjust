@@ -30,7 +30,7 @@ export function Avatar({ src, alt = '头像', size = 'md', className }: AvatarPr
   return (
     <span
       className={cn(
-        'inline-flex shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-brand-300 to-brand-500 font-semibold text-white',
+        'inline-flex shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-brand-300 to-brand-500 font-semibold text-[#04281a]',
         SIZES[size],
         className
       )}

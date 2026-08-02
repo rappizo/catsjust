@@ -153,7 +153,7 @@ export function CatEditSheet({ catId, cat, breeds, open, onClose }: CatEditSheet
             </span>
             <button
               onClick={() => fileRef.current?.click()}
-              className="absolute -bottom-1 -right-1 flex h-8 w-8 items-center justify-center rounded-full bg-brand-500 text-white shadow transition hover:bg-brand-600"
+              className="absolute -bottom-1 -right-1 flex h-8 w-8 items-center justify-center rounded-full bg-brand-500 text-[#04281a] shadow transition hover:bg-brand-600"
               aria-label="更换头像"
             >
               <Camera className="h-4 w-4" />
@@ -287,7 +287,7 @@ export function CatEditSheet({ catId, cat, breeds, open, onClose }: CatEditSheet
           <button
             onClick={handleSave}
             disabled={saving}
-            className="flex w-full items-center justify-center gap-2 rounded-xl bg-brand-500 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-600 disabled:opacity-60"
+            className="flex w-full items-center justify-center gap-2 rounded-xl bg-brand-500 py-2.5 text-sm font-semibold text-[#04281a] transition hover:bg-brand-600 disabled:opacity-60"
           >
             {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
             保存修改

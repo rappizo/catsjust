@@ -76,7 +76,7 @@ export function TopicManager({ initialTopics }: { initialTopics: Topic[] }) {
         {!creating ? (
           <button
             onClick={() => setCreating(true)}
-            className="flex items-center gap-2 rounded-xl bg-brand-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-brand-600"
+            className="flex items-center gap-2 rounded-xl bg-brand-500 px-4 py-2 text-sm font-semibold text-[#04281a] transition hover:bg-brand-600"
           >
             <Plus className="h-4 w-4" />
             新建话题
@@ -113,7 +113,7 @@ export function TopicManager({ initialTopics }: { initialTopics: Topic[] }) {
             <button
               type="submit"
               disabled={busyId === 'new'}
-              className="flex items-center gap-1.5 rounded-xl bg-brand-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-brand-600 disabled:opacity-60"
+              className="flex items-center gap-1.5 rounded-xl bg-brand-500 px-4 py-2 text-sm font-semibold text-[#04281a] transition hover:bg-brand-600 disabled:opacity-60"
             >
               {busyId === 'new' ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
               创建
@@ -144,7 +144,7 @@ export function TopicManager({ initialTopics }: { initialTopics: Topic[] }) {
                     <button
                       type="submit"
                       disabled={busyId === topic.id}
-                      className="flex items-center gap-1.5 rounded-lg bg-brand-500 px-3 py-1.5 text-xs font-semibold text-white disabled:opacity-60"
+                      className="flex items-center gap-1.5 rounded-lg bg-brand-500 px-3 py-1.5 text-xs font-semibold text-[#04281a] disabled:opacity-60"
                     >
                       {busyId === topic.id ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Save className="h-3.5 w-3.5" />}
                       保存

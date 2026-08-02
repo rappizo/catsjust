@@ -9,7 +9,7 @@ import { useI18n } from '@/lib/i18n';
 export function HeroBanner() {
   const { t } = useI18n();
   return (
-    <section className="relative mb-6 overflow-hidden rounded-3xl bg-gradient-to-br from-brand-500 via-accent-500 to-fuchsia-600 px-6 py-8 text-white shadow-lg shadow-neon-green sm:px-10">
+    <section className="relative mb-6 overflow-hidden rounded-3xl bg-gradient-to-br from-brand-500 via-accent-500 to-fuchsia-600 px-6 py-8 text-[#04281a] shadow-lg shadow-neon-green sm:px-10">
       <span className="pointer-events-none absolute -left-4 -top-6 select-none text-7xl opacity-20 sm:text-8xl">
         🐱
       </span>
@@ -20,13 +20,13 @@ export function HeroBanner() {
         😺
       </span>
       <div className="relative max-w-xl">
-        <p className="mb-1.5 text-[11px] font-semibold uppercase tracking-widest text-white/80">
+        <p className="mb-1.5 text-[11px] font-semibold uppercase tracking-widest text-[#04281a]/70">
           {t('hero', 'eyebrow')}
         </p>
         <h1 className="text-2xl font-bold leading-tight sm:text-3xl">
           {t('hero', 'title')}
         </h1>
-        <p className="mt-2 text-sm leading-relaxed text-white/90">
+        <p className="mt-2 text-sm leading-relaxed text-[#04281a]/80">
           {t('hero', 'subtitle')}
         </p>
       </div>

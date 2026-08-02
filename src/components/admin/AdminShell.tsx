@@ -99,7 +99,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
                   href={item.href}
                   className={cn(
                     'flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition',
-                    active ? 'bg-brand-500 text-white' : 'bg-stone-100 text-stone-500'
+                    active ? 'bg-brand-500 text-[#04281a]' : 'bg-stone-100 text-stone-500'
                   )}
                 >
                   <item.icon className="h-3.5 w-3.5" />

@@ -52,7 +52,7 @@ export function BottomTabBar({ username, unreadCount = 0 }: BottomTabBarProps) {
           <Link
             href="/publish"
             aria-label={t('tab', 'publish')}
-            className="-mt-5 flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-brand-500 to-accent-500 text-white shadow-lg shadow-neon-green ring-4 ring-cream transition hover:brightness-110 active:scale-95"
+            className="-mt-5 flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-brand-500 to-accent-500 text-[#04281a] shadow-lg shadow-neon-green ring-4 ring-cream transition hover:brightness-110 active:scale-95"
           >
             <Plus className="h-7 w-7" strokeWidth={2.5} />
           </Link>

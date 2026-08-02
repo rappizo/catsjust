@@ -73,7 +73,7 @@ export function SensitiveWordManager({ initialWords }: { initialWords: Sensitive
         <button
           type="submit"
           disabled={busyId === 'new'}
-          className="flex items-center gap-1.5 rounded-xl bg-brand-500 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-600 disabled:opacity-60"
+          className="flex items-center gap-1.5 rounded-xl bg-brand-500 px-4 py-2.5 text-sm font-semibold text-[#04281a] transition hover:bg-brand-600 disabled:opacity-60"
         >
           {busyId === 'new' ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" />}
           新增

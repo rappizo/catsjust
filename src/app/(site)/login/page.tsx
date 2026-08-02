@@ -34,7 +34,7 @@ export default function LoginPage({
       <HeroBanner />
       <div className="mx-auto flex min-h-[60vh] max-w-md flex-col justify-center py-6">
         <div className="mb-8 text-center">
-          <span className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-400 to-brand-600 text-white shadow-lg shadow-brand-500/30">
+          <span className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-400 to-brand-600 text-[#04281a] shadow-lg shadow-brand-500/30">
             <CatIcon className="h-7 w-7" />
           </span>
           <h1 className="text-2xl font-bold text-ink">{t('auth', 'loginWelcome')}</h1>
@@ -78,7 +78,7 @@ export default function LoginPage({
           <button
             type="submit"
             disabled={submitting}
-            className="flex w-full items-center justify-center gap-2 rounded-xl bg-brand-500 py-2.5 text-sm font-semibold text-white shadow-md shadow-brand-500/30 transition hover:bg-brand-600 disabled:opacity-60"
+            className="flex w-full items-center justify-center gap-2 rounded-xl bg-brand-500 py-2.5 text-sm font-semibold text-[#04281a] shadow-md shadow-brand-500/30 transition hover:bg-brand-600 disabled:opacity-60"
           >
             {submitting && <Loader2 className="h-4 w-4 animate-spin" />}
             {t('auth', 'loginBtn')}

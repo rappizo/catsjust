@@ -88,7 +88,7 @@ export default async function SearchPage({
             />
             <button
               type="submit"
-              className="flex items-center gap-1.5 rounded-2xl bg-gradient-to-r from-brand-500 to-accent-500 px-6 py-3 text-sm font-semibold text-white shadow-md shadow-neon-green transition hover:brightness-110"
+              className="flex items-center gap-1.5 rounded-2xl bg-gradient-to-r from-brand-500 to-accent-500 px-6 py-3 text-sm font-semibold text-[#04281a] shadow-md shadow-neon-green transition hover:brightness-110"
             >
               <SearchIcon className="h-4 w-4" />
               {t('search', 'go')}

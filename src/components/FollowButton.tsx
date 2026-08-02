@@ -46,7 +46,7 @@ export function FollowButton({
       className={`flex items-center gap-1.5 rounded-full px-5 py-2 text-sm font-semibold transition ${
         following
           ? 'border border-stone-300 bg-white text-stone-600 hover:bg-stone-50'
-          : 'bg-gradient-to-r from-brand-500 to-brand-600 text-white shadow-neon-green hover:brightness-110'
+          : 'bg-gradient-to-r from-brand-500 to-brand-600 text-[#04281a] shadow-neon-green hover:brightness-110'
       }`}
     >
       {busy ? (

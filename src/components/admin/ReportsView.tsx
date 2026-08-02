@@ -106,7 +106,7 @@ export function ReportsView({ initialReports }: { initialReports: ReportRow[] })
             onClick={() => setFilter(tab.key)}
             className={cn(
               'rounded-full px-3.5 py-1.5 text-xs font-medium transition',
-              filter === tab.key ? 'bg-brand-500 text-white' : 'bg-white text-stone-500 ring-1 ring-stone-200 hover:bg-stone-50'
+              filter === tab.key ? 'bg-brand-500 text-[#04281a]' : 'bg-white text-stone-500 ring-1 ring-stone-200 hover:bg-stone-50'
             )}
           >
             {tab.label}

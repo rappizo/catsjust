@@ -109,7 +109,7 @@ function ListFollowButton({
         'flex shrink-0 items-center gap-1 rounded-full px-4 py-1.5 text-xs font-semibold transition disabled:opacity-60',
         following
           ? 'border border-stone-300 bg-white text-stone-500 hover:bg-stone-50'
-          : 'bg-gradient-to-r from-brand-500 to-brand-600 text-white shadow-neon-green hover:brightness-110'
+          : 'bg-gradient-to-r from-brand-500 to-brand-600 text-[#04281a] shadow-neon-green hover:brightness-110'
       )}
     >
       {busy ? (

@@ -12,7 +12,7 @@ export default function NotFound() {
       <p className="text-sm text-stone-400">{t('common', 'notFoundDesc')}</p>
       <Link
         href="/"
-        className="mt-2 rounded-full bg-brand-500 px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-600"
+        className="mt-2 rounded-full bg-brand-500 px-6 py-2.5 text-sm font-semibold text-[#04281a] transition hover:bg-brand-600"
       >
         回到首页
       </Link>

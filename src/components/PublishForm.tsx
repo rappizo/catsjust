@@ -416,7 +416,7 @@ export function PublishForm({ userId, initialCats, topics, editNote }: PublishFo
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={img.preview} alt="" className="h-full w-full object-cover" />
                 {i === 0 && (
-                  <span className="absolute left-1.5 top-1.5 rounded bg-brand-500 px-1.5 py-0.5 text-[10px] font-semibold text-white">
+                  <span className="absolute left-1.5 top-1.5 rounded bg-brand-500 px-1.5 py-0.5 text-[10px] font-semibold text-[#04281a]">
                     {t('publish', 'coverLabel')}
                   </span>
                 )}
@@ -790,7 +790,7 @@ export function PublishForm({ userId, initialCats, topics, editNote }: PublishFo
         <button
           type="submit"
           disabled={submitting}
-          className="flex flex-1 items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-brand-500 to-accent-500 py-3.5 text-sm font-bold text-white shadow-lg shadow-neon-green transition hover:from-brand-600 hover:to-accent-600 disabled:opacity-60"
+          className="flex flex-1 items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-brand-500 to-accent-500 py-3.5 text-sm font-bold text-[#04281a] shadow-lg shadow-neon-green transition hover:from-brand-600 hover:to-accent-600 disabled:opacity-60"
         >
           {submitting ? (
             <>

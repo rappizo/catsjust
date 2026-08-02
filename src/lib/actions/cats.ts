@@ -85,3 +85,32 @@ export async function updateCat(
   revalidatePath(`/cats/${catId}`);
   return { ok: true };
 }
+
+/** 删除猫咪档案（仅本人）：解除关联笔记后删除 */
+export async function deleteCat(catId: string): Promise<ActionResult> {
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { ok: false, error: '请先登录' };
+
+  // 校验归属（RLS 也会拦截，此处给更友好的提示）
+  const { data: cat } = await supabase
+    .from('cats')
+    .select('owner_id')
+    .eq('id', catId)
+    .maybeSingle();
+  if (!cat) return { ok: false, error: '猫咪档案不存在' };
+  if (cat.owner_id !== user.id) return { ok: false, error: '只能删除自己的猫咪档案' };
+
+  // 解除关联笔记，避免留下悬空引用
+  await supabase.from('notes').update({ cat_id: null }).eq('cat_id', catId);
+
+  const { error } = await supabase.from('cats').delete().eq('id', catId);
+  if (error) return { ok: false, error: `删除失败：${error.message}` };
+
+  revalidatePath('/cats');
+  revalidatePath('/');
+  revalidatePath(`/profile/${user.id}`);
+  return { ok: true, message: '猫咪档案已删除' };
+}

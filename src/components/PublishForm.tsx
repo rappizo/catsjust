@@ -35,6 +35,8 @@ interface PublishFormProps {
     avatar_url: string | null;
   }>;
   topics: Array<{ id: string; name: string }>;
+  /** 品种列表（来自 breeds 表，空则回退内置常量） */
+  breeds?: string[];
   /** 编辑模式：传入待编辑笔记 */
   editNote?: Note | null;
 }
@@ -52,12 +54,15 @@ interface VideoItem {
   duration: number;
 }
 
-export function PublishForm({ userId, initialCats, topics, editNote }: PublishFormProps) {
+export function PublishForm({ userId, initialCats, topics, breeds = [], editNote }: PublishFormProps) {
   const router = useRouter();
   const { t } = useI18n();
   const imageInputRef = useRef<HTMLInputElement>(null);
   const videoInputRef = useRef<HTMLInputElement>(null);
   const isEditing = !!editNote;
+
+  // 品种：优先数据库 breeds 表，空则回退内置常量
+  const breedOptions = breeds.length ? breeds : [...CAT_BREEDS];
 
   const [mediaType, setMediaType] = useState<MediaType>('image');
   const [images, setImages] = useState<ImageItem[]>([]);
@@ -666,7 +671,7 @@ export function PublishForm({ userId, initialCats, topics, editNote }: PublishFo
                     className="w-full rounded-lg border border-stone-200 bg-white px-3 py-2 text-sm outline-none focus:border-brand-400"
                   >
                     <option value="">{t('publish', 'breedPlaceholder')}</option>
-                    {CAT_BREEDS.map((b) => (
+                    {breedOptions.map((b) => (
                       <option key={b} value={b}>
                         {b}
                       </option>

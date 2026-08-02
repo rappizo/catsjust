@@ -2,9 +2,11 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { MessageCircle, PawPrint } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { Loader2, MessageCircle, PawPrint, Pencil, Trash2 } from 'lucide-react';
 import { cn, timeAgo } from '@/lib/utils';
 import { useI18n } from '@/lib/i18n';
+import { deleteNote } from '@/lib/actions/notes';
 import { Waterfall } from './Waterfall';
 import { Avatar } from './Avatar';
 import type { Cat, CommentItem, Note } from '@/lib/types';
@@ -85,8 +87,14 @@ export function ProfileTabs({
         ))}
       </div>
 
-      {/* 作品 / 收藏 / 赞过 */}
-      {(tab === 'works' || tab === 'favorites' || tab === 'likes') && (
+      {/* 作品（本人：可编辑/删除） / 收藏 / 赞过 */}
+      {tab === 'works' && isOwner ? (
+        <OwnerWorksGrid
+          notes={worksNotes}
+          emptyTitle={dataFor.works.empty}
+          emptyDescription={dataFor.works.desc}
+        />
+      ) : (tab === 'works' || tab === 'favorites' || tab === 'likes') && (
         <Waterfall
           key={tab}
           initialNotes={dataFor[tab].notes}
@@ -185,6 +193,103 @@ export function ProfileTabs({
             ))}
           </div>
         ))}
+    </div>
+  );
+}
+
+/** 本人作品网格：瀑布流卡片 + 编辑 / 删除操作 */
+function OwnerWorksGrid({
+  notes,
+  emptyTitle,
+  emptyDescription,
+}: {
+  notes: Note[];
+  emptyTitle: string;
+  emptyDescription: string;
+}) {
+  const router = useRouter();
+  const { t } = useI18n();
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [confirmId, setConfirmId] = useState<string | null>(null);
+
+  async function handleDelete(noteId: string) {
+    if (confirmId !== noteId) {
+      setConfirmId(noteId);
+      setTimeout(() => setConfirmId((c) => (c === noteId ? null : c)), 3000);
+      return;
+    }
+    setDeletingId(noteId);
+    const res = await deleteNote(noteId);
+    setDeletingId(null);
+    setConfirmId(null);
+    if (res.ok) {
+      router.refresh();
+    } else {
+      alert(res.error);
+    }
+  }
+
+  if (!notes.length) {
+    return (
+      <div className="flex flex-col items-center gap-3 rounded-2xl border border-stone-200/60 bg-white py-16 text-center shadow-card">
+        <PawPrint className="h-9 w-9 text-stone-300" />
+        <p className="font-semibold text-stone-600">{emptyTitle}</p>
+        <p className="text-sm text-stone-400">{emptyDescription}</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="masonry">
+      {notes.map((note) => {
+        const cover = note.cover_url || note.media?.[0]?.url;
+        return (
+          <div
+            key={note.id}
+            className="masonry-item overflow-hidden rounded-xl border border-stone-200/60 bg-white shadow-card transition-all hover:shadow-card-hover"
+          >
+            <Link href={`/notes/${note.id}`} className="block">
+              {cover ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={cover} alt={note.title ?? ''} className="w-full object-cover" />
+              ) : (
+                <div className="flex aspect-video w-full items-center justify-center bg-brand-50 text-3xl">
+                  {note.media_type === 'video' ? '🎬' : '🐱'}
+                </div>
+              )}
+              {note.title && (
+                <p className="px-3 py-2 text-sm font-medium text-ink">{note.title}</p>
+              )}
+            </Link>
+            {/* 操作条：编辑 / 删除 */}
+            <div className="flex items-center gap-1 border-t border-stone-100 px-2 py-1.5">
+              <Link
+                href={`/publish?edit=${note.id}`}
+                className="flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium text-stone-400 transition hover:bg-brand-50 hover:text-brand-600"
+              >
+                <Pencil className="h-3.5 w-3.5" />
+                {t('note', 'edit')}
+              </Link>
+              <button
+                onClick={() => handleDelete(note.id)}
+                disabled={deletingId === note.id}
+                className={`flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium transition ${
+                  confirmId === note.id
+                    ? 'bg-red-500 text-white'
+                    : 'text-stone-400 hover:bg-red-50 hover:text-red-500'
+                }`}
+              >
+                {deletingId === note.id ? (
+                  <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                ) : (
+                  <Trash2 className="h-3.5 w-3.5" />
+                )}
+                {confirmId === note.id ? t('note', 'confirmDelete') : t('note', 'deleteNote')}
+              </button>
+            </div>
+          </div>
+        );
+      })}
     </div>
   );
 }

@@ -6,6 +6,7 @@ import { createClient } from '@/lib/supabase/server';
 import { Waterfall } from '@/components/Waterfall';
 import { Avatar } from '@/components/Avatar';
 import { CatEditButton } from '@/components/CatEditButton';
+import { CatDeleteButton } from '@/components/CatDeleteButton';
 import { formatDate } from '@/lib/utils';
 import { isSupabaseConfigured } from '@/lib/config';
 import { getLocaleFromCookies } from '@/lib/i18n/cookies';
@@ -94,7 +95,10 @@ export default async function CatPage({ params }: { params: { id: string } }) {
                   <LinkToOwner owner={typedCat.owner} />
                 )}
                 {isOwner && (
-                  <CatEditButton catId={typedCat.id} cat={typedCat} breeds={breeds} />
+                  <>
+                    <CatEditButton catId={typedCat.id} cat={typedCat} breeds={breeds} />
+                    <CatDeleteButton catId={typedCat.id} catName={typedCat.name} />
+                  </>
                 )}
               </div>
             </div>

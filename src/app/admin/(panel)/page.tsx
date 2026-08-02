@@ -10,6 +10,8 @@ import {
   MessageSquare,
   PawPrint,
   Send,
+  SlidersHorizontal,
+  ThumbsDown,
   TrendingUp,
   Users,
 } from 'lucide-react';
@@ -119,7 +121,7 @@ export default async function AdminDashboard() {
   // 5) 兴趣标签分布
   const { data: interestRows } = await supabase
     .from('profile_interests')
-    .select('interest_type, interest_value')
+    .select('interest_type, interest_value, user_id')
     .limit(5000);
   const topicCounts: Record<string, number> = {};
   const breedCounts: Record<string, number> = {};
@@ -132,6 +134,26 @@ export default async function AdminDashboard() {
   const maxTopic = Math.max(...topTopics.map(([, c]) => c), 1);
   const maxBreed = Math.max(...topBreeds.map(([, c]) => c), 1);
 
+  // 6) 推荐反馈：「不感兴趣」内容 Top + 覆盖用户数
+  const { data: niRows } = await supabase
+    .from('not_interested')
+    .select('note_id, note:notes(id, title, cover_url, media_type)')
+    .limit(5000);
+  const niCounts: Record<string, { note: { id: string; title: string | null; cover_url: string | null; media_type: string }; count: number }> = {};
+  (niRows ?? []).forEach((r) => {
+    const note = Array.isArray(r.note) ? r.note[0] : r.note;
+    if (!note) return;
+    if (!niCounts[r.note_id]) niCounts[r.note_id] = { note, count: 0 };
+    niCounts[r.note_id].count += 1;
+  });
+  const topNotInterested = Object.values(niCounts).sort((a, b) => b.count - a.count).slice(0, 5);
+  const maxNi = Math.max(...topNotInterested.map((x) => x.count), 1);
+
+  const { data: niAll } = await supabase.from('not_interested').select('user_id').limit(5000);
+  const niUserCount = new Set((niAll ?? []).map((r) => r.user_id)).size;
+  const interestUserIds = new Set((interestRows ?? []).map((r) => r.user_id));
+  const interestUserCount = interestUserIds.size;
+
   const stats = [
     { label: '总用户数', value: totalUsers ?? 0, icon: Users, color: 'text-blue-500 bg-blue-50' },
     { label: '今日新增用户', value: todayRegistered ?? 0, icon: Users, color: 'text-sky-500 bg-sky-50' },
@@ -142,6 +164,8 @@ export default async function AdminDashboard() {
     { label: '总收藏数', value: formatCount(totalFavorites ?? 0), icon: Bookmark, color: 'text-violet-500 bg-violet-50' },
     { label: '私信会话', value: formatCount(totalConversations ?? 0), icon: MessageSquare, color: 'text-teal-500 bg-teal-50' },
     { label: '总消息量', value: formatCount(totalMessages ?? 0), icon: Send, color: 'text-cyan-500 bg-cyan-50' },
+    { label: '设置兴趣用户', value: interestUserCount, icon: SlidersHorizontal, color: 'text-emerald-500 bg-emerald-50' },
+    { label: '不感兴趣反馈', value: formatCount(niAll?.length ?? 0), icon: ThumbsDown, color: 'text-amber-500 bg-amber-50' },
     { label: '待处理举报', value: openReports ?? 0, icon: Flag, color: 'text-red-500 bg-red-50' },
   ];
 
@@ -344,6 +368,56 @@ export default async function AdminDashboard() {
           )}
         </section>
       </div>
+
+      {/* 推荐数据看板：不感兴趣内容 Top */}
+      <section className="rounded-2xl border border-stone-200/60 bg-white p-5 shadow-card">
+        <div className="mb-4 flex items-center justify-between">
+          <h2 className="flex items-center gap-1.5 font-semibold text-ink">
+            <ThumbsDown className="h-4 w-4 text-amber-500" />
+            「不感兴趣」内容 Top 5（推荐降权）
+          </h2>
+          <span className="rounded-full bg-amber-500/10 px-2.5 py-0.5 text-[11px] font-medium text-amber-500">
+            {niUserCount} 位用户 · {niAll?.length ?? 0} 次反馈
+          </span>
+        </div>
+        {!topNotInterested.length ? (
+          <p className="py-6 text-center text-sm text-stone-400">暂无「不感兴趣」反馈 🎉</p>
+        ) : (
+          <ul className="space-y-2.5">
+            {topNotInterested.map((item, i) => (
+              <li key={item.note.id} className="flex items-center gap-3">
+                <span className="w-4 shrink-0 text-center text-sm font-bold text-stone-300">{i + 1}</span>
+                {item.note.cover_url ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={item.note.cover_url} alt="" className="h-9 w-9 shrink-0 rounded-lg object-cover" />
+                ) : (
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-brand-50 text-base">
+                    {item.note.media_type === 'video' ? '🎬' : '🐱'}
+                  </span>
+                )}
+                <div className="min-w-0 flex-1">
+                  <Link
+                    href={`/notes/${item.note.id}`}
+                    target="_blank"
+                    className="block truncate text-sm font-medium text-ink hover:text-brand-500"
+                  >
+                    {item.note.title || '（无标题）'}
+                  </Link>
+                  <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-stone-100">
+                    <div
+                      className="h-full rounded-full bg-gradient-to-r from-amber-400 to-orange-400"
+                      style={{ width: `${Math.max((item.count / maxNi) * 100, 8)}%` }}
+                    />
+                  </div>
+                </div>
+                <span className="shrink-0 rounded-full bg-amber-50 px-2 py-0.5 text-[11px] font-semibold text-amber-600">
+                  {item.count} 次
+                </span>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
 
       {/* 待审列表 */}
       <div className="rounded-2xl border border-stone-200/60 bg-white shadow-card">

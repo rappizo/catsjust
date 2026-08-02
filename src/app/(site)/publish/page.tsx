@@ -33,7 +33,7 @@ export default async function PublishPage({
     redirect('/login?next=/publish');
   }
 
-  const [{ data: cats }, { data: topics }, { data: drafts }] = await Promise.all([
+  const [{ data: cats }, { data: topics }, { data: drafts }, { data: breeds }] = await Promise.all([
     supabase
       .from('cats')
       .select('id, name, breed, gender, birthday, personality_tags, avatar_url')
@@ -51,6 +51,7 @@ export default async function PublishPage({
       .eq('status', 'draft')
       .order('created_at', { ascending: false })
       .limit(50),
+    supabase.from('breeds').select('name').order('name'),
   ]);
 
   // 编辑模式：加载自己的笔记
@@ -91,6 +92,7 @@ export default async function PublishPage({
         userId={user.id}
         initialCats={cats ?? []}
         topics={topics ?? []}
+        breeds={(breeds ?? []).map((b: any) => b.name)}
         editNote={editNote}
       />
 

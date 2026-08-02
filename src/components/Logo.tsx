@@ -9,9 +9,9 @@ export function Logo({ className }: { className?: string }) {
         <CatIcon className="h-5 w-5" />
       </span>
       <span className="text-xl font-bold tracking-tight text-ink">
-        喵岛
+        只有猫
         <span className="ml-1.5 align-middle text-[10px] font-medium tracking-widest text-accent-400">
-          猫咪社区
+          Just Cats Here
         </span>
       </span>
     </Link>

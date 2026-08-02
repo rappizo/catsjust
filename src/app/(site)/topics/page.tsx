@@ -38,13 +38,13 @@ export default async function TopicsPage() {
         <p className="mt-1 text-sm text-stone-400">找到你感兴趣的话题，一起云吸猫</p>
       </div>
 
-      {/* 按品种逛喵岛 */}
+      {/* 按品种逛 */}
       <section className="mb-8 rounded-3xl border border-stone-200/60 bg-white p-5 shadow-card">
         <div className="mb-4 flex items-center gap-2">
           <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-accent-500 to-fuchsia-600 text-sm text-white shadow-neon-purple">
             🐱
           </span>
-          <h2 className="font-semibold text-ink">按品种逛喵岛</h2>
+          <h2 className="font-semibold text-ink">按品种逛</h2>
           <span className="rounded-full bg-brand-500/15 px-2 py-0.5 text-[11px] font-medium text-brand-500">
             霓虹品种标签
           </span>

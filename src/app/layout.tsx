@@ -3,13 +3,13 @@ import './globals.css';
 
 export const metadata: Metadata = {
   title: {
-    default: '喵岛 · 猫咪分享社区',
-    template: '%s · 喵岛',
+    default: '只有猫 · Just Cats Here',
+    template: '%s · 只有猫',
   },
-  description: '喵岛 —— 只属于猫咪的内容分享社区。晒出你的猫，遇见全世界的猫。',
-  keywords: ['猫咪', '猫', '猫咪社区', '猫咪分享', '吸猫', 'Cat'],
+  description: '只有猫（CATSJUST）—— 只属于猫咪的内容分享社区。晒出你的猫，遇见全世界的猫。',
+  keywords: ['猫咪', '猫', 'Just Cats Here', '猫咪分享', '吸猫', 'CATSJUST'],
   openGraph: {
-    title: '喵岛 · 猫咪分享社区',
+    title: '只有猫 · Just Cats Here',
     description: '只属于猫咪的内容分享社区',
     type: 'website',
   },

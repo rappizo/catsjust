@@ -1,5 +1,5 @@
 /**
- * 喵岛 · Supabase 连通性冒烟测试
+ * 只有猫 · Supabase 连通性冒烟测试
  * 用法：node scripts/supabase-smoke.mjs
  * 验证：publishable 密钥能否连通 API、RLS 查询是否正常
  */

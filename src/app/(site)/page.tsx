@@ -7,7 +7,7 @@ const PAGE_SIZE = 12;
 
 export const metadata = {
   title: '发现猫咪',
-  description: '喵岛 —— 只属于猫咪的内容分享社区',
+  description: '只有猫（CATSJUST）—— 只属于猫咪的内容分享社区',
 };
 
 export default async function HomePage() {
@@ -35,7 +35,7 @@ export default async function HomePage() {
         <span className="pointer-events-none absolute bottom-2 right-24 hidden select-none text-6xl opacity-20 sm:block">😺</span>
         <div className="relative max-w-xl">
           <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-white/80">
-            Cat Island
+            CATSJUST
           </p>
           <h1 className="text-3xl font-bold leading-tight sm:text-4xl">
             只属于猫咪的分享社区

@@ -32,7 +32,7 @@ export default function LoginPage({
         <span className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-400 to-brand-600 text-white shadow-lg shadow-brand-500/30">
           <CatIcon className="h-7 w-7" />
         </span>
-        <h1 className="text-2xl font-bold text-ink">欢迎回到喵岛</h1>
+        <h1 className="text-2xl font-bold text-ink">欢迎回到只有猫</h1>
         <p className="mt-1 text-sm text-stone-400">登录后继续云吸猫</p>
       </div>
 

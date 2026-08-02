@@ -56,7 +56,7 @@ export default async function BreedPage({ params }: { params: { breed: string } 
           </h1>
         </div>
         <div className="flex flex-wrap items-center gap-2 px-6 py-4">
-          <span className="text-xs text-stone-500">按品种逛喵岛：</span>
+          <span className="text-xs text-stone-500">按品种：</span>
           {CAT_BREEDS.map((b) => (
             <Link
               key={b}

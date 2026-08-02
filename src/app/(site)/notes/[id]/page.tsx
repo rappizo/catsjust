@@ -31,7 +31,7 @@ export async function generateMetadata({
     .maybeSingle();
   return {
     title: note?.title || '猫咪笔记',
-    description: note?.content?.slice(0, 80) || '喵岛猫咪笔记',
+    description: note?.content?.slice(0, 80) || '只有猫笔记',
   };
 }
 

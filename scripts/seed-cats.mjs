@@ -1,5 +1,5 @@
 /**
- * 喵岛 · 种子内容生成脚本
+ * 只有猫 · 种子内容生成脚本
  * 通过 apiyi 图片 API 生成 3 张不同的猫图，
  * 创建 3 个账号，并为每个账号发布一篇对应品种的笔记（直接 published）。
  *
@@ -126,7 +126,7 @@ async function cleanup() {
 
 // ---------- 主流程 ----------
 async function main() {
-  console.log('===== 喵岛 · 种子内容生成 =====\n');
+  console.log('===== 只有猫 · 种子内容生成 =====\n');
   await cleanup();
   const results = [];
 

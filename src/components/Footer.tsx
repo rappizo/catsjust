@@ -8,9 +8,9 @@ export function Footer() {
         <div className="flex items-center gap-2 text-stone-500">
           <CatIcon className="h-5 w-5 text-brand-500" />
           <span className="font-semibold text-stone-700">
-            喵岛
+            只有猫
             <span className="ml-1 text-[10px] font-medium tracking-widest text-accent-400">
-              霓虹猫社区
+              CATSJUST
             </span>
           </span>
         </div>

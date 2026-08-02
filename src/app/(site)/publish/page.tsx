@@ -43,6 +43,22 @@ export default async function PublishPage() {
           发布后将进入审核，通过后公开展示给所有喵友
         </p>
       </div>
+
+      {/* 审核须知 */}
+      <div className="mb-6 rounded-2xl border border-amber-500/30 bg-amber-500/10 p-4">
+        <p className="mb-2 flex items-center gap-1.5 text-sm font-semibold text-amber-400">
+          📋 审核须知
+          <span className="rounded-full bg-amber-500/15 px-2 py-0.5 text-[11px] font-medium">
+            纯猫咪 · 真实
+          </span>
+        </p>
+        <ul className="space-y-1 text-xs leading-relaxed text-stone-400">
+          <li>· 内容必须与猫咪相关，与猫无关将不通过审核</li>
+          <li>· 必须为真实拍摄，AI 生成的图片/视频将不通过审核</li>
+          <li>· 禁止直接广告宣传，产品可融入内容但不能直接推广</li>
+        </ul>
+      </div>
+
       <PublishForm
         userId={user.id}
         initialCats={cats ?? []}

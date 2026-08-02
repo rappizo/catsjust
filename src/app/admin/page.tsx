@@ -49,7 +49,7 @@ export default async function AdminDashboard() {
     <div className="space-y-6">
       <div>
         <h1 className="text-xl font-bold text-ink">仪表盘</h1>
-        <p className="mt-0.5 text-sm text-stone-400">喵岛运营数据概览</p>
+        <p className="mt-0.5 text-sm text-stone-400">只有猫运营数据概览</p>
       </div>
 
       {/* 数据卡片 */}

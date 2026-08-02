@@ -41,7 +41,7 @@ export default function RegisterPage() {
         <span className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-400 to-brand-600 text-white shadow-lg shadow-brand-500/30">
           <CatIcon className="h-7 w-7" />
         </span>
-        <h1 className="text-2xl font-bold text-ink">加入喵岛</h1>
+        <h1 className="text-2xl font-bold text-ink">加入只有猫</h1>
         <p className="mt-1 text-sm text-stone-400">注册一个账号，开始记录你的猫</p>
       </div>
 

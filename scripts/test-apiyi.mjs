@@ -1,5 +1,5 @@
 /**
- * 喵岛 · apiyi 图片 API 连通性测试
+ * 只有猫 · apiyi 图片 API 连通性测试
  * 用法：node scripts/test-apiyi.mjs
  */
 import { readFileSync } from 'node:fs';

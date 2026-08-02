@@ -24,7 +24,7 @@ export async function generateMetadata({
     .maybeSingle();
   return {
     title: profile?.nickname ? `${profile.nickname} 的主页` : '用户主页',
-    description: profile?.bio?.slice(0, 80) || '喵岛用户主页',
+    description: profile?.bio?.slice(0, 80) || '只有猫用户主页',
   };
 }
 

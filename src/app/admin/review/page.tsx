@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server';
 import { ReviewActions, ProcessedBadge } from '@/components/admin/ReviewActions';
+import { ShieldCheck } from 'lucide-react';
 import { timeAgo } from '@/lib/utils';
 import type { Note } from '@/lib/types';
 
@@ -30,6 +31,31 @@ export default async function AdminReviewPage() {
         <h1 className="text-xl font-bold text-ink">内容审核</h1>
         <p className="mt-0.5 text-sm text-stone-400">先审后发：新内容默认待审核，通过后公开展示</p>
       </div>
+
+      {/* 审核规范 */}
+      <section className="rounded-2xl border border-stone-200/60 bg-white p-4 shadow-card">
+        <h2 className="mb-2.5 flex items-center gap-1.5 font-semibold text-ink">
+          <ShieldCheck className="h-4 w-4 text-brand-500" />
+          审核规范
+          <span className="rounded-full bg-brand-500/15 px-2 py-0.5 text-[11px] font-medium text-brand-500">
+            平台定位：纯猫咪 · 真实
+          </span>
+        </h2>
+        <ul className="space-y-1.5 text-sm text-stone-500">
+          <li className="flex items-start gap-2">
+            <span className="mt-0.5 text-brand-500">✅</span>
+            <span>内容必须与<b className="text-stone-600">猫咪</b>相关 —— 与猫无关的内容不通过</span>
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="mt-0.5 text-accent-400">🤖</span>
+            <span>必须为<b className="text-stone-600">真实拍摄</b> —— AI 生成的图片/视频不通过</span>
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="mt-0.5 text-rose-400">📢</span>
+            <span>禁止<b className="text-stone-600">直接广告</b> —— 产品可融入内容，但不能做任何直接宣传</span>
+          </li>
+        </ul>
+      </section>
 
       {/* 待审队列 */}
       <section>

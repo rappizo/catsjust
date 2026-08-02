@@ -29,6 +29,9 @@ yarn-error.log*
 .env.test.local
 .env.production.local
 
+# Supabase access token（临时，勿提交）
+.supabase-token
+
 # vercel
 .vercel
 

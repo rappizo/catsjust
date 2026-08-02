@@ -92,7 +92,7 @@ export async function signUp(
   }
 
   const supabase = createClient();
-  const { error } = await supabase.auth.signUp({
+  const { data, error } = await supabase.auth.signUp({
     email,
     password,
     options: {
@@ -107,6 +107,13 @@ export async function signUp(
   // 记住注册时选择的语言
   setLocaleCookie(language);
 
+  // 邮箱确认已关闭时，signUp 直接返回 session（注册即登录）
+  if (data.session) {
+    revalidatePath('/', 'layout');
+    return { ok: true, message: '注册成功，欢迎来到只有猫！', redirectTo: '/' };
+  }
+
+  // 邮箱确认开启（项目尚未关闭确认）：需前往邮箱验证后登录
   return { ok: true, message: '注册成功，请前往邮箱完成验证后登录', redirectTo: '/login' };
 }
 

@@ -4,7 +4,7 @@ import { useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Camera, Loader2, Save } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
-import { uploadAvatar } from '@/lib/storage';
+import { uploadAvatar, uploadCover } from '@/lib/storage';
 import { updateProfile } from '@/lib/actions/auth';
 import { Avatar } from '@/components/Avatar';
 import { useI18n } from '@/lib/i18n';
@@ -59,7 +59,7 @@ export function SettingsForm({ profile }: SettingsFormProps) {
 
     const client = createClient();
     try {
-      const url = await uploadFileToCover(client, file, profile.id);
+      const url = await uploadCover(client, file, profile.id);
       setCoverUrl(url);
     } catch (e) {
       setMessage({ type: 'error', text: e instanceof Error ? e.message : t('settings', 'coverUploadFailed') });
@@ -215,20 +215,3 @@ export function SettingsForm({ profile }: SettingsFormProps) {
   );
 }
 
-/** 封面上传到 media 桶的 covers 目录 */
-async function uploadFileToCover(
-  client: ReturnType<typeof createClient>,
-  file: File,
-  userId: string
-): Promise<string> {
-  const ext = file.name.split('.').pop()?.toLowerCase() || 'jpg';
-  const path = `${userId}/covers/cover.${ext}`;
-  const { error } = await client.storage.from('media').upload(path, file, {
-    cacheControl: '3600',
-    upsert: true,
-    contentType: file.type || undefined,
-  });
-  if (error) throw new Error(`上传失败：${error.message}`);
-  const { data } = client.storage.from('media').getPublicUrl(path);
-  return data.publicUrl;
-}

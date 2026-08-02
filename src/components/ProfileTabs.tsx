@@ -65,8 +65,8 @@ export function ProfileTabs({
 
   return (
     <div>
-      {/* Tab 栏（横向可滚动） */}
-      <div className="no-scrollbar -mx-1 mb-5 flex items-center gap-1 overflow-x-auto border-b border-stone-200/70 px-1">
+      {/* Tab 栏（换行展示全部） */}
+      <div className="-mx-1 mb-5 flex flex-wrap items-center gap-1 border-b border-stone-200/70 px-1">
         {tabs.map((tItem) => (
           <button
             key={tItem.key}

@@ -42,7 +42,12 @@ export const zhHant = {
     "loadingFail": "內容載入失敗：",
     "following": "關注",
     "followingEmptyTitle": "關注的人還沒有發佈內容",
-    "followingEmptyDesc": "去關注一些喵友，第一時間看到他們的新內容吧"
+    "followingEmptyDesc": "去關注一些喵友，第一時間看到他們的新內容吧",
+    "discover": "發現",
+    "pickCat": "選貓",
+    "followingLoginTitle": "登入後查看追蹤動態",
+    "followingLoginDesc": "追蹤你喜歡的鏟屎官，第一時間看到他們的新內容",
+    "loginToSee": "去登入"
   },
   "topics": {
     "title": "話題廣場",
@@ -184,7 +189,19 @@ export const zhHant = {
     "noFavorites": "還沒有收藏內容",
     "noLikes": "還沒有喜歡的內容",
     "ownEmptyFavorites": "去收藏一些喜歡的貓咪內容吧",
-    "ownEmptyLikes": "去給喜歡的貓咪內容點個讚吧"
+    "ownEmptyLikes": "去給喜歡的貓咪內容點個讚吧",
+    "copyId": "複製 CATSJUST ID",
+    "followingList": "查看追蹤列表",
+    "followersList": "查看粉絲列表",
+    "receivedLikes": "獲讚",
+    "receivedFavorites": "收藏",
+    "commentsTab": "評論",
+    "catsTab": "貓咪",
+    "noComments": "尚未發表任何評論",
+    "commentedOn": "評論了",
+    "untitled": "未命名",
+    "noCats": "尚未建立貓咪檔案",
+    "createCat": "前往建立貓咪檔案"
   },
   "feed": {
     "back": "返回",
@@ -261,5 +278,29 @@ export const zhHant = {
     "noCats": "沒有相關貓咪",
     "noBreeds": "沒有相關品種",
     "empty": "沒有找到與「{q}」相關的內容"
+  },
+  "tab": {
+    "home": "首頁",
+    "cats": "貓咪",
+    "publish": "發佈",
+    "messages": "訊息",
+    "me": "我"
+  },
+  "cats": {
+    "title": "貓咪廣場",
+    "subtitle": "發現每一隻獨特的貓 · 按品種瀏覽",
+    "searchPlaceholder": "搜尋貓咪 / 品種 / 鏟屎官…",
+    "empty": "還沒有貓咪檔案",
+    "emptyDesc": "成為第一個建立貓咪檔案的人吧"
+  },
+  "messages": {
+    "title": "訊息",
+    "dm": "私訊",
+    "notifications": "通知",
+    "dmEmptyTitle": "私訊功能即將上線",
+    "dmEmptyDesc": "屆時你可以和喜歡的鏟屎官一對一私聊，敬請期待"
+  },
+  "userList": {
+    "empty": "這裡空空如也"
   }
 };

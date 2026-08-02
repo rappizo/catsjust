@@ -42,7 +42,12 @@ export const fr = {
     "loadingFail": "Échec du chargement du contenu :",
     "following": "Suivi",
     "followingEmptyTitle": "Les personnes que vous suivez n'ont rien publié pour le moment",
-    "followingEmptyDesc": "Suivez d'autres chats et découvrez leurs nouveautés en premier !"
+    "followingEmptyDesc": "Suivez d'autres chats et découvrez leurs nouveautés en premier !",
+    "discover": "Découvrir",
+    "pickCat": "Choisir un chat",
+    "followingLoginTitle": "Connectez-vous pour voir votre fil d'abonnements",
+    "followingLoginDesc": "Suivez les cat parents que vous aimez et découvrez leurs nouvelles publications en premier.",
+    "loginToSee": "Se connecter"
   },
   "topics": {
     "title": "Place des sujets",
@@ -184,7 +189,19 @@ export const fr = {
     "noFavorites": "Aucun contenu mis en favori",
     "noLikes": "Aucun contenu aimé",
     "ownEmptyFavorites": "Va mettre en favoris quelques contenus de chats que tu aimes",
-    "ownEmptyLikes": "Va mettre un like à quelques contenus de chats que tu aimes"
+    "ownEmptyLikes": "Va mettre un like à quelques contenus de chats que tu aimes",
+    "copyId": "Copier l'ID CATSJUST",
+    "followingList": "Voir la liste des abonnements",
+    "followersList": "Voir la liste des abonnés",
+    "receivedLikes": "J'aime reçus",
+    "receivedFavorites": "Favoris",
+    "commentsTab": "Commentaires",
+    "catsTab": "Chats",
+    "noComments": "Pas encore de commentaires",
+    "commentedOn": "a commenté",
+    "untitled": "Sans titre",
+    "noCats": "Aucun profil de chat pour l'instant",
+    "createCat": "Créer un profil de chat"
   },
   "feed": {
     "back": "Retour",
@@ -261,5 +278,29 @@ export const fr = {
     "noCats": "Aucun chat trouvé",
     "noBreeds": "Aucune race trouvée",
     "empty": "Aucun contenu trouvé pour « {q} »"
+  },
+  "tab": {
+    "home": "Accueil",
+    "cats": "Chats",
+    "publish": "Publier",
+    "messages": "Messages",
+    "me": "Moi"
+  },
+  "cats": {
+    "title": "Place des chats",
+    "subtitle": "Découvrez chaque chat unique · Parcourez par race",
+    "searchPlaceholder": "Rechercher des chats / races / propriétaires…",
+    "empty": "Aucun profil de chat pour le moment",
+    "emptyDesc": "Soyez le premier à créer un profil de chat !"
+  },
+  "messages": {
+    "title": "Messages",
+    "dm": "Messages privés",
+    "notifications": "Notifications",
+    "dmEmptyTitle": "La messagerie privée arrive bientôt",
+    "dmEmptyDesc": "Vous pourrez bientôt discuter en privé avec vos propriétaires de chats préférés. Restez à l'écoute !"
+  },
+  "userList": {
+    "empty": "C'est vide ici"
   }
 };

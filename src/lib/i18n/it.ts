@@ -42,7 +42,12 @@ export const it = {
     "loadingFail": "Caricamento contenuti non riuscito:",
     "following": "Seguiti",
     "followingEmptyTitle": "Le persone che segui non hanno ancora pubblicato contenuti",
-    "followingEmptyDesc": "Segui qualche amico felino e scopri subito i loro nuovi contenuti"
+    "followingEmptyDesc": "Segui qualche amico felino e scopri subito i loro nuovi contenuti",
+    "discover": "Scopri",
+    "pickCat": "Scegli gatto",
+    "followingLoginTitle": "Accedi per vedere il feed dei seguiti",
+    "followingLoginDesc": "Segui i proprietari di gatti che preferisci e scopri subito i loro nuovi contenuti",
+    "loginToSee": "Accedi"
   },
   "topics": {
     "title": "Piazza dei topic",
@@ -184,7 +189,19 @@ export const it = {
     "noFavorites": "Ancora nessun contenuto nei preferiti",
     "noLikes": "Non hai ancora messo mi piace a nessun contenuto",
     "ownEmptyFavorites": "Vai ad aggiungere ai preferiti qualche contenuto di gatti che ti piace",
-    "ownEmptyLikes": "Vai a mettere like ai contenuti di gatti che ti piacciono"
+    "ownEmptyLikes": "Vai a mettere like ai contenuti di gatti che ti piacciono",
+    "copyId": "Copia ID CATSJUST",
+    "followingList": "Visualizza elenco seguiti",
+    "followersList": "Visualizza elenco follower",
+    "receivedLikes": "Mi piace ricevuti",
+    "receivedFavorites": "Preferiti ricevuti",
+    "commentsTab": "Commenti",
+    "catsTab": "Gatti",
+    "noComments": "nessun commento pubblicato",
+    "commentedOn": "ha commentato",
+    "untitled": "senza titolo",
+    "noCats": "nessun profilo di gatto creato",
+    "createCat": "crea profilo di gatto"
   },
   "feed": {
     "back": "Indietro",
@@ -261,5 +278,29 @@ export const it = {
     "noCats": "Nessun gatto trovato",
     "noBreeds": "Nessuna razza trovata",
     "empty": "Nessun contenuto trovato per «{q}»"
+  },
+  "tab": {
+    "home": "Home",
+    "cats": "Gatti",
+    "publish": "Pubblica",
+    "messages": "Messaggi",
+    "me": "Io"
+  },
+  "cats": {
+    "title": "Piazza dei Gatti",
+    "subtitle": "Scopri ogni gatto unico · Sfoglia per razza",
+    "searchPlaceholder": "Cerca gatti / razze / gattari…",
+    "empty": "Ancora nessun profilo di gatto",
+    "emptyDesc": "Diventa il primo a creare un profilo di gatto"
+  },
+  "messages": {
+    "title": "Messaggi",
+    "dm": "Messaggi diretti",
+    "notifications": "Notifiche",
+    "dmEmptyTitle": "Presto disponibili i messaggi diretti",
+    "dmEmptyDesc": "Potrai chattare in privato, uno a uno, con i gattari che preferisci. Resta sintonizzato!"
+  },
+  "userList": {
+    "empty": "Qui non c'è ancora nessuno"
   }
 };

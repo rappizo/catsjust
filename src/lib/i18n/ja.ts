@@ -42,7 +42,12 @@ export const ja = {
     "loadingFail": "コンテンツの読み込みに失敗しました：",
     "following": "フォロー",
     "followingEmptyTitle": "フォロー中の人はまだ投稿していません",
-    "followingEmptyDesc": "猫友をフォローして、新しい投稿をいち早く見ましょう"
+    "followingEmptyDesc": "猫友をフォローして、新しい投稿をいち早く見ましょう",
+    "discover": "発見",
+    "pickCat": "猫を選ぶ",
+    "followingLoginTitle": "ログインしてフォロー中の投稿を見る",
+    "followingLoginDesc": "お気に入りの猫飼いをフォローして、最新の投稿をいち早くチェックしましょう",
+    "loginToSee": "ログインする"
   },
   "topics": {
     "title": "話題広場",
@@ -184,7 +189,19 @@ export const ja = {
     "noFavorites": "お気に入りはまだありません",
     "noLikes": "いいねしたものはまだありません",
     "ownEmptyFavorites": "お気に入りの猫コンテンツを保存してみましょう",
-    "ownEmptyLikes": "好きな猫コンテンツにいいねしてみましょう"
+    "ownEmptyLikes": "好きな猫コンテンツにいいねしてみましょう",
+    "copyId": "CATSJUST IDをコピー",
+    "followingList": "フォローリストを見る",
+    "followersList": "フォロワーリストを見る",
+    "receivedLikes": "いいね",
+    "receivedFavorites": "お気に入り",
+    "commentsTab": "コメント",
+    "catsTab": "猫",
+    "noComments": "まだコメントはありません",
+    "commentedOn": "コメントしました",
+    "untitled": "無題",
+    "noCats": "まだ猫のプロフィールを作成していません",
+    "createCat": "猫のプロフィールを作成する"
   },
   "feed": {
     "back": "戻る",
@@ -261,5 +278,29 @@ export const ja = {
     "noCats": "関連する猫がいません",
     "noBreeds": "関連する品種がいません",
     "empty": "「{q}」に関連する内容は見つかりませんでした"
+  },
+  "tab": {
+    "home": "ホーム",
+    "cats": "猫",
+    "publish": "投稿",
+    "messages": "メッセージ",
+    "me": "マイ"
+  },
+  "cats": {
+    "title": "猫の広場",
+    "subtitle": "個性豊かな猫たちを見つけよう · 品種で探す",
+    "searchPlaceholder": "猫 / 品種 / 飼い主さんを検索…",
+    "empty": "まだ猫のプロフィールはありません",
+    "emptyDesc": "最初の猫のプロフィールを作成しましょう"
+  },
+  "messages": {
+    "title": "メッセージ",
+    "dm": "DM",
+    "notifications": "通知",
+    "dmEmptyTitle": "DM機能は近日公開予定",
+    "dmEmptyDesc": "その際は、気に入った飼い主さんと1対1でチャットできます。ぜひお楽しみに！"
+  },
+  "userList": {
+    "empty": "ここにはまだ誰もいません"
   }
 };

@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { Avatar } from '@/components/Avatar';
+import { CopyId } from '@/components/CopyId';
 import { FollowButton } from '@/components/FollowButton';
 import { ProfileTabs } from '@/components/ProfileTabs';
 import { formatDate } from '@/lib/utils';
@@ -10,7 +11,7 @@ import { isSupabaseConfigured } from '@/lib/config';
 import { getLocaleFromCookies } from '@/lib/i18n/cookies';
 import { getT } from '@/lib/i18n/dictionaries';
 import { isFollowing, getFollowCounts } from '@/lib/actions/social';
-import type { FollowCounts, Note, Profile } from '@/lib/types';
+import type { Cat, CommentItem, FollowCounts, Note, Profile } from '@/lib/types';
 
 export async function generateMetadata({
   params,
@@ -112,6 +113,30 @@ export default async function ProfilePage({ params }: { params: { username: stri
     likesNotes = (lNotes ?? []) as Note[];
   }
 
+  // 收到的赞 / 收藏（统计已发布作品）
+  const publishedWorks = worksNotes.filter((n) => n.status === 'published');
+  const receivedLikes = publishedWorks.reduce((s, n) => s + (n.like_count ?? 0), 0);
+  const receivedFavorites = publishedWorks.reduce((s, n) => s + (n.favorite_count ?? 0), 0);
+
+  // TA 的评论（含所属笔记）
+  const { data: commentRows } = await supabase
+    .from('comments')
+    .select('*, note:notes(id, title, cover_url, media_type)')
+    .eq('user_id', typedProfile.id)
+    .order('created_at', { ascending: false })
+    .limit(100);
+  const profileComments = (commentRows ?? []) as CommentItem[];
+
+  // TA 的猫咪档案
+  const { data: catRows } = await supabase
+    .from('cats')
+    .select('*')
+    .eq('owner_id', typedProfile.id)
+    .eq('status', 'active')
+    .order('created_at', { ascending: false })
+    .limit(50);
+  const profileCats = (catRows ?? []) as Cat[];
+
   const name = typedProfile.nickname || typedProfile.username;
 
   return (
@@ -139,9 +164,18 @@ export default async function ProfilePage({ params }: { params: { username: stri
             <span className="rounded-full border-4 border-white shadow">
               <Avatar src={typedProfile.avatar_url} alt={name} size="xl" />
             </span>
-            <div className="flex-1 pb-1">
-              <h1 className="text-xl font-bold text-ink sm:text-2xl">{name}</h1>
-              <p className="text-sm text-stone-400">@{typedProfile.username}</p>
+            <div className="min-w-0 flex-1 pb-1">
+              <div className="flex items-center gap-2">
+                <h1 className="truncate text-xl font-bold text-ink sm:text-2xl">{name}</h1>
+                {typedProfile.role === 'admin' && (
+                  <span className="shrink-0 rounded-full bg-brand-50 px-2 py-0.5 text-xs font-medium text-brand-600">
+                    {t('profile', 'admin')}
+                  </span>
+                )}
+              </div>
+              <div className="mt-0.5">
+                <CopyId username={typedProfile.username} />
+              </div>
             </div>
             {isOwner ? (
               <Link
@@ -170,27 +204,42 @@ export default async function ProfilePage({ params }: { params: { username: stri
             </p>
           )}
 
-          <div className="mt-4 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-stone-500">
-            <span>
-              <strong className="font-semibold text-ink">{publishedCount}</strong> {t('profile', 'works')}
-            </span>
-            <span className="text-stone-300">·</span>
-            <span>
+          {/* 统计区：作品 / 关注 / 粉丝 / 获赞 / 收藏（数字可点击） */}
+          <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-stone-500">
+            <Link
+              href="#profile-content"
+              className="transition hover:text-brand-500"
+              title={t('profile', 'works')}
+            >
+              <strong className="font-semibold text-ink">{publishedCount}</strong>{' '}
+              {t('profile', 'works')}
+            </Link>
+            <Link
+              href={`/profile/${typedProfile.username}/following`}
+              className="transition hover:text-brand-500"
+              title={t('profile', 'followingList')}
+            >
               <strong className="font-semibold text-ink">{followCounts.following}</strong>{' '}
               {t('profile', 'followingCount')}
-            </span>
-            <span className="text-stone-300">·</span>
-            <span>
+            </Link>
+            <Link
+              href={`/profile/${typedProfile.username}/followers`}
+              className="transition hover:text-brand-500"
+              title={t('profile', 'followersList')}
+            >
               <strong className="font-semibold text-ink">{followCounts.followers}</strong>{' '}
               {t('profile', 'followersCount')}
+            </Link>
+            <span>
+              <strong className="font-semibold text-ink">{receivedLikes}</strong>{' '}
+              {t('profile', 'receivedLikes')}
+            </span>
+            <span>
+              <strong className="font-semibold text-ink">{receivedFavorites}</strong>{' '}
+              {t('profile', 'receivedFavorites')}
             </span>
             <span className="text-stone-300">·</span>
             <span>{t('profile', 'joinedAt')} {formatDate(typedProfile.created_at)}</span>
-            {typedProfile.role === 'admin' && (
-              <span className="rounded-full bg-brand-50 px-2 py-0.5 text-xs font-medium text-brand-600">
-                {t('profile', 'admin')}
-              </span>
-            )}
           </div>
 
           {typedProfile.status === 'banned' && !isOwner && (
@@ -201,8 +250,8 @@ export default async function ProfilePage({ params }: { params: { username: stri
         </div>
       </div>
 
-      {/* 作品 / 收藏 / 喜欢 */}
-      <div className="mt-8">
+      {/* 作品 / 收藏 / 赞过 / 评论 / 猫咪 */}
+      <div id="profile-content" className="mt-8">
         {typedProfile.status === 'banned' && !isOwner ? (
           <p className="py-12 text-center text-sm text-stone-400">{t('profile', 'contentHidden')}</p>
         ) : (
@@ -210,6 +259,8 @@ export default async function ProfilePage({ params }: { params: { username: stri
             worksNotes={worksNotes.filter((n) => isOwner || n.status === 'published')}
             favoritesNotes={favoritesNotes}
             likesNotes={likesNotes}
+            comments={profileComments}
+            cats={profileCats}
             isOwner={isOwner}
           />
         )}

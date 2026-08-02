@@ -42,7 +42,12 @@ export const en = {
     "loadingFail": "Content failed to load: ",
     "following": "Follow",
     "followingEmptyTitle": "People you follow haven't posted yet",
-    "followingEmptyDesc": "Follow some cat pals to see their new posts first!"
+    "followingEmptyDesc": "Follow some cat pals to see their new posts first!",
+    "discover": "Discover",
+    "pickCat": "Pick a Cat",
+    "followingLoginTitle": "Log in to view your following feed",
+    "followingLoginDesc": "Follow cat lovers you like and see their new posts first",
+    "loginToSee": "Log in"
   },
   "topics": {
     "title": "Topic Square",
@@ -184,7 +189,19 @@ export const en = {
     "noFavorites": "No favorites yet",
     "noLikes": "No liked content yet",
     "ownEmptyFavorites": "Go and save some cat content you love.",
-    "ownEmptyLikes": "Go and like some cat content you enjoy."
+    "ownEmptyLikes": "Go and like some cat content you enjoy.",
+    "copyId": "Copy CATSJUST ID",
+    "followingList": "View Following List",
+    "followersList": "View Followers List",
+    "receivedLikes": "Likes",
+    "receivedFavorites": "Favorites",
+    "commentsTab": "Comments",
+    "catsTab": "Cats",
+    "noComments": "No comments yet",
+    "commentedOn": "commented on",
+    "untitled": "Untitled",
+    "noCats": "No cat profiles yet",
+    "createCat": "Create a cat profile"
   },
   "feed": {
     "back": "Back",
@@ -261,5 +278,29 @@ export const en = {
     "noCats": "No related cats",
     "noBreeds": "No related breeds",
     "empty": "No content found related to \"{q}\""
+  },
+  "tab": {
+    "home": "Home",
+    "cats": "Cats",
+    "publish": "Post",
+    "messages": "Messages",
+    "me": "Me"
+  },
+  "cats": {
+    "title": "Cat Square",
+    "subtitle": "Discover every unique cat · Browse by breed",
+    "searchPlaceholder": "Search cats / breeds / cat parents…",
+    "empty": "No cat profiles yet",
+    "emptyDesc": "Be the first to create a cat profile"
+  },
+  "messages": {
+    "title": "Messages",
+    "dm": "DMs",
+    "notifications": "Notifications",
+    "dmEmptyTitle": "Direct messaging coming soon",
+    "dmEmptyDesc": "You'll be able to chat one-on-one with your favorite cat parents. Stay tuned!"
+  },
+  "userList": {
+    "empty": "Nothing here yet"
   }
 };

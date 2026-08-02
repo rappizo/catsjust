@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server';
 import { isSupabaseConfigured } from '@/lib/config';
 import { HomeTabs } from '@/components/HomeTabs';
+import type { CatCardData } from '@/components/CatsPlaza';
 import { getLocaleFromCookies } from '@/lib/i18n/cookies';
 import { getT } from '@/lib/i18n/dictionaries';
 import type { Note } from '@/lib/types';
@@ -15,14 +16,15 @@ export const metadata = {
 export default async function HomePage() {
   const t = getT(getLocaleFromCookies());
   let hotNotes: Note[] = [];
-  let latestNotes: Note[] = [];
   let followingNotes: Note[] = [];
+  let cats: CatCardData[] = [];
+  let breeds: string[] = [];
   let isLoggedIn = false;
   let feedError: string | null = null;
 
   if (isSupabaseConfigured()) {
     const supabase = createClient();
-    const [hotRes, latestRes, userResult] = await Promise.all([
+    const [hotRes, userResult] = await Promise.all([
       supabase
         .from('notes')
         .select('*, author:profiles(*), cat:cats(*), topic:topics(*)')
@@ -30,16 +32,9 @@ export default async function HomePage() {
         .order('hot_score', { ascending: false })
         .order('created_at', { ascending: false })
         .limit(PAGE_SIZE),
-      supabase
-        .from('notes')
-        .select('*, author:profiles(*), cat:cats(*), topic:topics(*)')
-        .eq('status', 'published')
-        .order('created_at', { ascending: false })
-        .limit(PAGE_SIZE),
       supabase.auth.getUser(),
     ]);
     hotNotes = (hotRes.data ?? []) as Note[];
-    latestNotes = (latestRes.data ?? []) as Note[];
     feedError = hotRes.error?.message ?? null;
 
     const user = userResult.data.user;
@@ -63,6 +58,38 @@ export default async function HomePage() {
         followingNotes = (fNotes ?? []) as Note[];
       }
     }
+
+    // 选猫：拉取活跃猫咪 + 品种
+    const [catsRes, breedsRes] = await Promise.all([
+      supabase
+        .from('cats')
+        .select(
+          'id, name, breed, gender, bio, avatar_url, owner:profiles(id, username, nickname, avatar_url), notes:notes(count)'
+        )
+        .eq('status', 'active')
+        .order('created_at', { ascending: false })
+        .limit(24),
+      supabase
+        .from('breeds')
+        .select('name')
+        .eq('status', 'active')
+        .order('sort_order', { ascending: true }),
+    ]);
+    cats = (catsRes.data ?? []).map((c: any) => {
+      const owner = Array.isArray(c.owner) ? c.owner[0] : c.owner;
+      const count = Array.isArray(c.notes) ? (c.notes[0] as any)?.count : undefined;
+      return {
+        id: c.id,
+        name: c.name,
+        breed: c.breed,
+        gender: c.gender,
+        bio: c.bio,
+        avatar_url: c.avatar_url,
+        note_count: typeof count === 'number' ? count : undefined,
+        owner: owner ?? null,
+      };
+    });
+    breeds = (breedsRes.data ?? []).map((b: any) => b.name);
   }
 
   return (
@@ -80,7 +107,13 @@ export default async function HomePage() {
       )}
 
       {/* 内容流 */}
-      <HomeTabs hotNotes={hotNotes} latestNotes={latestNotes} followingNotes={followingNotes} isLoggedIn={isLoggedIn} />
+      <HomeTabs
+        hotNotes={hotNotes}
+        followingNotes={followingNotes}
+        isLoggedIn={isLoggedIn}
+        cats={cats}
+        breeds={breeds}
+      />
     </div>
   );
 }

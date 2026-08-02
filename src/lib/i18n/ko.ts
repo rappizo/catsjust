@@ -42,7 +42,12 @@ export const ko = {
     "loadingFail": "콘텐츠를 불러오지 못했어요:",
     "following": "팔로우",
     "followingEmptyTitle": "팔로우하는 사람이 아직 게시물을 올리지 않았습니다",
-    "followingEmptyDesc": "냥이 친구들을 팔로우해서 새로운 콘텐츠를 가장 먼저 확인해 보세요"
+    "followingEmptyDesc": "냥이 친구들을 팔로우해서 새로운 콘텐츠를 가장 먼저 확인해 보세요",
+    "discover": "발견",
+    "pickCat": "고양이 고르기",
+    "followingLoginTitle": "로그인 후 팔로우 피드 확인",
+    "followingLoginDesc": "마음에 드는 집사를 팔로우하고 새로운 콘텐츠를 가장 먼저 만나보세요",
+    "loginToSee": "로그인하기"
   },
   "topics": {
     "title": "토픽 광장",
@@ -184,7 +189,19 @@ export const ko = {
     "noFavorites": "즐겨찾기한 콘텐츠가 아직 없습니다",
     "noLikes": "좋아요한 콘텐츠가 아직 없습니다",
     "ownEmptyFavorites": "마음에 드는 고양이 콘텐츠를 저장해 보세요",
-    "ownEmptyLikes": "마음에 드는 고양이 콘텐츠에 좋아요를 눌러 보세요"
+    "ownEmptyLikes": "마음에 드는 고양이 콘텐츠에 좋아요를 눌러 보세요",
+    "copyId": "CATSJUST ID 복사",
+    "followingList": "팔로우 목록 보기",
+    "followersList": "팔로워 목록 보기",
+    "receivedLikes": "받은 좋아요",
+    "receivedFavorites": "즐겨찾기",
+    "commentsTab": "댓글",
+    "catsTab": "고양이",
+    "noComments": "아직 댓글을 남기지 않았습니다",
+    "commentedOn": "댓글을 남겼습니다",
+    "untitled": "제목 없음",
+    "noCats": "아직 고양이 프로필을 만들지 않았습니다",
+    "createCat": "고양이 프로필 만들기"
   },
   "feed": {
     "back": "뒤로",
@@ -261,5 +278,29 @@ export const ko = {
     "noCats": "관련 고양이가 없습니다",
     "noBreeds": "관련 품종이 없습니다",
     "empty": "「{q}」와 관련된 내용을 찾지 못했습니다"
+  },
+  "tab": {
+    "home": "홈",
+    "cats": "고양이",
+    "publish": "게시",
+    "messages": "메시지",
+    "me": "나"
+  },
+  "cats": {
+    "title": "고양이 광장",
+    "subtitle": "특별한 고양이를 만나보세요 · 품종별로 둘러보기",
+    "searchPlaceholder": "고양이 / 품종 / 집사 검색…",
+    "empty": "아직 고양이 프로필이 없습니다",
+    "emptyDesc": "고양이 프로필을 가장 먼저 만들어 보세요!"
+  },
+  "messages": {
+    "title": "메시지",
+    "dm": "DM",
+    "notifications": "알림",
+    "dmEmptyTitle": "DM 기능이 곧 출시됩니다",
+    "dmEmptyDesc": "그때부터 마음에 드는 집사와 1:1로 대화할 수 있어요. 기대해 주세요!"
+  },
+  "userList": {
+    "empty": "여기는 텅 비어 있어요"
   }
 };

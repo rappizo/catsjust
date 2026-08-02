@@ -42,7 +42,12 @@ export const es = {
     "loadingFail": "Error al cargar el contenido:",
     "following": "Siguiendo",
     "followingEmptyTitle": "Todavía no hay publicaciones de las personas que sigues",
-    "followingEmptyDesc": "¡Sigue a algunos amigos gatunos para ver su nuevo contenido de inmediato!"
+    "followingEmptyDesc": "¡Sigue a algunos amigos gatunos para ver su nuevo contenido de inmediato!",
+    "discover": "Descubrir",
+    "pickCat": "Elegir gato",
+    "followingLoginTitle": "Inicia sesión para ver tu feed de seguidos",
+    "followingLoginDesc": "Sigue a tus cuidadores favoritos y ve sus nuevas publicaciones al instante",
+    "loginToSee": "Iniciar sesión"
   },
   "topics": {
     "title": "Plaza de temas",
@@ -184,7 +189,19 @@ export const es = {
     "noFavorites": "Todavía no tienes contenido favorito",
     "noLikes": "Aún no hay contenido que te guste",
     "ownEmptyFavorites": "¡Guarda en favoritos algunos contenidos de gatos que te gusten!",
-    "ownEmptyLikes": "¡Dale me gusta a los contenidos de gatos que te gusten!"
+    "ownEmptyLikes": "¡Dale me gusta a los contenidos de gatos que te gusten!",
+    "copyId": "Copiar ID de CATSJUST",
+    "followingList": "Ver lista de seguidos",
+    "followersList": "Ver lista de seguidores",
+    "receivedLikes": "Me gusta recibidos",
+    "receivedFavorites": "Favoritos",
+    "commentsTab": "Comentarios",
+    "catsTab": "Gatos",
+    "noComments": "Aún no has publicado comentarios",
+    "commentedOn": "comentó en",
+    "untitled": "Sin título",
+    "noCats": "Aún no has creado ningún perfil de gato",
+    "createCat": "Ve a crear un perfil de gato"
   },
   "feed": {
     "back": "Volver",
@@ -261,5 +278,29 @@ export const es = {
     "noCats": "No hay gatos que coincidan",
     "noBreeds": "No hay razas que coincidan",
     "empty": "No se encontró contenido relacionado con «{q}»"
+  },
+  "tab": {
+    "home": "Inicio",
+    "cats": "Gatos",
+    "publish": "Publicar",
+    "messages": "Mensajes",
+    "me": "Yo"
+  },
+  "cats": {
+    "title": "Plaza de gatos",
+    "subtitle": "Descubre cada gato único · Explora por raza",
+    "searchPlaceholder": "Buscar gatos / razas / dueños…",
+    "empty": "Aún no hay perfiles de gatos",
+    "emptyDesc": "Sé el primero en crear un perfil de gato"
+  },
+  "messages": {
+    "title": "Mensajes",
+    "dm": "Mensajes directos",
+    "notifications": "Notificaciones",
+    "dmEmptyTitle": "La mensajería directa estará disponible pronto",
+    "dmEmptyDesc": "Entonces podrás chatear en privado con tus dueños de gatos favoritos. ¡Muy pronto!"
+  },
+  "userList": {
+    "empty": "No hay nada aquí"
   }
 };

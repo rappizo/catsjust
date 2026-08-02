@@ -42,7 +42,12 @@ export const de = {
     "loadingFail": "Inhalte konnten nicht geladen werden:",
     "following": "Folgen",
     "followingEmptyTitle": "Personen, denen du folgst, haben noch nichts gepostet",
-    "followingEmptyDesc": "Folge einigen Katzenfreunden, um ihre neuen Inhalte als Erster zu sehen"
+    "followingEmptyDesc": "Folge einigen Katzenfreunden, um ihre neuen Inhalte als Erster zu sehen",
+    "discover": "Entdecken",
+    "pickCat": "Katze wählen",
+    "followingLoginTitle": "Melde dich an, um deinen Feed zu sehen",
+    "followingLoginDesc": "Folge deinen Lieblings-Katzeneltern, um ihre neuen Inhalte sofort zu sehen.",
+    "loginToSee": "Jetzt anmelden"
   },
   "topics": {
     "title": "Themenplatz",
@@ -184,7 +189,19 @@ export const de = {
     "noFavorites": "Noch keine Favoriten",
     "noLikes": "Noch keine Likes",
     "ownEmptyFavorites": "Füge ein paar deiner Lieblingskatzeninhalte zu deinen Favoriten hinzu",
-    "ownEmptyLikes": "Gib einen Like für Katzeninhalte, die dir gefallen"
+    "ownEmptyLikes": "Gib einen Like für Katzeninhalte, die dir gefallen",
+    "copyId": "CATSJUST-ID kopieren",
+    "followingList": "Gefolgte anzeigen",
+    "followersList": "Follower anzeigen",
+    "receivedLikes": "Likes",
+    "receivedFavorites": "Favoriten",
+    "commentsTab": "Kommentare",
+    "catsTab": "Katzen",
+    "noComments": "Noch keine Kommentare vorhanden",
+    "commentedOn": "hat kommentiert",
+    "untitled": "Ohne Titel",
+    "noCats": "Noch kein Katzenprofil erstellt",
+    "createCat": "Katzenprofil erstellen"
   },
   "feed": {
     "back": "Zurück",
@@ -261,5 +278,29 @@ export const de = {
     "noCats": "Keine passenden Katzen",
     "noBreeds": "Keine passenden Rassen",
     "empty": "Keine passenden Inhalte zu „{q}“ gefunden"
+  },
+  "tab": {
+    "home": "Start",
+    "cats": "Katzen",
+    "publish": "Veröffentlichen",
+    "messages": "Nachrichten",
+    "me": "Ich"
+  },
+  "cats": {
+    "title": "Katzenplatz",
+    "subtitle": "Entdecke jede einzigartige Katze · Nach Rasse stöbern",
+    "searchPlaceholder": "Katzen / Rassen / Katzenhalter suchen…",
+    "empty": "Noch keine Katzenprofile",
+    "emptyDesc": "Sei der Erste, der ein Katzenprofil erstellt."
+  },
+  "messages": {
+    "title": "Nachrichten",
+    "dm": "Direktnachrichten",
+    "notifications": "Benachrichtigungen",
+    "dmEmptyTitle": "Direktnachrichten bald verfügbar",
+    "dmEmptyDesc": "Bald kannst du mit deinen Lieblings-Katzenhaltern direkt chatten. Sei gespannt!"
+  },
+  "userList": {
+    "empty": "Hier ist noch nichts."
   }
 };

@@ -42,7 +42,12 @@ export const pt = {
     "loadingFail": "Falha ao carregar conteúdo:",
     "following": "Seguindo",
     "followingEmptyTitle": "As pessoas que você segue ainda não publicaram nada",
-    "followingEmptyDesc": "Siga alguns amigos gatinhos e veja as novidades deles em primeira mão!"
+    "followingEmptyDesc": "Siga alguns amigos gatinhos e veja as novidades deles em primeira mão!",
+    "discover": "Descobrir",
+    "pickCat": "Escolher Gato",
+    "followingLoginTitle": "Faça login para ver o feed de quem você segue",
+    "followingLoginDesc": "Siga seus tutores de gatos favoritos e veja as novidades deles em primeira mão",
+    "loginToSee": "Fazer login"
   },
   "topics": {
     "title": "Praça de Tópicos",
@@ -184,7 +189,19 @@ export const pt = {
     "noFavorites": "Nenhum conteúdo favoritado ainda",
     "noLikes": "Nenhum conteúdo curtido ainda",
     "ownEmptyFavorites": "Vá favoritar alguns conteúdos de gatos que você gosta",
-    "ownEmptyLikes": "Vá curtir alguns conteúdos de gatos que você gosta"
+    "ownEmptyLikes": "Vá curtir alguns conteúdos de gatos que você gosta",
+    "copyId": "Copiar ID CATSJUST",
+    "followingList": "Ver lista de seguidos",
+    "followersList": "Ver lista de seguidores",
+    "receivedLikes": "Curtidas recebidas",
+    "receivedFavorites": "Favoritos",
+    "commentsTab": "Comentários",
+    "catsTab": "Gatos",
+    "noComments": "Ainda não fez comentários",
+    "commentedOn": "Comentou em",
+    "untitled": "Sem título",
+    "noCats": "Ainda não criou um perfil de gato",
+    "createCat": "Criar perfil de gato"
   },
   "feed": {
     "back": "Voltar",
@@ -261,5 +278,29 @@ export const pt = {
     "noCats": "Nenhum gato encontrado",
     "noBreeds": "Nenhuma raça encontrada",
     "empty": "Nenhum conteúdo encontrado para '{q}'"
+  },
+  "tab": {
+    "home": "Início",
+    "cats": "Gatos",
+    "publish": "Publicar",
+    "messages": "Mensagens",
+    "me": "Eu"
+  },
+  "cats": {
+    "title": "Praça dos Gatos",
+    "subtitle": "Descubra cada gato único · Navegue por raça",
+    "searchPlaceholder": "Pesquisar gatos / raças / tutores…",
+    "empty": "Nenhum perfil de gato ainda",
+    "emptyDesc": "Seja o primeiro a criar um perfil de gato"
+  },
+  "messages": {
+    "title": "Mensagens",
+    "dm": "Mensagens diretas",
+    "notifications": "Notificações",
+    "dmEmptyTitle": "Em breve: mensagens diretas",
+    "dmEmptyDesc": "Aí você poderá conversar no privado com os tutores de gatos de sua preferência. Fique ligado!"
+  },
+  "userList": {
+    "empty": "Nada por aqui"
   }
 };

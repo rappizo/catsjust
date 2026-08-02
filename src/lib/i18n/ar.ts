@@ -42,7 +42,12 @@ export const ar = {
     "loadingFail": "فشل تحميل المحتوى:",
     "following": "متابعة",
     "followingEmptyTitle": "لا توجد منشورات من الأشخاص الذين تتابعهم",
-    "followingEmptyDesc": "تابع بعض أصدقاء القطط لترى محتواهم الجديد أولاً بأول"
+    "followingEmptyDesc": "تابع بعض أصدقاء القطط لترى محتواهم الجديد أولاً بأول",
+    "discover": "استكشاف",
+    "pickCat": "اختر قطة",
+    "followingLoginTitle": "سجّل الدخول لعرض متابعاتك",
+    "followingLoginDesc": "تابع أصحاب القطط المفضلين لديك وشاهد محتواهم الجديد أولاً بأول",
+    "loginToSee": "تسجيل الدخول"
   },
   "topics": {
     "title": "ساحة المواضيع",
@@ -184,7 +189,19 @@ export const ar = {
     "noFavorites": "لا توجد عناصر مفضلة بعد",
     "noLikes": "لا توجد إعجابات بعد",
     "ownEmptyFavorites": "احفظ بعض محتوى القطط الذي يعجبك",
-    "ownEmptyLikes": "أعجب ببعض محتوى القطط الذي يعجبك"
+    "ownEmptyLikes": "أعجب ببعض محتوى القطط الذي يعجبك",
+    "copyId": "انسخ معرّف CATSJUST",
+    "followingList": "عرض قائمة المتابَعات",
+    "followersList": "عرض قائمة المتابعين",
+    "receivedLikes": "الإعجابات",
+    "receivedFavorites": "المفضلة",
+    "commentsTab": "التعليقات",
+    "catsTab": "القطط",
+    "noComments": "لا توجد تعليقات بعد",
+    "commentedOn": "علّق على",
+    "untitled": "بدون عنوان",
+    "noCats": "لا توجد ملفات قطط بعد",
+    "createCat": "اذهب لإنشاء ملف قط"
   },
   "feed": {
     "back": "رجوع",
@@ -261,5 +278,29 @@ export const ar = {
     "noCats": "لا توجد قطط ذات صلة",
     "noBreeds": "لا توجد سلالات ذات صلة",
     "empty": "لم يتم العثور على محتوى متعلق بـ «{q}»"
+  },
+  "tab": {
+    "home": "الرئيسية",
+    "cats": "القطط",
+    "publish": "نشر",
+    "messages": "الرسائل",
+    "me": "أنا"
+  },
+  "cats": {
+    "title": "ساحة القطط",
+    "subtitle": "اكتشف كل قط فريد · تصفح حسب السلالة",
+    "searchPlaceholder": "ابحث عن القطط / السلالات / أصحاب القطط...",
+    "empty": "لا توجد ملفات قطط بعد",
+    "emptyDesc": "كن أول من ينشئ ملف قطة"
+  },
+  "messages": {
+    "title": "الرسائل",
+    "dm": "الرسائل الخاصة",
+    "notifications": "الإشعارات",
+    "dmEmptyTitle": "ميزة الرسائل الخاصة قادمة قريبًا",
+    "dmEmptyDesc": "عندها ستتمكن من الدردشة الخاصة مع أصحاب القطط المفضلين لديك، ترقبوا"
+  },
+  "userList": {
+    "empty": "لا يوجد شيء هنا"
   }
 };

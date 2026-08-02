@@ -224,5 +224,15 @@ export const ja = {
     "topics": "トピック広場",
     "tos": "利用規約（準備中）",
     "privacy": "プライバシーポリシー（準備中）"
+  },
+  "notifications": {
+    "title": "通知",
+    "empty": "まだ通知はありません",
+    "emptyDesc": "いいね、コメント、フォローがあったときに、ここでお知らせします",
+    "likedYourNote": "あなたのノートにいいねしました",
+    "commentedYourNote": "あなたのノートにコメントしました",
+    "followedYou": "あなたをフォローしました",
+    "system": "システム通知",
+    "someone": "誰か"
   }
 };

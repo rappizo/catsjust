@@ -224,5 +224,15 @@ export const es = {
     "topics": "Plaza de temas",
     "tos": "Acuerdo de usuario (en planificación)",
     "privacy": "Política de privacidad (en planificación)"
+  },
+  "notifications": {
+    "title": "Notificaciones",
+    "empty": "Aún no hay notificaciones",
+    "emptyDesc": "Cuando recibas me gusta, comentarios o seguidores, te avisaremos aquí",
+    "likedYourNote": "Le gustó tu nota",
+    "commentedYourNote": "Comentó tu nota",
+    "followedYou": "Te siguió",
+    "system": "Notificaciones del sistema",
+    "someone": "Alguien"
   }
 };

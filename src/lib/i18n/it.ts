@@ -224,5 +224,15 @@ export const it = {
     "topics": "Piazza degli argomenti",
     "tos": "Termini di utilizzo (in programma)",
     "privacy": "Informativa sulla privacy (in programma)"
+  },
+  "notifications": {
+    "title": "Notifiche",
+    "empty": "Nessuna notifica",
+    "emptyDesc": "Quando ricevi mi piace, commenti o nuovi follower, riceverai un avviso qui",
+    "likedYourNote": "ha messo mi piace al tuo post",
+    "commentedYourNote": "ha commentato il tuo post",
+    "followedYou": "ti ha seguito",
+    "system": "Notifica di sistema",
+    "someone": "Qualcuno"
   }
 };

@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { Compass, LogIn, LogOut, Menu, PenSquare, Plus, Settings, Shield, User as UserIcon, X } from 'lucide-react';
+import { Compass, LogIn, LogOut, Menu, PenSquare, Plus, Settings, Shield, Bell, User as UserIcon, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useI18n } from '@/lib/i18n';
 import { Logo } from './Logo';
@@ -13,6 +13,7 @@ import { signOut } from '@/lib/actions/auth';
 interface NavbarClientProps {
   user: { id: string; email: string } | null;
   profile: { username: string; nickname: string; avatar_url: string | null; role: string } | null;
+  unreadNotifications?: number;
 }
 
 const NAV_LINKS = [
@@ -21,7 +22,7 @@ const NAV_LINKS = [
   { href: '/publish', labelKey: 'publish', icon: Plus },
 ];
 
-export function NavbarClient({ user, profile }: NavbarClientProps) {
+export function NavbarClient({ user, profile, unreadNotifications = 0 }: NavbarClientProps) {
   const pathname = usePathname();
   const router = useRouter();
   const { t } = useI18n();
@@ -80,7 +81,22 @@ export function NavbarClient({ user, profile }: NavbarClientProps) {
         {/* 右侧用户区 */}
         <div className="flex items-center gap-2">
           {user ? (
-            <div className="relative" ref={dropdownRef}>
+            <>
+              {/* 通知铃铛 */}
+              <Link
+                href="/notifications"
+                className="relative flex h-9 w-9 items-center justify-center rounded-full text-stone-500 transition hover:bg-stone-100 hover:text-stone-700"
+                aria-label="通知"
+              >
+                <Bell className="h-5 w-5" />
+                {unreadNotifications > 0 && (
+                  <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-gradient-to-r from-rose-500 to-red-500 px-1 text-[10px] font-bold text-white shadow">
+                    {unreadNotifications > 99 ? '99+' : unreadNotifications}
+                  </span>
+                )}
+              </Link>
+
+              <div className="relative" ref={dropdownRef}>
               <button
                 onClick={() => setDropdownOpen((v) => !v)}
                 className="flex items-center gap-2 rounded-full p-1 transition hover:bg-stone-100"
@@ -114,6 +130,7 @@ export function NavbarClient({ user, profile }: NavbarClientProps) {
                 </div>
               )}
             </div>
+            </>
           ) : (
             <div className="hidden items-center gap-2 md:flex">
               <Link

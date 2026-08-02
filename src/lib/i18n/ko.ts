@@ -224,5 +224,15 @@ export const ko = {
     "topics": "주제 광장",
     "tos": "이용약관 (예정)",
     "privacy": "개인정보 처리방침 (예정)"
+  },
+  "notifications": {
+    "title": "알림",
+    "empty": "아직 알림이 없습니다",
+    "emptyDesc": "좋아요, 댓글, 팔로우를 받으면 여기서 알려드려요",
+    "likedYourNote": "내 노트에 좋아요를 눌렀습니다",
+    "commentedYourNote": "내 노트에 댓글을 달았습니다",
+    "followedYou": "나를 팔로우했습니다",
+    "system": "시스템 알림",
+    "someone": "누군가"
   }
 };

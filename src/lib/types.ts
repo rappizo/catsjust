@@ -91,3 +91,19 @@ export interface FollowCounts {
   following: number;
   followers: number;
 }
+
+export type NotificationType = 'like' | 'comment' | 'follow' | 'system';
+
+export interface AppNotification {
+  id: string;
+  user_id: string;
+  actor_id: string | null;
+  type: NotificationType;
+  note_id: string | null;
+  comment_id: string | null;
+  content: string | null;
+  read: boolean;
+  created_at: string;
+  actor?: Profile | null;
+  note?: Pick<Note, 'id' | 'title' | 'cover_url' | 'media'> | null;
+}

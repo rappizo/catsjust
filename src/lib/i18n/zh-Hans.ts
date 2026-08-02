@@ -204,6 +204,16 @@ export const zhHans = {
     deleteNote: '删除',
     confirmDelete: '确认删除？',
   },
+  notifications: {
+    title: '通知',
+    empty: '还没有通知',
+    emptyDesc: '收到点赞、评论、关注时，会在这里提醒你',
+    likedYourNote: '赞了你的笔记',
+    commentedYourNote: '评论了你的笔记',
+    followedYou: '关注了你',
+    system: '系统通知',
+    someone: '有人',
+  },
   cat: {
     gender: '性别',
     genderMale: '公猫',

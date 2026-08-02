@@ -224,5 +224,15 @@ export const fr = {
     "topics": "Sujets",
     "tos": "Conditions d'utilisation (en préparation)",
     "privacy": "Politique de confidentialité (en préparation)"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "empty": "Aucune notification",
+    "emptyDesc": "Vous serez informé(e) ici des likes, commentaires et abonnements reçus",
+    "likedYourNote": "a aimé votre note",
+    "commentedYourNote": "a commenté votre note",
+    "followedYou": "vous a suivi(e)",
+    "system": "Notifications système",
+    "someone": "Quelqu'un"
   }
 };

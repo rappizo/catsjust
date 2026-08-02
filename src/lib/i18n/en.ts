@@ -224,5 +224,15 @@ export const en = {
     "topics": "Topic Square",
     "tos": "Terms of Service (Planned)",
     "privacy": "Privacy Policy (Planned)"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "empty": "No notifications yet",
+    "emptyDesc": "When you get likes, comments, or follows, reminders will appear here.",
+    "likedYourNote": "liked your note",
+    "commentedYourNote": "commented on your note",
+    "followedYou": "followed you",
+    "system": "System notifications",
+    "someone": "Someone"
   }
 };

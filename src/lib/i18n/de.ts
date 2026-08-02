@@ -224,5 +224,15 @@ export const de = {
     "topics": "Themenforum",
     "tos": "Nutzungsbedingungen (in Planung)",
     "privacy": "Datenschutzerklärung (in Planung)"
+  },
+  "notifications": {
+    "title": "Benachrichtigungen",
+    "empty": "Noch keine Benachrichtigungen",
+    "emptyDesc": "Wenn jemand deine Beiträge mag, kommentiert oder dir folgt, wirst du hier benachrichtigt.",
+    "likedYourNote": "hat deine Notiz geliked",
+    "commentedYourNote": "hat deine Notiz kommentiert",
+    "followedYou": "hat dir gefolgt",
+    "system": "Systembenachrichtigung",
+    "someone": "Jemand"
   }
 };

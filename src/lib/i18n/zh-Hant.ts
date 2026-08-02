@@ -224,5 +224,15 @@ export const zhHant = {
     "topics": "話題廣場",
     "tos": "用戶協議（規劃中）",
     "privacy": "隱私政策（規劃中）"
+  },
+  "notifications": {
+    "title": "通知",
+    "empty": "還沒有通知",
+    "emptyDesc": "收到按讚、留言、追蹤時，會在這裡提醒你",
+    "likedYourNote": "按讚了你的筆記",
+    "commentedYourNote": "留言了你的筆記",
+    "followedYou": "追蹤了你",
+    "system": "系統通知",
+    "someone": "有人"
   }
 };

@@ -29,7 +29,7 @@ export default async function HomePage() {
   return (
     <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6">
       {/* 顶部横幅 */}
-      <section className="relative mb-6 overflow-hidden rounded-3xl bg-gradient-to-br from-brand-500 via-orange-400 to-amber-300 px-6 py-10 text-white shadow-lg shadow-brand-500/20 sm:px-10 sm:py-14">
+      <section className="relative mb-6 overflow-hidden rounded-3xl bg-gradient-to-br from-brand-500 via-accent-500 to-fuchsia-600 px-6 py-10 text-white shadow-lg shadow-neon-green sm:px-10 sm:py-14">
         <span className="pointer-events-none absolute -left-4 -top-6 select-none text-8xl opacity-20 sm:text-9xl">🐱</span>
         <span className="pointer-events-none absolute right-6 top-4 select-none text-5xl opacity-25 sm:text-6xl">🐾</span>
         <span className="pointer-events-none absolute bottom-2 right-24 hidden select-none text-6xl opacity-20 sm:block">😺</span>

@@ -3,8 +3,8 @@
 @tailwind utilities;
 
 :root {
-  --background: #fffaf3;
-  --foreground: #292524;
+  --background: #0a0a12;
+  --foreground: #f0f0ff;
 }
 
 body {
@@ -50,17 +50,72 @@ body {
   }
 }
 
-/* 自定义滚动条 */
+/* 自定义滚动条（霓虹渐变） */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 ::-webkit-scrollbar-thumb {
-  background: #d6d3d1;
+  background: linear-gradient(180deg, #2eff8c, #b45af7);
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-track {
   background: transparent;
+}
+
+/* ============================================================
+   深色霓虹主题 · 浅色工具类覆盖
+   把整站原本面向浅色背景的 stone/white 系列映射为深色表面，
+   与 tailwind.config 中重定义的 brand/accent 一起构成霓虹主题。
+   （未加 @layer，非分层样式优先级高于 Tailwind 分层工具类）
+   ============================================================ */
+.bg-white { background-color: #14141f; }
+.bg-white\/60 { background-color: rgba(20, 20, 31, 0.6); }
+.bg-cream { background-color: #0a0a12; }
+.bg-cream\/85 { background-color: rgba(10, 10, 18, 0.85); }
+.bg-stone-50 { background-color: #171722; }
+.bg-stone-100 { background-color: #1d1d2a; }
+.bg-stone-200 { background-color: #272738; }
+.bg-stone-300 { background-color: #313147; }
+.bg-stone-900 { background-color: #11111b; }
+.bg-stone-950 { background-color: #0a0a12; }
+.bg-amber-50 { background-color: rgba(251, 191, 36, 0.1); }
+.bg-amber-200 { background-color: rgba(251, 191, 36, 0.2); }
+.bg-red-50 { background-color: rgba(248, 113, 113, 0.12); }
+.bg-rose-50 { background-color: rgba(244, 63, 94, 0.14); }
+.bg-emerald-50 { background-color: rgba(16, 185, 129, 0.14); }
+
+.text-ink { color: #f0f0ff; }
+.text-stone-300 { color: #7f7f98; }
+.text-stone-400 { color: #8f8fa8; }
+.text-stone-500 { color: #a7a7c0; }
+.text-stone-600 { color: #bfbfd6; }
+.text-stone-700 { color: #d6d6ea; }
+.text-amber-700 { color: #fbbf24; }
+
+.border-stone-100 { border-color: #1e1e2c; }
+.border-stone-200 { border-color: #2a2a3c; }
+.border-stone-200\/60 { border-color: rgba(42, 42, 60, 0.85); }
+.border-stone-200\/70 { border-color: rgba(42, 42, 60, 0.9); }
+.border-stone-300 { border-color: #36364e; }
+.border-amber-200 { border-color: rgba(251, 191, 36, 0.35); }
+.divide-stone-100 > :not([hidden]) ~ :not([hidden]) { border-color: #1e1e2c; }
+
+.hover\:bg-stone-50:hover { background-color: #1a1a26; }
+.hover\:bg-stone-50\/60:hover { background-color: rgba(26, 26, 38, 0.6); }
+.hover\:bg-stone-100:hover { background-color: #232332; }
+.hover\:bg-stone-200:hover { background-color: #2d2d40; }
+.hover\:bg-rose-50:hover { background-color: rgba(244, 63, 94, 0.18); }
+.hover\:border-stone-300:hover { border-color: #36364e; }
+
+/* 霓虹文字发光 */
+@layer utilities {
+  .text-glow-green {
+    text-shadow: 0 0 12px rgba(46, 255, 140, 0.6);
+  }
+  .text-glow-purple {
+    text-shadow: 0 0 12px rgba(180, 90, 247, 0.6);
+  }
 }
 
 /* 全局动画 */

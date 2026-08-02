@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
 import { isSupabaseConfigured } from '@/lib/config';
 import { cn } from '@/lib/utils';
+import { CAT_BREEDS } from '@/lib/constants';
 
 export const metadata = {
   title: '话题广场',
@@ -36,6 +37,35 @@ export default async function TopicsPage() {
         <h1 className="text-2xl font-bold text-ink">话题广场</h1>
         <p className="mt-1 text-sm text-stone-400">找到你感兴趣的话题，一起云吸猫</p>
       </div>
+
+      {/* 按品种逛喵岛 */}
+      <section className="mb-8 rounded-3xl border border-stone-200/60 bg-white p-5 shadow-card">
+        <div className="mb-4 flex items-center gap-2">
+          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-accent-500 to-fuchsia-600 text-sm text-white shadow-neon-purple">
+            🐱
+          </span>
+          <h2 className="font-semibold text-ink">按品种逛喵岛</h2>
+          <span className="rounded-full bg-brand-500/15 px-2 py-0.5 text-[11px] font-medium text-brand-500">
+            霓虹品种标签
+          </span>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          {CAT_BREEDS.map((breed, i) => (
+            <Link
+              key={breed}
+              href={`/topics/breeds/${encodeURIComponent(breed)}`}
+              className={cn(
+                'rounded-full border px-3 py-1.5 text-xs font-medium transition hover:-translate-y-0.5',
+                i % 2 === 0
+                  ? 'border-brand-500/40 bg-brand-500/10 text-brand-500 hover:shadow-neon-green'
+                  : 'border-accent-500/40 bg-accent-500/10 text-accent-400 hover:shadow-neon-purple'
+              )}
+            >
+              # {breed}
+            </Link>
+          ))}
+        </div>
+      </section>
 
       {!topics?.length ? (
         <p className="py-16 text-center text-sm text-stone-400">暂无话题</p>

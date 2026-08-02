@@ -35,3 +35,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Vercel CLI 生成的 env（保留 example 模板供他人参考）
+.env*
+!.env.local.example

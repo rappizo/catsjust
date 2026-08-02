@@ -123,7 +123,7 @@ export function NavbarClient({ user, profile }: NavbarClientProps) {
               </Link>
               <Link
                 href="/register"
-                className="rounded-full bg-brand-500 px-4 py-2 text-sm font-semibold text-white shadow-md shadow-brand-500/30 transition hover:bg-brand-600"
+                className="rounded-full bg-gradient-to-r from-brand-500 to-accent-500 px-4 py-2 text-sm font-semibold text-white shadow-md shadow-neon-green transition hover:from-brand-600 hover:to-accent-600"
               >
                 注册
               </Link>
@@ -169,7 +169,7 @@ export function NavbarClient({ user, profile }: NavbarClientProps) {
                 <Link
                   href="/register"
                   onClick={() => setMenuOpen(false)}
-                  className="flex items-center justify-center gap-2 rounded-xl bg-brand-500 px-3 py-2.5 text-sm font-semibold text-white"
+                  className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-brand-500 to-accent-500 px-3 py-2.5 text-sm font-semibold text-white"
                 >
                   注册
                 </Link>

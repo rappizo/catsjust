@@ -32,7 +32,7 @@ export function HomeTabs({ initialNotes }: HomeTabsProps) {
           >
             {t.label}
             {tab === t.key && (
-              <span className="absolute inset-x-2 -bottom-px h-0.5 rounded-full bg-brand-500" />
+              <span className="absolute inset-x-2 -bottom-px h-0.5 rounded-full bg-gradient-to-r from-brand-500 to-accent-500" />
             )}
           </button>
         ))}

@@ -7,7 +7,12 @@ export function Footer() {
       <div className="mx-auto flex max-w-7xl flex-col items-center gap-3 px-4 py-8 text-center sm:px-6">
         <div className="flex items-center gap-2 text-stone-500">
           <CatIcon className="h-5 w-5 text-brand-500" />
-          <span className="font-semibold text-stone-700">喵岛</span>
+          <span className="font-semibold text-stone-700">
+            喵岛
+            <span className="ml-1 text-[10px] font-medium tracking-widest text-accent-400">
+              霓虹猫社区
+            </span>
+          </span>
         </div>
         <p className="flex items-center gap-1 text-xs text-stone-400">
           一个只属于猫咪的分享社区 · 纯展示 · 无商业

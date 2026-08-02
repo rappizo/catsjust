@@ -77,6 +77,11 @@ export function NoteCard({ note, priority = false }: NoteCardProps) {
             🐾 {note.cat.name}
           </span>
         )}
+        {note.cat?.breed && (
+          <span className="shrink-0 rounded-full bg-accent-50 px-2 py-0.5 text-[11px] font-medium text-accent-400">
+            #{note.cat.breed}
+          </span>
+        )}
       </div>
     </Link>
   );

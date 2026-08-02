@@ -8,17 +8,29 @@ import type { Note } from '@/lib/types';
 
 interface HomeTabsProps {
   initialNotes: Note[];
+  /** 关注流首屏数据（仅登录时传入） */
+  followingNotes?: Note[];
+  /** 是否已登录（登录后展示「关注」Tab） */
+  isLoggedIn?: boolean;
 }
 
-/** 首页 Tab：推荐 / 最新（P1 两者均为最新排序，为 P2 热度排序预留） */
-export function HomeTabs({ initialNotes }: HomeTabsProps) {
-  const { t } = useI18n();
-  const [tab, setTab] = useState<'recommend' | 'latest'>('recommend');
+type TabKey = 'recommend' | 'latest' | 'following';
 
-  const tabs = [
-    { key: 'recommend' as const, label: t('home', 'recommend') },
-    { key: 'latest' as const, label: t('home', 'latest') },
+/** 首页 Tab：推荐 / 最新 / 关注（P2：推荐=热度排序，最新=时间，关注=关注流） */
+export function HomeTabs({ initialNotes, followingNotes = [], isLoggedIn = false }: HomeTabsProps) {
+  const { t } = useI18n();
+  const [tab, setTab] = useState<TabKey>('recommend');
+
+  const tabs: Array<{ key: TabKey; label: string }> = [
+    { key: 'recommend', label: t('home', 'recommend') },
+    { key: 'latest', label: t('home', 'latest') },
   ];
+  if (isLoggedIn) {
+    tabs.push({ key: 'following', label: t('home', 'following') });
+  }
+
+  const feedFor = (key: TabKey): Note[] =>
+    key === 'following' ? followingNotes : initialNotes;
 
   return (
     <div>
@@ -41,10 +53,13 @@ export function HomeTabs({ initialNotes }: HomeTabsProps) {
       </div>
 
       <Waterfall
-        key={tab}
-        initialNotes={initialNotes}
-        emptyTitle={t('home', 'emptyTitle')}
-        emptyDescription={t('home', 'emptyDesc')}
+        key={`${tab}-${feedFor(tab).length}`}
+        initialNotes={feedFor(tab)}
+        apiFeed={tab === 'following' ? 'following' : 'all'}
+        emptyTitle={tab === 'following' ? t('home', 'followingEmptyTitle') : t('home', 'emptyTitle')}
+        emptyDescription={
+          tab === 'following' ? t('home', 'followingEmptyDesc') : t('home', 'emptyDesc')
+        }
       />
     </div>
   );

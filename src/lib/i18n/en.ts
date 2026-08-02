@@ -38,7 +38,10 @@ export const en = {
     "emptyTitle": "No cat content yet",
     "emptyDesc": "Log in to post your first cat note",
     "end": "— That's all, no more content —",
-    "loadingFail": "Content failed to load: "
+    "loadingFail": "Content failed to load: ",
+    "following": "Follow",
+    "followingEmptyTitle": "People you follow haven't posted yet",
+    "followingEmptyDesc": "Follow some cat pals to see their new posts first!"
   },
   "topics": {
     "title": "Topic Square",
@@ -165,7 +168,18 @@ export const en = {
     "worksTitle": "Their works",
     "contentHidden": "This user's content has been hidden",
     "firstPublish": "Go publish your first cat note",
-    "noContentYet": "They haven't published anything yet"
+    "noContentYet": "They haven't published anything yet",
+    "follow": "Follow",
+    "following": "Following",
+    "followingCount": "Following",
+    "followersCount": "Followers",
+    "followingTab": "Following",
+    "favoritesTab": "Favorites",
+    "likesTab": "Likes",
+    "noFavorites": "No favorites yet",
+    "noLikes": "No liked content yet",
+    "ownEmptyFavorites": "Go and save some cat content you love.",
+    "ownEmptyLikes": "Go and like some cat content you enjoy."
   },
   "feed": {
     "back": "Back",

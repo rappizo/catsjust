@@ -38,7 +38,10 @@ export const ar = {
     "emptyTitle": "لا توجد محتويات قطط بعد",
     "emptyDesc": "سجّل الدخول وانشر أول ملاحظة عن القطط",
     "end": "— وصلت إلى النهاية، لا مزيد من المحتوى —",
-    "loadingFail": "فشل تحميل المحتوى:"
+    "loadingFail": "فشل تحميل المحتوى:",
+    "following": "متابعة",
+    "followingEmptyTitle": "لا توجد منشورات من الأشخاص الذين تتابعهم",
+    "followingEmptyDesc": "تابع بعض أصدقاء القطط لترى محتواهم الجديد أولاً بأول"
   },
   "topics": {
     "title": "ساحة المواضيع",
@@ -165,7 +168,18 @@ export const ar = {
     "worksTitle": "أعماله",
     "contentHidden": "تم إخفاء محتوى هذا المستخدم",
     "firstPublish": "انشر أول ملاحظة قطط لك",
-    "noContentYet": "لم ينشر أي محتوى بعد"
+    "noContentYet": "لم ينشر أي محتوى بعد",
+    "follow": "متابعة",
+    "following": "تتابع",
+    "followingCount": "متابعة",
+    "followersCount": "المتابعون",
+    "followingTab": "متابعة",
+    "favoritesTab": "المفضلة",
+    "likesTab": "الإعجابات",
+    "noFavorites": "لا توجد عناصر مفضلة بعد",
+    "noLikes": "لا توجد إعجابات بعد",
+    "ownEmptyFavorites": "احفظ بعض محتوى القطط الذي يعجبك",
+    "ownEmptyLikes": "أعجب ببعض محتوى القطط الذي يعجبك"
   },
   "feed": {
     "back": "رجوع",

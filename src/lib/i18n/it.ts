@@ -38,7 +38,10 @@ export const it = {
     "emptyTitle": "Nessun contenuto felino ancora",
     "emptyDesc": "Accedi e pubblica la tua prima nota felina",
     "end": "— Fine, nessun altro contenuto —",
-    "loadingFail": "Caricamento contenuti non riuscito:"
+    "loadingFail": "Caricamento contenuti non riuscito:",
+    "following": "Seguiti",
+    "followingEmptyTitle": "Le persone che segui non hanno ancora pubblicato contenuti",
+    "followingEmptyDesc": "Segui qualche amico felino e scopri subito i loro nuovi contenuti"
   },
   "topics": {
     "title": "Piazza dei topic",
@@ -165,7 +168,18 @@ export const it = {
     "worksTitle": "Le sue opere",
     "contentHidden": "I contenuti di questo utente sono nascosti",
     "firstPublish": "Pubblica la tua prima nota felina!",
-    "noContentYet": "Non ha ancora pubblicato nulla"
+    "noContentYet": "Non ha ancora pubblicato nulla",
+    "follow": "Segui",
+    "following": "Seguito",
+    "followingCount": "Seguiti",
+    "followersCount": "Follower",
+    "followingTab": "Seguiti",
+    "favoritesTab": "Preferiti",
+    "likesTab": "Mi Piace",
+    "noFavorites": "Ancora nessun contenuto nei preferiti",
+    "noLikes": "Non hai ancora messo mi piace a nessun contenuto",
+    "ownEmptyFavorites": "Vai ad aggiungere ai preferiti qualche contenuto di gatti che ti piace",
+    "ownEmptyLikes": "Vai a mettere like ai contenuti di gatti che ti piacciono"
   },
   "feed": {
     "back": "Indietro",

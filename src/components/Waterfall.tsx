@@ -12,6 +12,8 @@ interface WaterfallProps {
   emptyDescription?: string;
   /** 附加过滤条件（如按用户/猫咪/话题筛选时，本组件不做加载更多） */
   staticMode?: boolean;
+  /** 加载更多的 feed 类型（all / following） */
+  apiFeed?: 'all' | 'following';
 }
 
 /** 双列瀑布流 + 无限滚动 */
@@ -20,6 +22,7 @@ export function Waterfall({
   emptyTitle = '还没有内容',
   emptyDescription = '成为第一个发布猫咪内容的人吧',
   staticMode = false,
+  apiFeed = 'all',
 }: WaterfallProps) {
   const { t } = useI18n();
   const [notes, setNotes] = useState<Note[]>(initialNotes);
@@ -37,7 +40,7 @@ export function Waterfall({
         return;
       }
       const cursor = JSON.stringify({ created_at: last.created_at, id: last.id });
-      const res = await fetch(`/api/notes?cursor=${encodeURIComponent(cursor)}&limit=12`);
+      const res = await fetch(`/api/notes?cursor=${encodeURIComponent(cursor)}&limit=12&feed=${apiFeed}`);
       const data = await res.json();
       const newNotes: Note[] = data.notes ?? [];
       setNotes((prev) => {
@@ -50,7 +53,7 @@ export function Waterfall({
     } finally {
       setLoading(false);
     }
-  }, [loading, hasMore, notes]);
+  }, [loading, hasMore, notes, apiFeed]);
 
   useEffect(() => {
     if (staticMode) return;

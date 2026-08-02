@@ -38,7 +38,10 @@ export const ko = {
     "emptyTitle": "아직 고양이 콘텐츠가 없어요",
     "emptyDesc": "로그인하고 첫 번째 고양이 노트를 올려보세요",
     "end": "— 끝까지 봤어요, 더 이상 콘텐츠가 없어요 —",
-    "loadingFail": "콘텐츠를 불러오지 못했어요:"
+    "loadingFail": "콘텐츠를 불러오지 못했어요:",
+    "following": "팔로우",
+    "followingEmptyTitle": "팔로우하는 사람이 아직 게시물을 올리지 않았습니다",
+    "followingEmptyDesc": "냥이 친구들을 팔로우해서 새로운 콘텐츠를 가장 먼저 확인해 보세요"
   },
   "topics": {
     "title": "토픽 광장",
@@ -165,7 +168,18 @@ export const ko = {
     "worksTitle": "TA의 작품",
     "contentHidden": "이 사용자의 콘텐츠가 숨겨져 있어요",
     "firstPublish": "첫 번째 고양이 노트를 올려 보세요",
-    "noContentYet": "아직 게시한 콘텐츠가 없어요"
+    "noContentYet": "아직 게시한 콘텐츠가 없어요",
+    "follow": "팔로우",
+    "following": "팔로우 중",
+    "followingCount": "팔로우",
+    "followersCount": "팔로워",
+    "followingTab": "팔로우",
+    "favoritesTab": "즐겨찾기",
+    "likesTab": "좋아요",
+    "noFavorites": "즐겨찾기한 콘텐츠가 아직 없습니다",
+    "noLikes": "좋아요한 콘텐츠가 아직 없습니다",
+    "ownEmptyFavorites": "마음에 드는 고양이 콘텐츠를 저장해 보세요",
+    "ownEmptyLikes": "마음에 드는 고양이 콘텐츠에 좋아요를 눌러 보세요"
   },
   "feed": {
     "back": "뒤로",

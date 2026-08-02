@@ -38,7 +38,10 @@ export const ja = {
     "emptyTitle": "まだ猫の投稿はありません",
     "emptyDesc": "ログインして最初の猫ノートを投稿しましょう",
     "end": "— これ以上はありません —",
-    "loadingFail": "コンテンツの読み込みに失敗しました："
+    "loadingFail": "コンテンツの読み込みに失敗しました：",
+    "following": "フォロー",
+    "followingEmptyTitle": "フォロー中の人はまだ投稿していません",
+    "followingEmptyDesc": "猫友をフォローして、新しい投稿をいち早く見ましょう"
   },
   "topics": {
     "title": "話題広場",
@@ -165,7 +168,18 @@ export const ja = {
     "worksTitle": "このユーザーの作品",
     "contentHidden": "このユーザーのコンテンツは非表示になっています",
     "firstPublish": "初めての猫ノートを投稿してみましょう",
-    "noContentYet": "まだ投稿はありません"
+    "noContentYet": "まだ投稿はありません",
+    "follow": "フォロー",
+    "following": "フォロー中",
+    "followingCount": "フォロー",
+    "followersCount": "フォロワー",
+    "followingTab": "フォロー",
+    "favoritesTab": "お気に入り",
+    "likesTab": "いいね",
+    "noFavorites": "お気に入りはまだありません",
+    "noLikes": "いいねしたものはまだありません",
+    "ownEmptyFavorites": "お気に入りの猫コンテンツを保存してみましょう",
+    "ownEmptyLikes": "好きな猫コンテンツにいいねしてみましょう"
   },
   "feed": {
     "back": "戻る",

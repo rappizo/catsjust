@@ -38,7 +38,10 @@ export const de = {
     "emptyTitle": "Noch keine Katzeninhalte",
     "emptyDesc": "Melde dich an und veröffentliche deinen ersten Katzenbeitrag",
     "end": "— Ende, keine weiteren Inhalte —",
-    "loadingFail": "Inhalte konnten nicht geladen werden:"
+    "loadingFail": "Inhalte konnten nicht geladen werden:",
+    "following": "Folgen",
+    "followingEmptyTitle": "Personen, denen du folgst, haben noch nichts gepostet",
+    "followingEmptyDesc": "Folge einigen Katzenfreunden, um ihre neuen Inhalte als Erster zu sehen"
   },
   "topics": {
     "title": "Themenplatz",
@@ -165,7 +168,18 @@ export const de = {
     "worksTitle": "Werke",
     "contentHidden": "Der Inhalt dieses Benutzers ist versteckt",
     "firstPublish": "Veröffentliche deinen ersten Katzenbeitrag",
-    "noContentYet": "Er/Sie hat noch nichts veröffentlicht"
+    "noContentYet": "Er/Sie hat noch nichts veröffentlicht",
+    "follow": "Folgen",
+    "following": "Gefolgt",
+    "followingCount": "Gefolgt",
+    "followersCount": "Follower",
+    "followingTab": "Gefolgt",
+    "favoritesTab": "Favoriten",
+    "likesTab": "Likes",
+    "noFavorites": "Noch keine Favoriten",
+    "noLikes": "Noch keine Likes",
+    "ownEmptyFavorites": "Füge ein paar deiner Lieblingskatzeninhalte zu deinen Favoriten hinzu",
+    "ownEmptyLikes": "Gib einen Like für Katzeninhalte, die dir gefallen"
   },
   "feed": {
     "back": "Zurück",

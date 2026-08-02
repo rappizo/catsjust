@@ -15,18 +15,45 @@ export const metadata = {
 export default async function HomePage() {
   const t = getT(getLocaleFromCookies());
   let notes: Note[] = [];
+  let followingNotes: Note[] = [];
+  let isLoggedIn = false;
   let feedError: string | null = null;
 
   if (isSupabaseConfigured()) {
     const supabase = createClient();
-    const { data, error } = await supabase
-      .from('notes')
-      .select('*, author:profiles(*), cat:cats(*), topic:topics(*)')
-      .eq('status', 'published')
-      .order('created_at', { ascending: false })
-      .limit(PAGE_SIZE);
-    notes = (data ?? []) as Note[];
-    feedError = error?.message ?? null;
+    const [notesResult, userResult] = await Promise.all([
+      supabase
+        .from('notes')
+        .select('*, author:profiles(*), cat:cats(*), topic:topics(*)')
+        .eq('status', 'published')
+        .order('created_at', { ascending: false })
+        .limit(PAGE_SIZE),
+      supabase.auth.getUser(),
+    ]);
+    notes = (notesResult.data ?? []) as Note[];
+    feedError = notesResult.error?.message ?? null;
+
+    const user = userResult.data.user;
+    isLoggedIn = !!user;
+    // 登录后拉取关注流首屏
+    if (user) {
+      const { data: follows } = await supabase
+        .from('follows')
+        .select('following_id')
+        .eq('follower_id', user.id)
+        .limit(200);
+      const ids = (follows ?? []).map((f) => f.following_id);
+      if (ids.length) {
+        const { data: fNotes } = await supabase
+          .from('notes')
+          .select('*, author:profiles(*), cat:cats(*), topic:topics(*)')
+          .eq('status', 'published')
+          .in('author_id', ids)
+          .order('created_at', { ascending: false })
+          .limit(PAGE_SIZE);
+        followingNotes = (fNotes ?? []) as Note[];
+      }
+    }
   }
 
   return (
@@ -62,7 +89,7 @@ export default async function HomePage() {
       )}
 
       {/* 内容流 */}
-      <HomeTabs initialNotes={notes} />
+      <HomeTabs initialNotes={notes} followingNotes={followingNotes} isLoggedIn={isLoggedIn} />
     </div>
   );
 }

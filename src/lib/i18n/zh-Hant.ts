@@ -38,7 +38,10 @@ export const zhHant = {
     "emptyTitle": "還沒有貓咪內容",
     "emptyDesc": "登入後發佈第一則貓咪筆記吧",
     "end": "— 到底啦，沒有更多內容 —",
-    "loadingFail": "內容載入失敗："
+    "loadingFail": "內容載入失敗：",
+    "following": "關注",
+    "followingEmptyTitle": "關注的人還沒有發佈內容",
+    "followingEmptyDesc": "去關注一些喵友，第一時間看到他們的新內容吧"
   },
   "topics": {
     "title": "話題廣場",
@@ -165,7 +168,18 @@ export const zhHant = {
     "worksTitle": "TA 的作品",
     "contentHidden": "該用戶的內容已隱藏",
     "firstPublish": "去發布你的第一篇貓咪筆記吧",
-    "noContentYet": "TA 還沒有發布過內容"
+    "noContentYet": "TA 還沒有發布過內容",
+    "follow": "關注",
+    "following": "已關注",
+    "followingCount": "關注",
+    "followersCount": "粉絲",
+    "followingTab": "關注",
+    "favoritesTab": "收藏",
+    "likesTab": "喜歡",
+    "noFavorites": "還沒有收藏內容",
+    "noLikes": "還沒有喜歡的內容",
+    "ownEmptyFavorites": "去收藏一些喜歡的貓咪內容吧",
+    "ownEmptyLikes": "去給喜歡的貓咪內容點個讚吧"
   },
   "feed": {
     "back": "返回",

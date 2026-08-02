@@ -38,7 +38,10 @@ export const es = {
     "emptyTitle": "Aún no hay contenido sobre gatos",
     "emptyDesc": "Inicia sesión y publica tu primera nota sobre gatos",
     "end": "— Eso es todo, no hay más contenido —",
-    "loadingFail": "Error al cargar el contenido:"
+    "loadingFail": "Error al cargar el contenido:",
+    "following": "Siguiendo",
+    "followingEmptyTitle": "Todavía no hay publicaciones de las personas que sigues",
+    "followingEmptyDesc": "¡Sigue a algunos amigos gatunos para ver su nuevo contenido de inmediato!"
   },
   "topics": {
     "title": "Plaza de temas",
@@ -165,7 +168,18 @@ export const es = {
     "worksTitle": "Sus obras",
     "contentHidden": "El contenido de este usuario está oculto",
     "firstPublish": "Publica tu primera nota sobre gatos",
-    "noContentYet": "Aún no ha publicado contenido"
+    "noContentYet": "Aún no ha publicado contenido",
+    "follow": "Seguir",
+    "following": "Siguiendo",
+    "followingCount": "Siguiendo",
+    "followersCount": "Seguidores",
+    "followingTab": "Siguiendo",
+    "favoritesTab": "Favoritos",
+    "likesTab": "Me gusta",
+    "noFavorites": "Todavía no tienes contenido favorito",
+    "noLikes": "Aún no hay contenido que te guste",
+    "ownEmptyFavorites": "¡Guarda en favoritos algunos contenidos de gatos que te gusten!",
+    "ownEmptyLikes": "¡Dale me gusta a los contenidos de gatos que te gusten!"
   },
   "feed": {
     "back": "Volver",

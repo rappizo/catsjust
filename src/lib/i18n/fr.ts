@@ -38,7 +38,10 @@ export const fr = {
     "emptyTitle": "Aucun contenu de chat pour le moment",
     "emptyDesc": "Connectez-vous pour publier votre première note de chat",
     "end": "— C'est fini, plus de contenu —",
-    "loadingFail": "Échec du chargement du contenu :"
+    "loadingFail": "Échec du chargement du contenu :",
+    "following": "Suivi",
+    "followingEmptyTitle": "Les personnes que vous suivez n'ont rien publié pour le moment",
+    "followingEmptyDesc": "Suivez d'autres chats et découvrez leurs nouveautés en premier !"
   },
   "topics": {
     "title": "Place des sujets",
@@ -165,7 +168,18 @@ export const fr = {
     "worksTitle": "Ses œuvres",
     "contentHidden": "Le contenu de cet utilisateur est masqué",
     "firstPublish": "Publiez votre première note sur les chats",
-    "noContentYet": "Cette personne n'a encore rien publié"
+    "noContentYet": "Cette personne n'a encore rien publié",
+    "follow": "Suivre",
+    "following": "Suivi",
+    "followingCount": "Suivi",
+    "followersCount": "Abonnés",
+    "followingTab": "Suivi",
+    "favoritesTab": "Favoris",
+    "likesTab": "J'aime",
+    "noFavorites": "Aucun contenu mis en favori",
+    "noLikes": "Aucun contenu aimé",
+    "ownEmptyFavorites": "Va mettre en favoris quelques contenus de chats que tu aimes",
+    "ownEmptyLikes": "Va mettre un like à quelques contenus de chats que tu aimes"
   },
   "feed": {
     "back": "Retour",

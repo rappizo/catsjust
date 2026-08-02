@@ -3,6 +3,10 @@
 > 只属于猫咪的内容分享社区 —— 专为猫咪展示的「小红书」。
 > 纯展示 · 无商业 · 垂直专业。P1：中文框架。
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Next.js](https://img.shields.io/badge/Next.js-14-000000?logo=next.js)](https://nextjs.org)
+[![Supabase](https://img.shields.io/badge/Supabase-PostgreSQL-3ECF8E?logo=supabase)](https://supabase.com)
+
 ## 技术架构
 
 ```
@@ -126,3 +130,24 @@ where id = (select id from auth.users where email = '你的邮箱' limit 1);
 ## 下一步（P2）
 
 关注/粉丝、通知中心（WebSocket）、搜索、收藏夹、楼中楼评论、举报处理、数据统计、热度推荐 —— 详见 [`docs/02-分阶段规划-P1-P3.md`](docs/02-分阶段规划-P1-P3.md)。
+
+## 开源与安全
+
+本项目以 **MIT 许可证**开源，欢迎自部署、二次开发与贡献。
+
+**安全设计**
+
+- 🔑 **密钥永不入库**：所有密钥只存在于 `.env.local`（已被 `.gitignore` 忽略），仓库中的 `.env.local.example` 仅含占位符；
+- 🔒 **RLS 行级安全**：所有表开启行级安全策略，前端使用权限最小的 `publishable` 公钥，特权操作（审核/封禁/邮箱）仅服务端 `secret` 密钥可执行；
+- 🧯 **先审后发**：内容默认 `pending`，通过管理员审核后才公开，防止垃圾内容；
+- 🛡️ **依赖安全**：建议开启 GitHub **Dependabot alerts** 接收依赖漏洞提醒，并定期更新 Supabase 的 RLS 策略。
+
+**自部署提示**
+
+1. 复制 `.env.local.example` 为 `.env.local`，填入 Supabase 项目地址与密钥；
+2. 在 Supabase SQL Editor 或本地执行 `supabase/migrations/` 下的 SQL；
+3. `npm install && npm run dev` 本地预览；生产部署建议使用 Vercel。
+
+**贡献**
+
+欢迎通过 Issue / PR 提交 Bug 修复、功能建议与多语言翻译（P3 目标）。

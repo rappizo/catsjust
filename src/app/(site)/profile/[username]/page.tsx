@@ -141,7 +141,7 @@ export default async function ProfilePage({ params }: { params: { username: stri
   const name = typedProfile.nickname || typedProfile.username;
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6">
+    <div className="mx-auto max-w-7xl px-2 py-3 sm:px-3 sm:py-4">
       {/* 主页头部 */}
       <div className="overflow-hidden rounded-3xl border border-stone-200/60 bg-white shadow-card">
         {/* 封面 */}

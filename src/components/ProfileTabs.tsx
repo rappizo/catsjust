@@ -164,7 +164,7 @@ export function ProfileTabs({
             )}
           </div>
         ) : (
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+          <div className="grid grid-cols-2 gap-1 md:gap-1.5 xl:gap-2 sm:grid-cols-3 lg:grid-cols-4">
             {cats.map((cat) => (
               <Link
                 key={cat.id}

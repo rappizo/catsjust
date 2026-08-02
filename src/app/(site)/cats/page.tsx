@@ -70,8 +70,8 @@ export default async function CatsPlazaPage() {
   const breeds = (breedsRes.data ?? []).map((b: any) => b.name);
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6">
-      <div className="mb-5">
+    <div className="mx-auto max-w-7xl px-2 py-3 sm:px-3 sm:py-4">
+      <div className="mb-3">
         <h1 className="flex items-center gap-2 text-xl font-bold text-ink sm:text-2xl">
           🐾 {t('cats', 'title')}
         </h1>

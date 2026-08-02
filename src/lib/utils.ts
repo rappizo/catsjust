@@ -61,14 +61,24 @@ export function noteStatusLabel(status: string): string {
   }
 }
 
-/** 校验文件是否为图片 */
-export function isImageFile(file: File): boolean {
-  return file.type.startsWith('image/');
+const IMAGE_EXTS = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'heic', 'heif', 'bmp', 'avif', 'svg'];
+const VIDEO_EXTS = ['mp4', 'mov', 'webm', 'mkv', '3gp', 'm4v', 'avi', 'mpeg', 'mpg'];
+
+function hasExt(file: File, exts: string[]): boolean {
+  const ext = file.name.split('.').pop()?.toLowerCase() ?? '';
+  return exts.includes(ext);
 }
 
-/** 校验文件是否为视频 */
+/** 校验文件是否为图片（兼容安卓部分文件管理器 File.type 为空的情况） */
+export function isImageFile(file: File): boolean {
+  if (file.type) return file.type.startsWith('image/');
+  return hasExt(file, IMAGE_EXTS);
+}
+
+/** 校验文件是否为视频（兼容 File.type 为空的情况） */
 export function isVideoFile(file: File): boolean {
-  return file.type.startsWith('video/');
+  if (file.type) return file.type.startsWith('video/');
+  return hasExt(file, VIDEO_EXTS);
 }
 
 /** 获取文件扩展名 */

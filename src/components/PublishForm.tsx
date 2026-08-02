@@ -96,7 +96,9 @@ export function PublishForm({ userId, initialCats, topics, breeds = [], editNote
   /* ---------- 图片上传 ---------- */
   function handleImagesSelected(files: FileList | null) {
     if (!files) return;
-    const valid = Array.from(files).filter(isImageFile);
+    // 兼容安卓：部分文件管理器 File.type 为空，扩展名也缺失时，
+    // 因 input 已限定 accept="image/*"，type 为空的直接视为图片
+    const valid = Array.from(files).filter((f) => f.type === '' || isImageFile(f));
     if (!valid.length) {
       setError(t('publish', 'imageOnlyError'));
       return;
@@ -141,7 +143,7 @@ export function PublishForm({ userId, initialCats, topics, breeds = [], editNote
   async function handleVideoSelected(file: File | undefined) {
     if (!file) return;
     setVideoError('');
-    if (!isVideoFile(file)) {
+    if (!isVideoFile(file) && file.type !== '') {
       setVideoError(t('publish', 'videoOnlyError'));
       return;
     }

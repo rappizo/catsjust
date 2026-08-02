@@ -253,7 +253,8 @@ export const ko = {
     "tagline": "고양이만을 위한 공유 커뮤니티 · 전시 전용 · 무광고",
     "topics": "주제 광장",
     "tos": "이용약관 (예정)",
-    "privacy": "개인정보 처리방침 (예정)"
+    "privacy": "개인정보 처리방침 (예정)",
+    "download": "앱 다운로드"
   },
   "notifications": {
     "title": "알림",

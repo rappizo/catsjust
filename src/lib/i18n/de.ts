@@ -253,7 +253,8 @@ export const de = {
     "tagline": "Eine Community nur für Katzen · Nur zur Ansicht · Kein Kommerz",
     "topics": "Themenforum",
     "tos": "Nutzungsbedingungen (in Planung)",
-    "privacy": "Datenschutzerklärung (in Planung)"
+    "privacy": "Datenschutzerklärung (in Planung)",
+    "download": "App herunterladen"
   },
   "notifications": {
     "title": "Benachrichtigungen",

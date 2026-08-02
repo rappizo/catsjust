@@ -253,7 +253,8 @@ export const ja = {
     "tagline": "猫だけのシェアコミュニティ · 純粋な展示 · 商業なし",
     "topics": "トピック広場",
     "tos": "利用規約（準備中）",
-    "privacy": "プライバシーポリシー（準備中）"
+    "privacy": "プライバシーポリシー（準備中）",
+    "download": "アプリをダウンロード"
   },
   "notifications": {
     "title": "通知",

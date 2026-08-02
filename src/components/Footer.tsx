@@ -26,6 +26,10 @@ export function Footer() {
             {t('footer', 'topics')}
           </Link>
           <span>·</span>
+          <Link href="/download" className="transition hover:text-brand-500">
+            {t('footer', 'download')}
+          </Link>
+          <span>·</span>
           <span>{t('footer', 'tos')}</span>
           <span>·</span>
           <span>{t('footer', 'privacy')}</span>

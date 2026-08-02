@@ -42,3 +42,16 @@ next-env.d.ts
 # 词典生成日志
 scripts/gen-log.txt
 !.env.local.example
+
+# ---- Capacitor Android App (mobile/) ----
+mobile/node_modules/
+mobile/www/
+mobile/android/.gradle/
+mobile/android/build/
+mobile/android/app/build/
+mobile/android/local.properties
+mobile/android/.idea/
+mobile/android/captures/
+mobile/android/*.apk
+mobile/android/*.keystore
+!mobile/android/keystore.properties

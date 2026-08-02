@@ -253,7 +253,8 @@ export const es = {
     "tagline": "Una comunidad exclusiva para gatos · Solo exhibición · Sin fines comerciales",
     "topics": "Plaza de temas",
     "tos": "Acuerdo de usuario (en planificación)",
-    "privacy": "Política de privacidad (en planificación)"
+    "privacy": "Política de privacidad (en planificación)",
+    "download": "Descargar la app"
   },
   "notifications": {
     "title": "Notificaciones",

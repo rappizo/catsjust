@@ -253,7 +253,8 @@ export const en = {
     "tagline": "A sharing community just for cats · Display only · No commercial",
     "topics": "Topic Square",
     "tos": "Terms of Service (Planned)",
-    "privacy": "Privacy Policy (Planned)"
+    "privacy": "Privacy Policy (Planned)",
+    "download": "Download App"
   },
   "notifications": {
     "title": "Notifications",

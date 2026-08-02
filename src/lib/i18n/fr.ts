@@ -253,7 +253,8 @@ export const fr = {
     "tagline": "Une communauté dédiée aux chats · Vitrine · Sans but commercial",
     "topics": "Sujets",
     "tos": "Conditions d'utilisation (en préparation)",
-    "privacy": "Politique de confidentialité (en préparation)"
+    "privacy": "Politique de confidentialité (en préparation)",
+    "download": "Télécharger l'application"
   },
   "notifications": {
     "title": "Notifications",

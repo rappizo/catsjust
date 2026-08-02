@@ -253,7 +253,8 @@ export const it = {
     "tagline": "Una community di condivisione solo per gatti · Solo mostra · Nessuno scopo commerciale",
     "topics": "Piazza degli argomenti",
     "tos": "Termini di utilizzo (in programma)",
-    "privacy": "Informativa sulla privacy (in programma)"
+    "privacy": "Informativa sulla privacy (in programma)",
+    "download": "Scarica l'app"
   },
   "notifications": {
     "title": "Notifiche",

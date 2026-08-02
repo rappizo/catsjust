@@ -253,7 +253,8 @@ export const zhHant = {
     "tagline": "一個只屬於貓咪的分享社群 · 純展示 · 無商業",
     "topics": "話題廣場",
     "tos": "用戶協議（規劃中）",
-    "privacy": "隱私政策（規劃中）"
+    "privacy": "隱私政策（規劃中）",
+    "download": "下載 App"
   },
   "notifications": {
     "title": "通知",

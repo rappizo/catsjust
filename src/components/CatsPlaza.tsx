@@ -81,15 +81,17 @@ export function CatsPlaza({ cats, breeds }: CatsPlazaProps) {
         </div>
       </div>
 
-      {/* 品种筛选 */}
-      <div className="no-scrollbar -mx-1 flex gap-2 overflow-x-auto px-1 pb-1">
+      {/* 品种筛选（换行展示全部） */}
+      <div className="flex flex-wrap gap-2">
         {['全部', ...breeds].map((b) => (
           <button
             key={b}
             onClick={() => setBreed(b)}
             className={cn(
-              'shrink-0 rounded-full px-3.5 py-1.5 text-xs font-medium transition',
-              breed === b ? 'bg-brand-500 text-[#04281a]' : 'bg-white text-stone-500 ring-1 ring-stone-200 hover:bg-stone-50'
+              'rounded-full px-3.5 py-1.5 text-xs font-medium transition',
+              breed === b
+                ? 'bg-brand-500 text-[#04281a]'
+                : 'bg-white text-stone-500 ring-1 ring-stone-300 hover:bg-stone-50 hover:text-stone-600'
             )}
           >
             {b}

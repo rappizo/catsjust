@@ -102,7 +102,7 @@ export default async function HomePage() {
   }
 
   return (
-    <div className="mx-auto max-w-7xl px-3 py-3 sm:px-4 sm:py-4">
+    <div className="mx-auto max-w-7xl px-2 py-3 sm:px-3 sm:py-4">
       {!isSupabaseConfigured() && (
         <div className="mb-5 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-700">
           ⚠️ Supabase 尚未配置。请填写 <code className="font-mono text-xs">.env.local</code>{' '}

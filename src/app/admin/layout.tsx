@@ -1,39 +1,8 @@
-import { redirect } from 'next/navigation';
-import { createClient } from '@/lib/supabase/server';
-import { isSupabaseConfigured } from '@/lib/config';
-import { AdminShell } from '@/components/admin/AdminShell';
-
 export const metadata = {
   title: '管理后台',
 };
 
-export default async function AdminLayout({ children }: { children: React.ReactNode }) {
-  if (!isSupabaseConfigured()) {
-    redirect('/');
-  }
-
-  const supabase = createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    redirect('/login?next=/admin');
-  }
-
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('role, nickname, avatar_url')
-    .eq('id', user.id)
-    .maybeSingle();
-
-  if (!profile || profile.role !== 'admin') {
-    redirect('/');
-  }
-
-  return (
-    <AdminShell nickname={profile.nickname || '管理员'} avatar={profile.avatar_url}>
-      {children}
-    </AdminShell>
-  );
+/** 管理后台根布局：登录页与面板共用，具体鉴权在 (panel) 分组内完成 */
+export default function AdminLayout({ children }: { children: React.ReactNode }) {
+  return <>{children}</>;
 }

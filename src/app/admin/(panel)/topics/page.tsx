@@ -1,4 +1,4 @@
-import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
 import { TopicManager } from '@/components/admin/TopicManager';
 import type { Topic } from '@/lib/types';
 
@@ -7,7 +7,7 @@ export const metadata = {
 };
 
 export default async function AdminTopicsPage() {
-  const supabase = createClient();
+  const supabase = createAdminClient();
 
   const { data: topics } = await supabase
     .from('topics')

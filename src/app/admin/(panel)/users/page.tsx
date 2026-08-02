@@ -1,4 +1,3 @@
-import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { UserActions } from '@/components/admin/UserActions';
 import { Avatar } from '@/components/Avatar';
@@ -10,28 +9,23 @@ export const metadata = {
 };
 
 export default async function AdminUsersPage() {
-  const supabase = createClient();
+  const admin = createAdminClient();
 
-  const {
-    data: { user: currentUser },
-  } = await supabase.auth.getUser();
-
-  const { data: profiles } = await supabase
+  const { data: profiles } = await admin
     .from('profiles')
     .select('*')
     .order('created_at', { ascending: false })
     .limit(200);
 
-  // 用服务端密钥读取邮箱（仅管理员页面调用）
+  // 用服务端密钥读取邮箱
   let emailMap: Record<string, string> = {};
   try {
-    const admin = createAdminClient();
     const { data: authData } = await admin.auth.admin.listUsers({ page: 1, perPage: 1000 });
     emailMap = Object.fromEntries(
       (authData?.users ?? []).map((u) => [u.id, u.email ?? ''])
     );
   } catch (e) {
-    console.error('读取用户邮箱失败（如未配置 SUPABASE_SECRET_KEY 属正常）:', e);
+    console.error('读取用户邮箱失败:', e);
   }
 
   const typedProfiles = (profiles ?? []) as Profile[];
@@ -99,7 +93,7 @@ export default async function AdminUsersPage() {
                   <UserActions
                     userId={p.id}
                     status={p.status}
-                    isSelf={p.id === currentUser?.id}
+                    isSelf={false}
                   />
                 </td>
               </tr>

@@ -3,11 +3,13 @@
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
+import { aiReviewNote } from '@/lib/ai/review';
 import { LIMITS } from '@/lib/constants';
 import type { MediaType, NoteMedia } from '@/lib/types';
 
 export type ActionResult =
-  | { ok: true; message?: string; id?: string }
+  | { ok: true; message?: string; id?: string; status?: 'pending' | 'published' | 'rejected' }
   | { ok: false; error: string };
 
 /** 发布笔记（先审后发，默认 pending） */
@@ -60,9 +62,44 @@ export async function publishNote(input: {
 
   if (error) return { ok: false, error: `发布失败：${error.message}` };
 
+  // ---------- AI 自动审核（gpt-5.5 视觉） ----------
+  // 明确通过 → 自动发布；明确违规 → 自动驳回；无法判断 → 保持 pending 推人工
+  const admin = createAdminClient();
+  let finalStatus: 'pending' | 'published' | 'rejected' = 'pending';
+  let message = '已提交人工审核';
+
+  const ai = await aiReviewNote({
+    title: title || '',
+    content: content || '',
+    imageUrl: input.coverUrl,
+    mediaType: input.mediaType,
+  });
+
+  if (ai.verdict === 'approve') {
+    await admin.from('notes').update({ status: 'published' }).eq('id', data.id);
+    finalStatus = 'published';
+    message = '已通过 AI 自动审核，公开展示';
+  } else if (ai.verdict === 'reject') {
+    await admin
+      .from('notes')
+      .update({ status: 'rejected', reject_reason: ai.reason })
+      .eq('id', data.id);
+    finalStatus = 'rejected';
+    message = `未通过 AI 自动审核：${ai.reason}`;
+  }
+
+  if (ai.verdict !== 'review') {
+    await admin.from('review_logs').insert({
+      note_id: data.id,
+      reviewer_id: null,
+      action: ai.verdict,
+      reason: ai.reason || 'AI 自动审核',
+    });
+  }
+
   revalidatePath('/');
   revalidatePath(`/profile/${user.id}`);
-  return { ok: true, id: data.id };
+  return { ok: true, id: data.id, status: finalStatus, message };
 }
 
 /** 删除自己的笔记 */

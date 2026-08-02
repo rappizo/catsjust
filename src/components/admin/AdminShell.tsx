@@ -2,11 +2,10 @@
 
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { Cat, FileCheck, LayoutDashboard, LogOut, MessageSquareWarning, Tags } from 'lucide-react';
+import { Cat, FileCheck, LayoutDashboard, LogOut, MessageSquareWarning, ShieldCheck, Tags } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Logo } from '@/components/Logo';
-import { Avatar } from '@/components/Avatar';
-import { signOut } from '@/lib/actions/auth';
+import { adminLogout } from '@/lib/actions/admin-auth';
 
 const NAV = [
   { href: '/admin', label: '仪表盘', icon: LayoutDashboard },
@@ -15,20 +14,12 @@ const NAV = [
   { href: '/admin/topics', label: '话题管理', icon: Tags },
 ];
 
-export function AdminShell({
-  nickname,
-  avatar,
-  children,
-}: {
-  nickname: string;
-  avatar: string | null;
-  children: React.ReactNode;
-}) {
+export function AdminShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
 
-  async function handleSignOut() {
-    await signOut();
+  async function handleLogout() {
+    await adminLogout();
     router.refresh();
   }
 
@@ -62,13 +53,15 @@ export function AdminShell({
           </nav>
           <div className="border-t border-stone-100 p-3">
             <div className="mb-2 flex items-center gap-2.5 rounded-xl bg-stone-50 px-3 py-2">
-              <Avatar src={avatar} alt={nickname} size="sm" />
+              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand-500/15 text-brand-500">
+                <ShieldCheck className="h-4 w-4" />
+              </span>
               <span className="min-w-0 flex-1 truncate text-sm font-medium text-stone-700">
-                {nickname}
+                管理员
               </span>
             </div>
             <button
-              onClick={handleSignOut}
+              onClick={handleLogout}
               className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-sm text-stone-500 transition hover:bg-red-50 hover:text-red-600"
             >
               <LogOut className="h-4 w-4" />

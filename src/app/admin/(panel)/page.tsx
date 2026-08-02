@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { ArrowRight, FileCheck, FileClock, Users } from 'lucide-react';
-import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
 import { timeAgo } from '@/lib/utils';
 
 function startOfTodayISO(): string {
@@ -10,7 +10,7 @@ function startOfTodayISO(): string {
 }
 
 export default async function AdminDashboard() {
-  const supabase = createClient();
+  const supabase = createAdminClient();
   const todayISO = startOfTodayISO();
 
   const [

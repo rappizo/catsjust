@@ -79,6 +79,7 @@ export function PublishForm({ userId, initialCats, topics }: PublishFormProps) {
   const [dragIndex, setDragIndex] = useState<number | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
+  const [notice, setNotice] = useState<{ text: string; tone: 'green' | 'amber' | 'red' } | null>(null);
 
   /* ---------- 图片上传 ---------- */
   function handleImagesSelected(files: FileList | null) {
@@ -258,8 +259,13 @@ export function PublishForm({ userId, initialCats, topics }: PublishFormProps) {
       });
       if (!res.ok) throw new Error(res.error);
 
-      router.push(`/notes/${res.id}`);
-      router.refresh();
+      // 展示 AI 自动审核结果，稍后跳转笔记页
+      const tone = res.status === 'published' ? 'green' : res.status === 'rejected' ? 'red' : 'amber';
+      setNotice({ text: res.message || '已提交', tone });
+      setTimeout(() => {
+        router.push(`/notes/${res.id}`);
+        router.refresh();
+      }, 2000);
     } catch (err) {
       setError(err instanceof Error ? err.message : '发布失败，请重试');
       setSubmitting(false);
@@ -657,6 +663,19 @@ export function PublishForm({ userId, initialCats, topics }: PublishFormProps) {
           ))}
         </div>
       </section>
+
+      {notice && (
+        <p
+          className={cn(
+            'rounded-xl px-4 py-3 text-sm',
+            notice.tone === 'green' && 'bg-emerald-50 text-emerald-600',
+            notice.tone === 'amber' && 'bg-amber-50 text-amber-600',
+            notice.tone === 'red' && 'bg-red-50 text-red-500'
+          )}
+        >
+          {notice.text}，正在跳转…
+        </p>
+      )}
 
       {error && (
         <p className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-500">{error}</p>

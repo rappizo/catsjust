@@ -3,8 +3,8 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Check, ChevronDown, Loader2, X } from 'lucide-react';
-import { reviewNote } from '@/lib/actions/admin';
+import { Check, ChevronDown, Loader2, Sparkles, X } from 'lucide-react';
+import { reviewNote, aiReviewNow } from '@/lib/actions/admin';
 import { noteStatusLabel } from '@/lib/utils';
 import type { Note } from '@/lib/types';
 
@@ -20,6 +20,7 @@ export function ReviewActions({ note }: { note: Note }) {
   const [busy, setBusy] = useState<'approve' | 'reject' | null>(null);
   const [error, setError] = useState('');
   const [menuOpen, setMenuOpen] = useState(false);
+  const [aiBusy, setAiBusy] = useState(false);
 
   async function handleApprove() {
     setBusy('approve');
@@ -45,6 +46,16 @@ export function ReviewActions({ note }: { note: Note }) {
     const reason = window.prompt('请输入驳回原因（将展示给发布者）：');
     if (reason === null) return;
     rejectWith(reason || undefined);
+  }
+
+  async function handleAiReview() {
+    setAiBusy(true);
+    setError('');
+    const res = await aiReviewNow(note.id);
+    if (!res.ok) setError(res.error);
+    else if (res.message) setError(res.message);
+    router.refresh();
+    setAiBusy(false);
   }
 
   return (
@@ -91,6 +102,16 @@ export function ReviewActions({ note }: { note: Note }) {
             </div>
           )}
         </div>
+
+        <button
+          onClick={handleAiReview}
+          disabled={!!busy || aiBusy}
+          className="flex items-center gap-1 rounded-full border border-brand-500/40 bg-brand-500/10 px-3 py-1.5 text-xs font-medium text-brand-500 transition hover:bg-brand-500/20 disabled:opacity-60"
+          title="调用 gpt-5.5 重新自动审核"
+        >
+          {aiBusy ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Sparkles className="h-3.5 w-3.5" />}
+          AI 重审
+        </button>
 
         <Link
           href={`/notes/${note.id}`}

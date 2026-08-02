@@ -1,4 +1,4 @@
-import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
 import { ReviewActions, ProcessedBadge } from '@/components/admin/ReviewActions';
 import { ShieldCheck } from 'lucide-react';
 import { timeAgo } from '@/lib/utils';
@@ -9,7 +9,7 @@ export const metadata = {
 };
 
 export default async function AdminReviewPage() {
-  const supabase = createClient();
+  const supabase = createAdminClient();
 
   const { data: pendingNotes } = await supabase
     .from('notes')

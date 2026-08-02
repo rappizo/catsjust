@@ -287,11 +287,11 @@ function FeedItem({
       </div>
 
       {/* 底部信息 */}
-      <div className="absolute inset-x-0 bottom-0 z-20 bg-gradient-to-t from-black/85 via-black/40 to-transparent px-5 pb-6 pt-24">
+      <div className="absolute inset-x-0 bottom-0 z-20 bg-gradient-to-t from-black/95 via-black/55 to-transparent px-5 pb-8 pt-28">
         <div className="pr-20">
           {note.title && <h2 className="text-base font-semibold text-white">{note.title}</h2>}
           {note.content && (
-            <p className="mt-1.5 line-clamp-3 text-sm leading-relaxed text-white/85">
+            <p className="no-scrollbar mt-1.5 max-h-44 overflow-y-auto whitespace-pre-wrap text-sm leading-relaxed text-white/90">
               {note.content}
             </p>
           )}

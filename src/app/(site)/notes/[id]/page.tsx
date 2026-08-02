@@ -6,6 +6,7 @@ import { CalendarDays, ChevronRight, PenSquare } from 'lucide-react';
 import { createClient } from '@/lib/supabase/server';
 import { MediaCarousel } from '@/components/MediaCarousel';
 import { VideoPlayer } from '@/components/VideoPlayer';
+import { BackButton } from '@/components/BackButton';
 import { NoteActions } from '@/components/NoteActions';
 import { CommentSection } from '@/components/CommentSection';
 import { VerticalFeed } from '@/components/VerticalFeed';
@@ -59,8 +60,8 @@ export default async function NotePage({ params }: { params: { id: string } }) {
   const typed = note as Note;
   const isOwner = user?.id === typed.author_id;
 
-  // ============ 已发布 → 小红书式全屏上下滑信息流 ============
-  if (typed.status === 'published') {
+  // ============ 已发布视频笔记 → 抖音式全屏上下滑 ============
+  if (typed.status === 'published' && typed.media_type === 'video') {
     // 拉取信息流（最新 30 篇已发布笔记）
     const { data: feedData } = await supabase
       .from('notes')
@@ -184,20 +185,43 @@ export default async function NotePage({ params }: { params: { id: string } }) {
   const authorName = typed.author?.nickname || typed.author?.username || t('note', 'authorFallback');
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-6 sm:px-6">
-      {/* 非公开状态提示（已发布已在上方早退，此处必为非公开） */}
-      <div className="mb-4 flex flex-wrap items-center gap-3 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-700">
-        <StatusBadge status={typed.status} />
-        {typed.status === 'pending' && <span>{t('note', 'pending')}</span>}
-        {typed.status === 'rejected' && (
-          <span>{t('note', 'rejected')}{typed.reject_reason || ''}</span>
+    <div className="mx-auto max-w-3xl px-2 py-3 sm:px-3 sm:py-4">
+      {/* 顶部：返回 + 作者 */}
+      <div className="mb-4 flex items-center gap-3">
+        <BackButton />
+        <Link
+          href={`/profile/${typed.author?.username ?? ''}`}
+          className="flex min-w-0 items-center gap-2.5"
+        >
+          <Avatar src={typed.author?.avatar_url} alt={authorName} size="md" />
+          <div className="min-w-0">
+            <p className="truncate text-sm font-semibold text-ink">{authorName}</p>
+            <p className="text-xs text-stone-400">{timeAgo(typed.created_at)}</p>
+          </div>
+        </Link>
+        {typed.cat && (
+          <span className="ml-auto shrink-0 rounded-full bg-brand-50 px-2.5 py-1 text-[11px] font-medium text-brand-600">
+            🐾 {typed.cat.name}
+          </span>
         )}
-        {typed.status === 'removed' && <span>{t('note', 'removed')}</span>}
       </div>
 
-      <div className="grid gap-6 md:grid-cols-[1.25fr_1fr]">
-        {/* 媒体区 */}
-        <div className="md:sticky md:top-20 md:self-start">
+      {/* 非公开状态提示（仅作者可见，已发布不显示） */}
+      {typed.status !== 'published' && (
+        <div className="mb-4 flex flex-wrap items-center gap-3 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-700">
+          <StatusBadge status={typed.status} />
+          {typed.status === 'pending' && <span>{t('note', 'pending')}</span>}
+          {typed.status === 'rejected' && (
+            <span>{t('note', 'rejected')}{typed.reject_reason || ''}</span>
+          )}
+          {typed.status === 'removed' && <span>{t('note', 'removed')}</span>}
+        </div>
+      )}
+
+      {/* 图片（完整展示）→ 标题 → 内容 → TAG → 互动 → 评论 */}
+      <div className="flex flex-col gap-5">
+        {/* 媒体区：图片 object-contain 完整展示，不裁切 */}
+        <div>
           {isVideo ? (
             <VideoPlayer src={typed.media?.[0]?.url ?? ''} poster={typed.media?.[0]?.poster} />
           ) : (

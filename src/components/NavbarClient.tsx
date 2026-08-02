@@ -41,6 +41,12 @@ export function NavbarClient({ user, profile, unreadNotifications = 0 }: NavbarC
     return () => document.removeEventListener('mousedown', onClickOutside);
   }, []);
 
+  // 小红书风格：顶部 Header 仅个人主页显示，其余页面（首页/猫咪/话题/搜索等）沉浸式浏览
+  const showHeader = /^\/profile\//.test(pathname);
+  if (!showHeader) {
+    return null;
+  }
+
   async function handleSignOut() {
     setSigningOut(true);
     await signOut();

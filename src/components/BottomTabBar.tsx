@@ -33,7 +33,7 @@ export function BottomTabBar({ username, unreadCount = 0 }: BottomTabBarProps) {
     );
 
   return (
-    <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-stone-200/70 bg-cream/90 backdrop-blur-md">
+    <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-stone-200/70 bg-cream/95">
       <div className="mx-auto flex h-16 max-w-7xl items-stretch px-2 pb-[env(safe-area-inset-bottom)]">
         {/* 首页 */}
         <Link href="/" className={cn('flex-1', itemCls(isActive('/', true)))}>

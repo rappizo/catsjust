@@ -64,9 +64,9 @@ export function HomeTabs({
         ))}
       </div>
 
-      {/* 关注流 */}
-      {tab === 'following' &&
-        (!isLoggedIn ? (
+      {/* 关注流（保持挂载，切换不重建） */}
+      <div className={tab === 'following' ? 'block' : 'hidden'}>
+        {!isLoggedIn ? (
           <div className="flex flex-col items-center gap-3 rounded-2xl border border-stone-200/60 bg-white py-16 text-center shadow-card">
             <span className="text-4xl">👀</span>
             <p className="font-semibold text-stone-600">{t('home', 'followingLoginTitle')}</p>
@@ -87,10 +87,11 @@ export function HomeTabs({
             emptyTitle={t('home', 'followingEmptyTitle')}
             emptyDescription={t('home', 'followingEmptyDesc')}
           />
-        ))}
+        )}
+      </div>
 
-      {/* 发现流 */}
-      {tab === 'discover' && (
+      {/* 发现流（保持挂载，切换不重建） */}
+      <div className={tab === 'discover' ? 'block' : 'hidden'}>
         <Waterfall
           key={`discover-${hotNotes.length}`}
           initialNotes={hotNotes}
@@ -100,10 +101,12 @@ export function HomeTabs({
           emptyTitle={t('home', 'emptyTitle')}
           emptyDescription={t('home', 'emptyDesc')}
         />
-      )}
+      </div>
 
-      {/* 选猫 */}
-      {tab === 'cats' && <CatsPlaza cats={cats} breeds={breeds} />}
+      {/* 选猫（保持挂载，切换不重建） */}
+      <div className={tab === 'cats' ? 'block' : 'hidden'}>
+        <CatsPlaza cats={cats} breeds={breeds} />
+      </div>
     </div>
   );
 }

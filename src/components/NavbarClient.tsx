@@ -58,7 +58,7 @@ export function NavbarClient({ user, profile, unreadNotifications = 0 }: NavbarC
   const profileHref = profile ? `/profile/${profile.username}` : '/login';
 
   return (
-    <header className="sticky top-0 z-40 border-b border-stone-200/70 bg-cream/85 backdrop-blur-md">
+    <header className="sticky top-0 z-40 border-b border-stone-200/70 bg-cream/95">
       <div className="mx-auto flex h-14 max-w-7xl items-center justify-between gap-3 px-4 sm:px-6">
         <Logo />
 

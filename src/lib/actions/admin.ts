@@ -4,6 +4,7 @@ import { revalidatePath } from 'next/cache';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { isAdminAuthed } from '@/lib/admin-auth';
 import { aiReviewNote } from '@/lib/ai/review';
+import { notifyReviewResult } from '@/lib/notifyReview';
 
 export type ActionResult =
   | { ok: true; message?: string }
@@ -29,6 +30,9 @@ export async function reviewNote(
     .eq('id', noteId);
 
   if (error) return { ok: false, error: `操作失败：${error.message}` };
+
+  // 审核结果通知作者（通过 / 驳回 / 下架都通知）
+  await notifyReviewResult(noteId, status as 'published' | 'rejected' | 'removed', reason);
 
   // 记录审核日志
   await admin.from('review_logs').insert({
@@ -65,11 +69,13 @@ export async function aiReviewNow(noteId: string): Promise<ActionResult> {
 
   if (result.verdict === 'approve') {
     await admin.from('notes').update({ status: 'published', reject_reason: null }).eq('id', noteId);
+    await notifyReviewResult(noteId, 'published');
   } else if (result.verdict === 'reject') {
     await admin
       .from('notes')
       .update({ status: 'rejected', reject_reason: result.reason })
       .eq('id', noteId);
+    await notifyReviewResult(noteId, 'rejected', result.reason);
   }
   // verdict === 'review' → 保持 pending，等待人工
 

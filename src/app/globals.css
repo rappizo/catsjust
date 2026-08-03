@@ -11,6 +11,13 @@ body {
   background: var(--background);
   color: var(--foreground);
   -webkit-font-smoothing: antialiased;
+  /* iOS WebView 惯性滚动 + 提升滚动流畅度 */
+  -webkit-overflow-scrolling: touch;
+}
+
+/* 图片解码异步化，避免大图解码阻塞主线程导致卡顿 */
+img {
+  -webkit-user-drag: none;
 }
 
 @layer utilities {

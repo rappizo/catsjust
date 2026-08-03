@@ -41,7 +41,7 @@ export function NoteCard({ note, priority = false, dismissable = false }: NoteCa
       className="masonry-item group block overflow-hidden rounded-xl border border-stone-200/60 bg-white shadow-card transition-all duration-200 hover:-translate-y-0.5 hover:shadow-card-hover"
     >
       {/* 封面 */}
-      <div className="relative w-full overflow-hidden">
+      <div className="relative w-full overflow-hidden bg-stone-100">
         {dismissable && (
           <button
             onClick={handleDismiss}
@@ -59,6 +59,7 @@ export function NoteCard({ note, priority = false, dismissable = false }: NoteCa
             src={thumbUrl(cover, 640)}
             alt={note.title || '猫咪笔记'}
             loading={priority ? 'eager' : 'lazy'}
+            decoding="async"
             className="w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
           />
         ) : (

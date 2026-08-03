@@ -5,6 +5,7 @@ import { cookies } from 'next/headers';
 import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { aiReviewNote } from '@/lib/ai/review';
+import { notifyReviewResult } from '@/lib/notifyReview';
 import { LIMITS } from '@/lib/constants';
 import type { MediaType, NoteMedia } from '@/lib/types';
 
@@ -89,6 +90,7 @@ export async function publishNote(input: {
     await admin.from('notes').update({ status: 'published' }).eq('id', data.id);
     finalStatus = 'published';
     message = '已通过 AI 自动审核，公开展示';
+    await notifyReviewResult(data.id, 'published');
   } else if (ai.verdict === 'reject') {
     await admin
       .from('notes')
@@ -96,6 +98,7 @@ export async function publishNote(input: {
       .eq('id', data.id);
     finalStatus = 'rejected';
     message = `未通过 AI 自动审核：${ai.reason}`;
+    await notifyReviewResult(data.id, 'rejected', ai.reason);
   }
 
   if (ai.verdict !== 'review') {

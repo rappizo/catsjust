@@ -48,7 +48,10 @@ export const de = {
     "followingLoginTitle": "Melde dich an, um deinen Feed zu sehen",
     "followingLoginDesc": "Folge deinen Lieblings-Katzeneltern, um ihre neuen Inhalte sofort zu sehen.",
     "loginToSee": "Jetzt anmelden",
-    "notInterested": "Nicht interessiert"
+    "notInterested": "Nicht interessiert",
+    "pullRefresh": "Ziehen zum Aktualisieren",
+    "releaseRefresh": "Loslassen zum Aktualisieren",
+    "refreshing": "Wird aktualisiert…"
   },
   "topics": {
     "title": "Themenplatz",

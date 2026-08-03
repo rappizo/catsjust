@@ -28,11 +28,12 @@ export async function GET(request: Request) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  // 个性化推荐流（登录用户）：调用 recommend_notes RPC，offset 分页
+  // 个性化推荐流（登录用户）：调用 recommend_notes RPC，offset 分页；refresh=1 时重新推荐（随机扰动）
   if (feed === 'recommend') {
     if (!user) return NextResponse.json({ notes: [] });
+    const isRefresh = searchParams.get('refresh') === '1';
     let offset = 0;
-    if (cursorRaw) {
+    if (!isRefresh && cursorRaw) {
       try {
         offset = Number(JSON.parse(cursorRaw).offset || 0);
       } catch {
@@ -43,6 +44,8 @@ export async function GET(request: Request) {
       p_user: user.id,
       p_limit: limit,
       p_offset: offset,
+      // 下拉刷新：随机扰动排序，得到「相似但不完全一样」的新推荐
+      p_shuffle: isRefresh,
     });
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 });

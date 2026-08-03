@@ -48,7 +48,10 @@ export const ko = {
     "followingLoginTitle": "로그인 후 팔로우 피드 확인",
     "followingLoginDesc": "마음에 드는 집사를 팔로우하고 새로운 콘텐츠를 가장 먼저 만나보세요",
     "loginToSee": "로그인하기",
-    "notInterested": "관심 없음"
+    "notInterested": "관심 없음",
+    "pullRefresh": "당겨서 새로고침",
+    "releaseRefresh": "놓아서 새로고침",
+    "refreshing": "새로고침 중…"
   },
   "topics": {
     "title": "토픽 광장",

@@ -48,7 +48,10 @@ export const pt = {
     "followingLoginTitle": "Faça login para ver o feed de quem você segue",
     "followingLoginDesc": "Siga seus tutores de gatos favoritos e veja as novidades deles em primeira mão",
     "loginToSee": "Fazer login",
-    "notInterested": "Não tenho interesse"
+    "notInterested": "Não tenho interesse",
+    "pullRefresh": "Puxe para atualizar",
+    "releaseRefresh": "Solte para atualizar",
+    "refreshing": "Atualizando..."
   },
   "topics": {
     "title": "Praça de Tópicos",

@@ -48,7 +48,10 @@ export const es = {
     "followingLoginTitle": "Inicia sesión para ver tu feed de seguidos",
     "followingLoginDesc": "Sigue a tus cuidadores favoritos y ve sus nuevas publicaciones al instante",
     "loginToSee": "Iniciar sesión",
-    "notInterested": "No me interesa"
+    "notInterested": "No me interesa",
+    "pullRefresh": "Tirar para actualizar",
+    "releaseRefresh": "Soltar para actualizar",
+    "refreshing": "Actualizando…"
   },
   "topics": {
     "title": "Plaza de temas",

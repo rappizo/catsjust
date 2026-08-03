@@ -49,6 +49,9 @@ export const zhHans = {
     end: '— 到底啦，没有更多内容 —',
     loadingFail: '内容加载失败：',
     notInterested: '不感兴趣',
+    pullRefresh: '下拉刷新',
+    releaseRefresh: '松开刷新',
+    refreshing: '刷新中…',
   },
   topics: {
     title: '话题广场',

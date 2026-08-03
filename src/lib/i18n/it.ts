@@ -48,7 +48,10 @@ export const it = {
     "followingLoginTitle": "Accedi per vedere il feed dei seguiti",
     "followingLoginDesc": "Segui i proprietari di gatti che preferisci e scopri subito i loro nuovi contenuti",
     "loginToSee": "Accedi",
-    "notInterested": "Non mi interessa"
+    "notInterested": "Non mi interessa",
+    "pullRefresh": "Trascina per aggiornare",
+    "releaseRefresh": "Rilascia per aggiornare",
+    "refreshing": "Aggiornamento…"
   },
   "topics": {
     "title": "Piazza dei topic",

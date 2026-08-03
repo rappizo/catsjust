@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import QRCode from 'qrcode';
 import { Check, Download, Smartphone, ShieldAlert } from 'lucide-react';
+import { APP_VERSION } from '@/lib/version';
 
 export const metadata: Metadata = {
   title: '下载 App · 只有猫',
@@ -55,7 +56,7 @@ export default async function DownloadPage() {
         <div className="flex flex-col items-center justify-center rounded-3xl border border-stone-200/60 bg-white p-6 text-center shadow-card">
           <div className="mb-4 flex items-center gap-2 text-sm text-stone-400">
             <Smartphone className="h-4 w-4" />
-            最新版 · v0.1.4
+            最新版 · v{APP_VERSION}
             <span className="rounded-full bg-brand-500/15 px-2 py-0.5 text-[11px] font-medium text-brand-600">
               Beta
             </span>

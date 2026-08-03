@@ -48,7 +48,10 @@ export const zhHant = {
     "followingLoginTitle": "登入後查看追蹤動態",
     "followingLoginDesc": "追蹤你喜歡的鏟屎官，第一時間看到他們的新內容",
     "loginToSee": "去登入",
-    "notInterested": "不感興趣"
+    "notInterested": "不感興趣",
+    "pullRefresh": "下拉重新整理",
+    "releaseRefresh": "鬆開重新整理",
+    "refreshing": "重新整理中…"
   },
   "topics": {
     "title": "話題廣場",

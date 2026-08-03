@@ -4,6 +4,9 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
+import android.webkit.WebView;
+
+import androidx.activity.OnBackPressedCallback;
 
 import com.getcapacitor.BridgeActivity;
 
@@ -20,6 +23,21 @@ public class MainActivity extends BridgeActivity {
         flags &= ~View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
         flags &= ~View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR;
         window.getDecorView().setSystemUiVisibility(flags);
+
+        // 返回手势/按键：WebView 有历史则回退上一页，无历史才退出 App
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                WebView webView = getBridge() != null ? getBridge().getWebView() : null;
+                if (webView != null && webView.canGoBack()) {
+                    webView.goBack();
+                } else {
+                    // 交给默认处理（退出 / 回到桌面）
+                    setEnabled(false);
+                    getOnBackPressedDispatcher().onBackPressed();
+                }
+            }
+        });
     }
 }
 

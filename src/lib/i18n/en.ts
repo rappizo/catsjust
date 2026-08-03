@@ -48,7 +48,10 @@ export const en = {
     "followingLoginTitle": "Log in to view your following feed",
     "followingLoginDesc": "Follow cat lovers you like and see their new posts first",
     "loginToSee": "Log in",
-    "notInterested": "Not interested"
+    "notInterested": "Not interested",
+    "pullRefresh": "Pull to refresh",
+    "releaseRefresh": "Release to refresh",
+    "refreshing": "Refreshing..."
   },
   "topics": {
     "title": "Topic Square",

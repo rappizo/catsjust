@@ -48,7 +48,10 @@ export const ja = {
     "followingLoginTitle": "ログインしてフォロー中の投稿を見る",
     "followingLoginDesc": "お気に入りの猫飼いをフォローして、最新の投稿をいち早くチェックしましょう",
     "loginToSee": "ログインする",
-    "notInterested": "興味なし"
+    "notInterested": "興味なし",
+    "pullRefresh": "引っ張って更新",
+    "releaseRefresh": "離して更新",
+    "refreshing": "更新中…"
   },
   "topics": {
     "title": "話題広場",

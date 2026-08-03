@@ -48,7 +48,10 @@ export const fr = {
     "followingLoginTitle": "Connectez-vous pour voir votre fil d'abonnements",
     "followingLoginDesc": "Suivez les cat parents que vous aimez et découvrez leurs nouvelles publications en premier.",
     "loginToSee": "Se connecter",
-    "notInterested": "Pas intéressé(e)"
+    "notInterested": "Pas intéressé(e)",
+    "pullRefresh": "Tirer pour actualiser",
+    "releaseRefresh": "Relâcher pour actualiser",
+    "refreshing": "Actualisation..."
   },
   "topics": {
     "title": "Place des sujets",

@@ -48,7 +48,10 @@ export const ar = {
     "followingLoginTitle": "سجّل الدخول لعرض متابعاتك",
     "followingLoginDesc": "تابع أصحاب القطط المفضلين لديك وشاهد محتواهم الجديد أولاً بأول",
     "loginToSee": "تسجيل الدخول",
-    "notInterested": "غير مهتم"
+    "notInterested": "غير مهتم",
+    "pullRefresh": "اسحب للتحديث",
+    "releaseRefresh": "أفل للتحديث",
+    "refreshing": "جارٍ التحديث…"
   },
   "topics": {
     "title": "ساحة المواضيع",

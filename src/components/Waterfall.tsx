@@ -34,7 +34,12 @@ export function Waterfall({
   const [notes, setNotes] = useState<Note[]>(initialNotes);
   const [hasMore, setHasMore] = useState(!staticMode && initialNotes.length >= 12);
   const [loading, setLoading] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+  const [pull, setPull] = useState(0);
   const sentinelRef = useRef<HTMLDivElement>(null);
+  const pullRef = useRef(0);
+  const refreshingRef = useRef(false);
+  const touchStartY = useRef(0);
 
   const loadMore = useCallback(async () => {
     if (loading || !hasMore) return;
@@ -68,6 +73,63 @@ export function Waterfall({
     }
   }, [loading, hasMore, notes, apiFeed, apiSort]);
 
+  // 下拉刷新：重新拉取第一页（推荐流会随机扰动排序，得到相似但不完全一样的新内容）
+  async function handleRefresh() {
+    if (refreshingRef.current) return;
+    refreshingRef.current = true;
+    setRefreshing(true);
+    try {
+      const qs = new URLSearchParams({ limit: '12', feed: apiFeed, sort: apiSort, refresh: '1' });
+      const res = await fetch(`/api/notes?${qs.toString()}`);
+      const data = await res.json();
+      const fresh: Note[] = data.notes ?? [];
+      setNotes(fresh);
+      setHasMore(fresh.length >= 12);
+    } catch {
+      // 刷新失败保留原数据
+    } finally {
+      refreshingRef.current = false;
+      setRefreshing(false);
+    }
+  }
+
+  // 移动端触摸下拉触发刷新
+  useEffect(() => {
+    if (staticMode) return;
+    let pulling = false;
+    function onTouchStart(e: TouchEvent) {
+      if (window.scrollY <= 0) {
+        touchStartY.current = e.touches[0].clientY;
+        pulling = true;
+      }
+    }
+    function onTouchMove(e: TouchEvent) {
+      if (!pulling) return;
+      const dy = e.touches[0].clientY - touchStartY.current;
+      if (window.scrollY <= 0 && dy > 0) {
+        pullRef.current = Math.min(dy * 0.5, 80);
+        setPull(pullRef.current);
+      }
+    }
+    function onTouchEnd() {
+      if (!pulling) return;
+      pulling = false;
+      const d = pullRef.current;
+      pullRef.current = 0;
+      setPull(0);
+      if (d > 40) void handleRefresh();
+    }
+    window.addEventListener('touchstart', onTouchStart, { passive: true });
+    window.addEventListener('touchmove', onTouchMove, { passive: true });
+    window.addEventListener('touchend', onTouchEnd, { passive: true });
+    return () => {
+      window.removeEventListener('touchstart', onTouchStart);
+      window.removeEventListener('touchmove', onTouchMove);
+      window.removeEventListener('touchend', onTouchEnd);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [staticMode, apiFeed, apiSort]);
+
   useEffect(() => {
     if (staticMode) return;
     const sentinel = sentinelRef.current;
@@ -96,6 +158,24 @@ export function Waterfall({
 
   return (
     <>
+      {/* 下拉刷新指示器 */}
+      {(pull > 0 || refreshing) && (
+        <div
+          className="flex items-center justify-center gap-1.5 text-xs text-stone-400"
+          style={{ height: refreshing ? 32 : pull }}
+        >
+          {refreshing ? (
+            <>
+              <Loader2 className="h-3.5 w-3.5 animate-spin" />
+              {t('home', 'refreshing')}
+            </>
+          ) : pull > 40 ? (
+            t('home', 'releaseRefresh')
+          ) : (
+            t('home', 'pullRefresh')
+          )}
+        </div>
+      )}
       <div className="masonry">
         {notes.map((note, i) => (
           <NoteCard key={note.id} note={note} priority={i < 4} dismissable={showDismiss} />

@@ -60,7 +60,7 @@ export default async function DownloadPage() {
             <Smartphone className="h-4 w-4" />
             最新版 · v{APP_VERSION}
             <span className="rounded-full bg-brand-500/15 px-2 py-0.5 text-[11px] font-medium text-brand-600">
-              Beta
+              正式版
             </span>
           </div>
           {apkAvailable ? (

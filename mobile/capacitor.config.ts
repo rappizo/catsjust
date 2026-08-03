@@ -13,6 +13,13 @@ const config: CapacitorConfig = {
   android: {
     allowMixedContent: false,
   },
+  plugins: {
+    StatusBar: {
+      // 与站点深色主题一致：状态栏白色文字、深色背景
+      style: 'LIGHT',
+      backgroundColor: '#0a0a12',
+    },
+  },
 };
 
 export default config;

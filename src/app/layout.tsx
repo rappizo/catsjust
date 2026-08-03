@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import { I18nProvider } from '@/lib/i18n';
 import { DEFAULT_LOCALE, getLocaleRtl, type LocaleCode } from '@/lib/i18n/config';
@@ -15,6 +15,20 @@ export const metadata: Metadata = {
     description: '只属于猫咪的内容分享社区',
     type: 'website',
   },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'black-translucent',
+    title: '只有猫',
+  },
+};
+
+/** 移动端（尤其 iOS WebView / PWA）安全区与状态栏适配 */
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+  viewportFit: 'cover',
+  themeColor: '#0a0a12',
 };
 
 export default function RootLayout({

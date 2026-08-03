@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { Cat, FileCheck, Flag, FolderSearch, LayoutDashboard, LogOut, PawPrint, ShieldAlert, ShieldCheck, Tags, Users } from 'lucide-react';
+import { Bug, Cat, FileCheck, Flag, FolderSearch, LayoutDashboard, LogOut, PawPrint, ShieldAlert, ShieldCheck, Tags, Users } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Logo } from '@/components/Logo';
 import { adminLogout } from '@/lib/actions/admin-auth';
@@ -16,6 +16,7 @@ const NAV = [
   { href: '/admin/topics', label: '话题管理', icon: Tags },
   { href: '/admin/breeds', label: '品种管理', icon: PawPrint },
   { href: '/admin/sensitive-words', label: '敏感词', icon: ShieldAlert },
+  { href: '/admin/errors', label: '错误日志', icon: Bug },
 ];
 
 export function AdminShell({ children }: { children: React.ReactNode }) {

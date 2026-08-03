@@ -6,6 +6,7 @@ import { Bookmark, Check, Heart, MessageCircle, Share2 } from 'lucide-react';
 import { cn, formatCount } from '@/lib/utils';
 import { useI18n } from '@/lib/i18n';
 import { toggleFavorite, toggleLike } from '@/lib/actions/notes';
+import { shareContent } from '@/lib/share';
 
 interface NoteActionsProps {
   noteId: string;
@@ -80,13 +81,10 @@ export function NoteActions({
   }
 
   async function handleShare() {
-    const url = window.location.href;
-    try {
-      await navigator.clipboard.writeText(url);
+    const result = await shareContent({ url: window.location.href });
+    if (result === 'copied') {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
-    } catch {
-      // 忽略剪贴板失败
     }
   }
 

@@ -3,6 +3,7 @@ import { Footer } from '@/components/Footer';
 import { BottomTabBar } from '@/components/BottomTabBar';
 import { RealtimeUnreadSync } from '@/components/RealtimeUnreadSync';
 import { AppUpdateChecker } from '@/components/AppUpdateChecker';
+import { ErrorLogger } from '@/components/ErrorLogger';
 import { createClient } from '@/lib/supabase/server';
 import { isSupabaseConfigured } from '@/lib/config';
 
@@ -54,6 +55,7 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
         <BottomTabBar username={username} unreadCount={0} />
       )}
       <AppUpdateChecker />
+      <ErrorLogger />
     </div>
   );
 }

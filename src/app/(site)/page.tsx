@@ -22,6 +22,7 @@ export default async function HomePage() {
   let breeds: string[] = [];
   let isLoggedIn = false;
   let feedError: string | null = null;
+  let hotTopics: Array<{ id: string; name: string; slug: string; count: number }> = [];
 
   if (isSupabaseConfigured()) {
     const supabase = createClient();
@@ -70,8 +71,8 @@ export default async function HomePage() {
       }
     }
 
-    // 选猫：拉取活跃猫咪 + 品种
-    const [catsRes, breedsRes] = await Promise.all([
+    // 选猫：拉取活跃猫咪 + 品种 + 热门话题（按已发布笔记数排序）
+    const [catsRes, breedsRes, topicNotesRes] = await Promise.all([
       supabase
         .from('cats')
         .select(
@@ -85,7 +86,34 @@ export default async function HomePage() {
         .select('name')
         .eq('status', 'active')
         .order('sort_order', { ascending: true }),
+      supabase
+        .from('notes')
+        .select('topic_id')
+        .eq('status', 'published')
+        .not('topic_id', 'is', null),
     ]);
+    // 统计热门话题
+    const topicCountMap = new Map<string, number>();
+    for (const r of topicNotesRes.data ?? []) {
+      if (r.topic_id) topicCountMap.set(r.topic_id, (topicCountMap.get(r.topic_id) ?? 0) + 1);
+    }
+    const hotTopicIds = Array.from(topicCountMap.entries())
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 6)
+      .map((e) => e[0]);
+    if (hotTopicIds.length) {
+      const { data: topicRows } = await supabase
+        .from('topics')
+        .select('id, name, slug')
+        .eq('status', 'active')
+        .in('id', hotTopicIds);
+      hotTopics = hotTopicIds
+        .map((id) => {
+          const tp = (topicRows ?? []).find((x) => x.id === id);
+          return tp ? { id, name: tp.name, slug: tp.slug, count: topicCountMap.get(id) ?? 0 } : null;
+        })
+        .filter((x): x is NonNullable<typeof x> => x !== null);
+    }
     cats = (catsRes.data ?? []).map((c: any) => {
       const owner = Array.isArray(c.owner) ? c.owner[0] : c.owner;
       const count = Array.isArray(c.notes) ? (c.notes[0] as any)?.count : undefined;
@@ -125,6 +153,7 @@ export default async function HomePage() {
         discoverRecommend={isLoggedIn}
         cats={cats}
         breeds={breeds}
+        hotTopics={hotTopics}
       />
     </div>
   );

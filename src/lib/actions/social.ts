@@ -56,6 +56,63 @@ export async function toggleFollow(targetUserId: string): Promise<SocialResult> 
   return { ok: true, following: !existing, counts };
 }
 
+export interface RecommendedUser {
+  id: string;
+  username: string;
+  nickname: string;
+  avatar_url: string | null;
+  bio: string | null;
+  followers: number;
+  notes: number;
+  following: boolean;
+}
+
+/** 新用户关注引导：按「粉丝数 ×2 + 笔记数」推荐值得关注的作者（排除自己与已关注） */
+export async function getRecommendedFollows(limit = 8): Promise<RecommendedUser[]> {
+  if (!isSupabaseConfigured()) return [];
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return [];
+
+  const [profilesRes, followsRes, noteRes, myFollowRes] = await Promise.all([
+    supabase
+      .from('profiles')
+      .select('id, username, nickname, avatar_url, bio, status')
+      .neq('id', user.id)
+      .limit(200),
+    supabase.from('follows').select('following_id'),
+    supabase.from('notes').select('author_id').eq('status', 'published'),
+    supabase.from('follows').select('following_id').eq('follower_id', user.id),
+  ]);
+
+  const fanMap = new Map<string, number>();
+  for (const f of followsRes.data ?? []) {
+    fanMap.set(f.following_id, (fanMap.get(f.following_id) ?? 0) + 1);
+  }
+  const noteMap = new Map<string, number>();
+  for (const n of noteRes.data ?? []) {
+    noteMap.set(n.author_id, (noteMap.get(n.author_id) ?? 0) + 1);
+  }
+  const myFollow = new Set((myFollowRes.data ?? []).map((f) => f.following_id));
+
+  return (profilesRes.data ?? [])
+    .filter((p) => p.status !== 'banned' && p.id !== user.id)
+    .map((p) => ({
+      id: p.id,
+      username: p.username,
+      nickname: p.nickname,
+      avatar_url: p.avatar_url,
+      bio: p.bio,
+      followers: fanMap.get(p.id) ?? 0,
+      notes: noteMap.get(p.id) ?? 0,
+      following: myFollow.has(p.id),
+    }))
+    .sort((a, b) => b.notes + b.followers * 2 - (a.notes + a.followers * 2))
+    .slice(0, limit);
+}
+
 /** 是否已关注 */
 export async function isFollowing(followerId: string, targetId: string): Promise<boolean> {
   if (!isSupabaseConfigured() || !followerId) return false;

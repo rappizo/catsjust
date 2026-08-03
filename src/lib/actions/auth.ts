@@ -2,6 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
+import { headers, cookies } from 'next/headers';
 import { createClient } from '@/lib/supabase/server';
 import { ERROR_MESSAGES } from '@/lib/constants';
 import { setLocaleCookie } from '@/lib/i18n/cookies';
@@ -107,10 +108,10 @@ export async function signUp(
   // 记住注册时选择的语言
   setLocaleCookie(language);
 
-  // 邮箱确认已关闭时，signUp 直接返回 session（注册即登录）
+  // 邮箱确认已关闭时，signUp 直接返回 session（注册即登录）→ 前往关注引导
   if (data.session) {
     revalidatePath('/', 'layout');
-    return { ok: true, message: '注册成功，欢迎来到只有猫！', redirectTo: '/' };
+    return { ok: true, message: '注册成功，欢迎来到只有猫！', redirectTo: '/onboarding' };
   }
 
   // 邮箱确认开启（项目尚未关闭确认）：需前往邮箱验证后登录
@@ -123,6 +124,55 @@ export async function signOut(): Promise<void> {
   await supabase.auth.signOut();
   revalidatePath('/', 'layout');
   redirect('/');
+}
+
+/** 忘记密码：发送密码重置邮件（由 Supabase Auth 发送，SMTP 在 Supabase 面板配置） */
+export async function requestPasswordReset(
+  _prevState: ActionResult | null,
+  formData: FormData
+): Promise<ActionResult> {
+  const email = String(formData.get('email') ?? '').trim();
+  if (!email) {
+    return { ok: false, error: '请输入邮箱' };
+  }
+
+  const supabase = createClient();
+  const host = headers().get('host') ?? 'www.catsjust.com';
+  const protocol = host.includes('localhost') ? 'http' : 'https';
+  const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: `${protocol}://${host}/auth/confirm?next=/reset-password`,
+  });
+
+  if (error) {
+    return { ok: false, error: friendlyError(error.message) };
+  }
+
+  // 出于安全，无论邮箱是否注册都提示「已发送」
+  return { ok: true, message: '如果该邮箱已注册，重置链接已发送，请查收邮件' };
+}
+
+/** 通过重置邮件进入后，设置新密码（需已登录会话） */
+export async function updatePassword(
+  _prevState: ActionResult | null,
+  formData: FormData
+): Promise<ActionResult> {
+  const password = String(formData.get('password') ?? '');
+  const confirm = String(formData.get('confirm') ?? '');
+
+  if (password.length < 6) {
+    return { ok: false, error: '密码至少 6 位' };
+  }
+  if (password !== confirm) {
+    return { ok: false, error: '两次输入的密码不一致' };
+  }
+
+  const supabase = createClient();
+  const { error } = await supabase.auth.updateUser({ password });
+  if (error) {
+    return { ok: false, error: friendlyError(error.message) };
+  }
+
+  return { ok: true, message: '密码已更新，请用新密码登录', redirectTo: '/login' };
 }
 
 /** 更新个人资料（含界面语言） */

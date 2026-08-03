@@ -22,6 +22,7 @@ import { VideoPlayer } from './VideoPlayer';
 import { CommentSection } from './CommentSection';
 import { ReportDialog } from './ReportDialog';
 import { thumbUrl } from '@/lib/img';
+import { shareContent } from '@/lib/share';
 import type { CommentItem, Note } from '@/lib/types';
 
 interface VerticalFeedProps {
@@ -86,13 +87,10 @@ function useFeedInteractions(
   }
 
   async function share() {
-    const url = window.location.href;
-    try {
-      await navigator.clipboard.writeText(url);
+    const result = await shareContent({ url: window.location.href });
+    if (result === 'copied') {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
-    } catch {
-      // 忽略剪贴板失败
     }
   }
 

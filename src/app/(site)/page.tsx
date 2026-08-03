@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server';
 import { isSupabaseConfigured } from '@/lib/config';
 import { HomeTabs } from '@/components/HomeTabs';
+import { AnnouncementBar } from '@/components/AnnouncementBar';
 import type { CatCardData } from '@/components/CatsPlaza';
 import { attachNoteRelations } from '@/lib/noteRelations';
 import { getLocaleFromCookies } from '@/lib/i18n/cookies';
@@ -23,6 +24,7 @@ export default async function HomePage() {
   let isLoggedIn = false;
   let feedError: string | null = null;
   let hotTopics: Array<{ id: string; name: string; slug: string; count: number }> = [];
+  let announcement: { id: string; title: string; content: string } | null = null;
 
   if (isSupabaseConfigured()) {
     const supabase = createClient();
@@ -129,6 +131,17 @@ export default async function HomePage() {
       };
     });
     breeds = (breedsRes.data ?? []).map((b: any) => b.name);
+
+    // 最新启用公告（首页顶部）
+    const { data: annRes } = await supabase
+      .from('announcements')
+      .select('id, title, content')
+      .eq('active', true)
+      .order('created_at', { ascending: false })
+      .limit(1);
+    if (annRes?.[0]) {
+      announcement = { id: annRes[0].id, title: annRes[0].title, content: annRes[0].content };
+    }
   }
 
   return (
@@ -143,6 +156,15 @@ export default async function HomePage() {
         <div className="mb-5 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-500">
           {t('home', 'loadingFail')}{feedError}
         </div>
+      )}
+
+      {/* 站内公告 */}
+      {announcement && (
+        <AnnouncementBar
+          id={announcement.id}
+          title={announcement.title}
+          content={announcement.content}
+        />
       )}
 
       {/* 内容流 */}

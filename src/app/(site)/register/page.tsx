@@ -159,6 +159,36 @@ export default function RegisterPage() {
         </div>
         <input type="hidden" name="interests" value={JSON.stringify(interests)} />
 
+        {/* 同意用户协议与隐私政策 */}
+        <label className="flex items-start gap-2 text-xs leading-relaxed text-stone-500">
+          <input
+            type="checkbox"
+            name="agree"
+            required
+            className="mt-0.5 h-4 w-4 shrink-0 accent-brand-500"
+          />
+          <span>
+            我已阅读并同意
+            <Link
+              href="/terms"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-medium text-brand-500 hover:text-brand-600"
+            >
+              《用户协议》
+            </Link>
+            和
+            <Link
+              href="/privacy"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-medium text-brand-500 hover:text-brand-600"
+            >
+              《隐私政策》
+            </Link>
+          </span>
+        </label>
+
         {state && !state.ok && (
           <p className="rounded-xl bg-red-50 px-4 py-2.5 text-sm text-red-500">{state.error}</p>
         )}

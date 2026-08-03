@@ -30,9 +30,13 @@ export function Footer() {
             {t('footer', 'download')}
           </Link>
           <span>·</span>
-          <span>{t('footer', 'tos')}</span>
+          <Link href="/terms" className="transition hover:text-brand-500">
+            {t('footer', 'tos')}
+          </Link>
           <span>·</span>
-          <span>{t('footer', 'privacy')}</span>
+          <Link href="/privacy" className="transition hover:text-brand-500">
+            {t('footer', 'privacy')}
+          </Link>
         </div>
       </div>
     </footer>

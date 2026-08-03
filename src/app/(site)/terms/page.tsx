@@ -1,0 +1,113 @@
+import type { Metadata } from 'next';
+import { BackButton } from '@/components/BackButton';
+
+export const metadata: Metadata = {
+  title: '用户协议 · 只有猫',
+  description: '只有猫（CATSJUST）用户协议',
+};
+
+const sections: { title: string; body: string[] }[] = [
+  {
+    title: '一、协议范围',
+    body: [
+      '本协议是您与「只有猫」（CATSJUST，以下简称"本平台"或"我们"）之间就使用服务所订立的协议，适用于您在 www.catsjust.com 网站及移动应用上的全部行为。',
+      '在使用本平台前，请仔细阅读并充分理解本协议全部内容。您注册、登录或使用本平台任一功能，即视为您已阅读并同意本协议。',
+    ],
+  },
+  {
+    title: '二、账号注册与安全',
+    body: [
+      '您应使用真实、合法、有效的邮箱与昵称进行注册，并妥善保管账号及密码。',
+      '账号仅限本人使用，不得转让、出借或出租。',
+      '因您保管不善导致的账号丢失、被盗或信息泄露，由您自行承担相应责任。',
+      '如发现账号被他人盗用，请及时通过站内客服与我们联系。',
+    ],
+  },
+  {
+    title: '三、内容发布规范',
+    body: [
+      '本平台为猫咪主题的内容分享社区。您发布的内容应围绕猫咪及相关宠物生活。',
+      '您承诺发布的内容不包含以下情形：违反法律法规、公序良俗的内容；侵犯他人知识产权、肖像权、隐私权等合法权益的内容；色情、暴力、血腥、恐怖等内容；虚假信息、广告营销、垃圾信息、刷量作弊等；其他危害平台秩序或侵害他人利益的内容。',
+      '本平台有权对违规内容进行下架、删除，并对违规账号采取警告、限制功能、封禁等处理。',
+    ],
+  },
+  {
+    title: '四、知识产权',
+    body: [
+      '您发布的文字、图片、视频等内容的著作权归您本人或原作者所有。',
+      '您授予本平台在全球范围内、非独占、可传播的许可，用于在平台内展示、分发与推广您的公开内容。',
+      '平台自身的界面设计、标识、代码等知识产权归本平台所有。',
+    ],
+  },
+  {
+    title: '五、行为规范',
+    body: [
+      '不得以任何方式干扰、破坏平台的正常运行；',
+      '不得利用平台从事任何违法犯罪活动；',
+      '不得恶意攻击、骚扰、诽谤其他用户；',
+      '不得通过技术手段窃取、爬取平台数据。',
+    ],
+  },
+  {
+    title: '六、免责声明',
+    body: [
+      '平台内容为注册用户自主发布，用户应对其发布内容的真实性、合法性负责；',
+      '平台将尽合理努力维护内容质量与社区秩序，但不对用户行为承担连带责任；',
+      '因不可抗力、网络故障、第三方服务中断等导致的平台服务异常，平台不承担责任，但将尽力恢复。',
+    ],
+  },
+  {
+    title: '七、服务的变更与终止',
+    body: [
+      '本平台有权根据运营需要调整、暂停或终止部分或全部服务，并尽可能提前通知。您也可以随时停止使用本平台并注销账号。',
+    ],
+  },
+  {
+    title: '八、协议的变更',
+    body: [
+      '本平台可适时修订本协议。修订后的协议将在平台公布，并自公布之日起生效。若您继续使用本平台，即视为接受修订后的协议。',
+    ],
+  },
+  {
+    title: '九、联系我们',
+    body: ['如对本协议有任何疑问，欢迎通过平台站内消息或官方渠道与我们联系。'],
+  },
+];
+
+export default function TermsPage() {
+  return (
+    <div className="mx-auto max-w-3xl px-2 py-3 sm:px-3 sm:py-4">
+      <div className="mb-4 flex items-center gap-3">
+        <BackButton />
+        <div>
+          <h1 className="text-xl font-bold text-ink sm:text-2xl">用户协议</h1>
+          <p className="text-xs text-stone-400">更新日期：2026 年 8 月 3 日</p>
+        </div>
+      </div>
+
+      <div className="rounded-2xl border border-stone-200/60 bg-white p-6 shadow-card sm:p-8">
+        <p className="mb-6 text-sm leading-relaxed text-stone-600">
+          欢迎使用「只有猫」（CATSJUST）。在使用本平台前，请仔细阅读并充分理解本协议全部内容。
+          您注册、登录或使用本平台任一功能，即视为您已阅读并同意本协议。
+        </p>
+        <div className="space-y-6">
+          {sections.map((s) => (
+            <section key={s.title}>
+              <h2 className="mb-2 flex items-center gap-2 text-base font-semibold text-ink">
+                <span className="h-4 w-1 rounded-full bg-gradient-to-b from-brand-400 to-accent-400" />
+                {s.title}
+              </h2>
+              <div className="space-y-1.5">
+                {s.body.map((p, i) => (
+                  <p key={i} className="text-sm leading-relaxed text-stone-600">
+                    {p}
+                  </p>
+                ))}
+              </div>
+            </section>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}

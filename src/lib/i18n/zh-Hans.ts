@@ -280,8 +280,8 @@ export const zhHans = {
     tagline: '一个只属于猫咪的分享社区 · 纯展示 · 无商业',
     topics: '话题广场',
     download: '下载 App',
-    tos: '用户协议（规划中）',
-    privacy: '隐私政策（规划中）',
+    tos: '用户协议',
+    privacy: '隐私政策',
   },
   tab: {
     home: '首页',

@@ -93,7 +93,7 @@ export const zhHans = {
     imageLimitError: '最多上传 {max} 张图片',
     imageSizeError: '单张图片不能超过 25MB',
     videoOnlyError: '只能上传视频文件',
-    videoSizeError: '视频不能超过 200MB',
+    videoSizeError: '视频不能超过 300MB',
     videoDurationError: '视频时长不能超过 10 分钟',
     needImageError: '请至少添加一张图片',
     needVideoError: '请上传一个视频',

@@ -45,7 +45,7 @@ export const LIMITS = {
   MAX_IMAGES: 9,
   // 25MB 硬性上限：>2MB 的图会在客户端自动压缩后再上传，正常不会触发
   MAX_IMAGE_SIZE: 25 * 1024 * 1024, // 25MB
-  MAX_VIDEO_SIZE: 200 * 1024 * 1024, // 200MB
+  MAX_VIDEO_SIZE: 300 * 1024 * 1024, // 300MB（>40MB 自动客户端压缩，此上限为兜底）
   MAX_VIDEO_DURATION: 600, // 秒
   TITLE_MAX: 100,
   CONTENT_MAX: 2000,

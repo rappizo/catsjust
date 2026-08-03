@@ -39,6 +39,11 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# ffmpeg 运行时（构建时由 scripts/copy-ffmpeg.mjs 从 node_modules 复制生成）
+# 注意：public/ffmpeg/worker.js 是手写的，需要提交
+public/ffmpeg/ffmpeg-core.js
+public/ffmpeg/ffmpeg-core.wasm
+
 # Vercel CLI 生成的 env（保留 example 模板供他人参考）
 .env*
 

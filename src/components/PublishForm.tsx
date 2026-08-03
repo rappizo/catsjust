@@ -21,6 +21,7 @@ import { publishNote, saveDraft, editNote as editNoteAction } from '@/lib/action
 import { CAT_BREEDS, CAT_PERSONALITY_TAGS, LIMITS } from '@/lib/constants';
 import { compressImageFile } from '@/lib/imageCompress';
 import { captureVideoFrame, cn, isImageFile, isVideoFile, readVideoDuration } from '@/lib/utils';
+import { compressVideoFile, VIDEO_COMPRESS_THRESHOLD } from '@/lib/videoCompress';
 import { useI18n } from '@/lib/i18n';
 import type { CatGender, MediaType, Note, Topic } from '@/lib/types';
 
@@ -69,6 +70,8 @@ export function PublishForm({ userId, initialCats, topics, breeds = [], editNote
   const [images, setImages] = useState<ImageItem[]>([]);
   const [video, setVideo] = useState<VideoItem | null>(null);
   const [videoError, setVideoError] = useState('');
+  const [compressingVideo, setCompressingVideo] = useState(false);
+  const [compressProgress, setCompressProgress] = useState(0);
 
   const [title, setTitle] = useState(editNote?.title ?? '');
   const [content, setContent] = useState(editNote?.content ?? '');
@@ -156,9 +159,18 @@ export function PublishForm({ userId, initialCats, topics, breeds = [], editNote
       setVideoError(t('publish', 'videoSizeError'));
       return;
     }
+    setError('');
+    // 大视频客户端压缩（>40MB 自动转码压缩），压缩后再读取时长/封面并上传
+    let uploadFile = file;
+    if (file.size > VIDEO_COMPRESS_THRESHOLD) {
+      setCompressingVideo(true);
+      setCompressProgress(0);
+      uploadFile = await compressVideoFile(file, setCompressProgress);
+      setCompressingVideo(false);
+    }
     let duration = 0;
     try {
-      duration = await readVideoDuration(file);
+      duration = await readVideoDuration(uploadFile);
       if (duration > LIMITS.MAX_VIDEO_DURATION) {
         setVideoError(t('publish', 'videoDurationError'));
         return;
@@ -166,16 +178,15 @@ export function PublishForm({ userId, initialCats, topics, breeds = [], editNote
     } catch {
       // 忽略读取失败
     }
-    setError('');
     let poster: Blob | null = null;
     try {
-      poster = await captureVideoFrame(file);
+      poster = await captureVideoFrame(uploadFile);
     } catch {
       // 封面生成失败不影响发布
     }
     setVideo({
-      file,
-      preview: URL.createObjectURL(file),
+      file: uploadFile,
+      preview: URL.createObjectURL(uploadFile),
       poster,
       duration,
     });
@@ -481,10 +492,23 @@ export function PublishForm({ userId, initialCats, topics, breeds = [], editNote
             <button
               type="button"
               onClick={() => videoInputRef.current?.click()}
-              className="flex w-full flex-col items-center gap-2 rounded-xl border-2 border-dashed border-stone-200 py-10 text-stone-400 transition hover:border-brand-300 hover:text-brand-500"
+              disabled={compressingVideo}
+              className="flex w-full flex-col items-center gap-2 rounded-xl border-2 border-dashed border-stone-200 py-10 text-stone-400 transition hover:border-brand-300 hover:text-brand-500 disabled:cursor-not-allowed"
             >
-              <VideoIcon className="h-8 w-8" />
-              <span className="text-sm">点击选择视频（≤200MB，≤10分钟）</span>
+              {compressingVideo ? (
+                <span className="flex flex-col items-center gap-2 text-sm">
+                  <Loader2 className="h-5 w-5 animate-spin text-brand-500" />
+                  正在压缩视频… {compressProgress}%
+                  <span className="text-xs text-stone-400">压缩后上传体积更小、加载更快</span>
+                </span>
+              ) : (
+                <>
+                  <VideoIcon className="h-8 w-8" />
+                  <span className="text-sm">
+                    点击选择视频（≤{Math.round(LIMITS.MAX_VIDEO_SIZE / 1024 / 1024)}MB，≤10分钟，大视频自动压缩）
+                  </span>
+                </>
+              )}
             </button>
           ) : (
             <div className="flex flex-col items-center gap-3">

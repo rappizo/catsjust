@@ -108,6 +108,46 @@ body {
 .hover\:bg-rose-50:hover { background-color: rgba(244, 63, 94, 0.18); }
 .hover\:border-stone-300:hover { border-color: #36364e; }
 
+/* ============================================================
+   表单控件暗色化
+   部分 input/select/textarea 未显式设置背景色时，浏览器默认
+   渲染为白底、文字继承浅色（#f0f0ff），导致「白底浅字看不清」。
+   这里统一将文本类控件设为暗色表面 + 浅色文字，
+   并用 color-scheme: dark 让原生控件（日期选择器、下拉箭头等）跟随暗色。
+   ============================================================ */
+input[type='text'],
+input[type='email'],
+input[type='password'],
+input[type='search'],
+input[type='url'],
+input[type='tel'],
+input[type='number'],
+input[type='date'],
+input[type='datetime-local'],
+input[type='time'],
+input[type='month'],
+input[type='week'],
+textarea,
+select {
+  background-color: #14141f;
+  color: #f0f0ff;
+  color-scheme: dark;
+}
+input::placeholder,
+textarea::placeholder {
+  color: #7f7f98;
+}
+select option {
+  background-color: #14141f;
+  color: #f0f0ff;
+}
+input[type='date']::-webkit-calendar-picker-indicator,
+input[type='datetime-local']::-webkit-calendar-picker-indicator,
+input[type='time']::-webkit-calendar-picker-indicator {
+  filter: invert(0.82);
+  cursor: pointer;
+}
+
 /* 霓虹文字发光 */
 @layer utilities {
   .text-glow-green {

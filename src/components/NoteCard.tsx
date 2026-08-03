@@ -95,9 +95,11 @@ export function NoteCard({ note, priority = false, dismissable = false }: NoteCa
       )}
 
       {/* 作者与猫咪 */}
-      <div className="flex items-center gap-2 px-2.5 pb-2.5 pt-1.5">
-        <Avatar src={note.author?.avatar_url} alt={authorName} size="sm" />
-        <span className="min-w-0 flex-1 truncate text-xs text-stone-500">{authorName}</span>
+      <div className="flex flex-wrap items-center gap-x-2 gap-y-1 px-2.5 pb-2.5 pt-1.5">
+        <span className="flex min-w-0 flex-1 items-center gap-1.5">
+          <Avatar src={note.author?.avatar_url} alt={authorName} size="sm" />
+          <span className="min-w-0 truncate text-xs text-stone-500">{authorName}</span>
+        </span>
         {note.cat && (
           <span
             className={cn(

@@ -18,7 +18,7 @@ if (!url || !key) {
 }
 
 const APK_PATH = 'mobile/android/app/build/outputs/apk/debug/app-debug.apk';
-const STORAGE_PATH = 'apk/catsjust-v0.1.3-debug.apk';
+const STORAGE_PATH = 'apk/catsjust-v0.1.4-debug.apk';
 
 if (!fs.existsSync(APK_PATH)) {
   console.error('APK not found:', APK_PATH);

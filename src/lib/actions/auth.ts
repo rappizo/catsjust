@@ -35,19 +35,30 @@ export async function signIn(
     return { ok: false, error: friendlyError(error.message) };
   }
 
-  // 登录成功后：把用户偏好语言同步到 cookie
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (user) {
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('language')
-      .eq('id', user.id)
-      .maybeSingle();
-    if (isLocale(profile?.language)) {
-      setLocaleCookie(profile.language as LocaleCode);
-    }
+  if (!user) return { ok: false, error: '登录状态异常，请重试' };
+
+  // 登录成功后：检查是否被封禁
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('status')
+    .eq('id', user.id)
+    .maybeSingle();
+  if (profile?.status === 'banned') {
+    await supabase.auth.signOut();
+    return { ok: false, error: '该账号已被封禁，如有疑问请联系管理员' };
+  }
+
+  // 登录成功后：把用户偏好语言同步到 cookie
+  const { data: profileLang } = await supabase
+    .from('profiles')
+    .select('language')
+    .eq('id', user.id)
+    .maybeSingle();
+  if (isLocale(profileLang?.language)) {
+    setLocaleCookie(profileLang.language as LocaleCode);
   }
 
   return { ok: true, redirectTo: '/' };
@@ -173,6 +184,41 @@ export async function updatePassword(
   }
 
   return { ok: true, message: '密码已更新，请用新密码登录', redirectTo: '/login' };
+}
+
+/** 已登录用户修改密码（需验证当前密码） */
+export async function changePassword(
+  oldPassword: string,
+  newPassword: string,
+  confirm: string
+): Promise<ActionResult> {
+  if (newPassword.length < 6) {
+    return { ok: false, error: '新密码至少 6 位' };
+  }
+  if (newPassword !== confirm) {
+    return { ok: false, error: '两次输入的新密码不一致' };
+  }
+
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { ok: false, error: '请先登录' };
+
+  // 验证当前密码
+  const { error: verifyErr } = await supabase.auth.signInWithPassword({
+    email: user.email ?? '',
+    password: oldPassword,
+  });
+  if (verifyErr) {
+    return { ok: false, error: '当前密码不正确' };
+  }
+
+  const { error } = await supabase.auth.updateUser({ password: newPassword });
+  if (error) {
+    return { ok: false, error: friendlyError(error.message) };
+  }
+  return { ok: true, message: '密码修改成功' };
 }
 
 /** 更新个人资料（含界面语言） */

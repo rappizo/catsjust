@@ -1,9 +1,11 @@
 import Link from 'next/link';
 import { Search as SearchIcon, FileText, User as UserIcon, Hash, PawPrint } from 'lucide-react';
 import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
 import { isSupabaseConfigured } from '@/lib/config';
 import { Avatar } from '@/components/Avatar';
 import { NoteCard } from '@/components/NoteCard';
+import { SearchWidget } from '@/components/SearchWidget';
 import { CAT_BREEDS } from '@/lib/constants';
 import { getLocaleFromCookies } from '@/lib/i18n/cookies';
 import { getT } from '@/lib/i18n/dictionaries';
@@ -25,6 +27,7 @@ export default async function SearchPage({
   let topics: Topic[] = [];
   let cats: Cat[] = [];
   const breedHits: string[] = [];
+  let hotSearches: Array<{ query: string; count: number }> = [];
 
   if (q && isSupabaseConfigured()) {
     const supabase = createClient();
@@ -64,6 +67,38 @@ export default async function SearchPage({
 
     // 品种词典（本地常量）模糊匹配
     breedHits.push(...CAT_BREEDS.filter((b) => b.includes(q)));
+  } else if (isSupabaseConfigured()) {
+    // 无搜索词：拉取热搜词（公开可读）
+    const supabase = createClient();
+    const { data: hot } = await supabase
+      .from('search_logs')
+      .select('query, count')
+      .order('count', { ascending: false })
+      .limit(8);
+    hotSearches = (hot ?? []) as Array<{ query: string; count: number }>;
+  }
+
+  // 记录搜索词（热搜统计，service_role 写入）
+  if (q && isSupabaseConfigured()) {
+    try {
+      const admin = createAdminClient();
+      const qq = q.slice(0, 50);
+      const { data: existing } = await admin
+        .from('search_logs')
+        .select('count')
+        .eq('query', qq)
+        .maybeSingle();
+      if (existing) {
+        await admin
+          .from('search_logs')
+          .update({ count: existing.count + 1, last_searched_at: new Date().toISOString() })
+          .eq('query', qq);
+      } else {
+        await admin.from('search_logs').insert({ query: qq, count: 1 });
+      }
+    } catch {
+      /* 记录失败不影响搜索 */
+    }
   }
 
   const hasQuery = q.length > 0;
@@ -219,6 +254,9 @@ export default async function SearchPage({
             )}
         </div>
       )}
+
+      {/* 搜索历史 + 热搜（始终挂载：有搜索词时写入本地历史） */}
+      <SearchWidget q={q} hotSearches={hotSearches} />
     </div>
   );
 }

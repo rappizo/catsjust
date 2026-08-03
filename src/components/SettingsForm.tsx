@@ -2,10 +2,10 @@
 
 import { useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Camera, Loader2, Save } from 'lucide-react';
+import { Camera, Loader2, Lock, Save } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { uploadAvatar, uploadCover } from '@/lib/storage';
-import { updateProfile } from '@/lib/actions/auth';
+import { changePassword, updateProfile } from '@/lib/actions/auth';
 import { Avatar } from '@/components/Avatar';
 import { useI18n } from '@/lib/i18n';
 import { isImageFile } from '@/lib/utils';
@@ -32,6 +32,40 @@ export function SettingsForm({ profile }: SettingsFormProps) {
   const [coverPreview, setCoverPreview] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [message, setMessage] = useState<{ type: 'ok' | 'error'; text: string } | null>(null);
+
+  // 修改密码
+  const [pwOld, setPwOld] = useState('');
+  const [pwNew, setPwNew] = useState('');
+  const [pwConfirm, setPwConfirm] = useState('');
+  const [pwBusy, setPwBusy] = useState(false);
+  const [pwMsg, setPwMsg] = useState<{ type: 'ok' | 'error'; text: string } | null>(null);
+
+  async function handleChangePassword() {
+    if (pwBusy) return;
+    if (!pwOld) {
+      setPwMsg({ type: 'error', text: '请输入当前密码' });
+      return;
+    }
+    if (pwNew.length < 6) {
+      setPwMsg({ type: 'error', text: '新密码至少 6 位' });
+      return;
+    }
+    if (pwNew !== pwConfirm) {
+      setPwMsg({ type: 'error', text: '两次输入的新密码不一致' });
+      return;
+    }
+    setPwBusy(true);
+    const res = await changePassword(pwOld, pwNew, pwConfirm);
+    setPwBusy(false);
+    if (res.ok) {
+      setPwMsg({ type: 'ok', text: res.message ?? '密码修改成功' });
+      setPwOld('');
+      setPwNew('');
+      setPwConfirm('');
+    } else {
+      setPwMsg({ type: 'error', text: res.error });
+    }
+  }
 
   async function handleAvatarSelected(file: File | undefined) {
     if (!file || !isImageFile(file)) return;
@@ -205,6 +239,65 @@ export function SettingsForm({ profile }: SettingsFormProps) {
           />
           <div className="mt-1 text-right text-xs text-stone-300">{bio.length}/200</div>
         </div>
+      </div>
+
+      {/* 修改密码 */}
+      <div className="space-y-4 rounded-2xl border border-stone-200/60 bg-white p-6 shadow-card">
+        <h3 className="flex items-center gap-2 text-sm font-semibold text-ink">
+          <Lock className="h-4 w-4 text-brand-500" />
+          修改密码
+        </h3>
+        <div>
+          <label className="mb-1.5 block text-sm font-medium text-stone-600">当前密码</label>
+          <input
+            type="password"
+            value={pwOld}
+            onChange={(e) => setPwOld(e.target.value)}
+            autoComplete="current-password"
+            className="w-full rounded-xl border border-stone-200 bg-white px-4 py-2.5 text-sm outline-none transition focus:border-brand-400 focus:ring-2 focus:ring-brand-100"
+          />
+        </div>
+        <div>
+          <label className="mb-1.5 block text-sm font-medium text-stone-600">新密码</label>
+          <input
+            type="password"
+            value={pwNew}
+            onChange={(e) => setPwNew(e.target.value)}
+            autoComplete="new-password"
+            placeholder="至少 6 位"
+            className="w-full rounded-xl border border-stone-200 bg-white px-4 py-2.5 text-sm outline-none transition focus:border-brand-400 focus:ring-2 focus:ring-brand-100"
+          />
+        </div>
+        <div>
+          <label className="mb-1.5 block text-sm font-medium text-stone-600">确认新密码</label>
+          <input
+            type="password"
+            value={pwConfirm}
+            onChange={(e) => setPwConfirm(e.target.value)}
+            autoComplete="new-password"
+            className="w-full rounded-xl border border-stone-200 bg-white px-4 py-2.5 text-sm outline-none transition focus:border-brand-400 focus:ring-2 focus:ring-brand-100"
+          />
+        </div>
+        {pwMsg && (
+          <p
+            className={
+              pwMsg.type === 'ok'
+                ? 'rounded-xl bg-emerald-50 px-4 py-2.5 text-sm text-emerald-600'
+                : 'rounded-xl bg-red-50 px-4 py-2.5 text-sm text-red-500'
+            }
+          >
+            {pwMsg.text}
+          </p>
+        )}
+        <button
+          type="button"
+          onClick={handleChangePassword}
+          disabled={pwBusy}
+          className="flex items-center justify-center gap-2 rounded-xl border border-stone-200 px-5 py-2.5 text-sm font-medium text-stone-600 transition hover:border-brand-400 hover:text-brand-500 disabled:opacity-60"
+        >
+          {pwBusy ? <Loader2 className="h-4 w-4 animate-spin" /> : <Lock className="h-4 w-4" />}
+          确认修改密码
+        </button>
       </div>
 
       {message && (

@@ -9,6 +9,8 @@ import { updateCat } from '@/lib/actions/cats';
 import type { CatGender } from '@/lib/types';
 import { useI18n } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
+import { compressImageFile } from '@/lib/imageCompress';
+import { LIMITS } from '@/lib/constants';
 import { Avatar } from './Avatar';
 
 interface CatEditSheetProps {
@@ -67,8 +69,10 @@ export function CatEditSheet({ catId, cat, breeds, open, onClose }: CatEditSheet
   async function handleAvatar(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
-    if (file.size > 5 * 1024 * 1024) {
-      setError('头像不能超过 5MB');
+    // 大图客户端压缩后上传（>2MB 自动压缩）
+    const processed = await compressImageFile(file);
+    if (processed.size > LIMITS.MAX_IMAGE_SIZE) {
+      setError('头像过大，请更换图片');
       return;
     }
     try {
@@ -80,7 +84,7 @@ export function CatEditSheet({ catId, cat, breeds, open, onClose }: CatEditSheet
         setError('请先登录');
         return;
       }
-      const url = await uploadAvatar(client, file, user.id);
+      const url = await uploadAvatar(client, processed, user.id);
       setAvatarUrl(url);
       setError(null);
     } catch (err: any) {

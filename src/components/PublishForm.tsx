@@ -19,6 +19,7 @@ import { uploadFile } from '@/lib/storage';
 import { createCat } from '@/lib/actions/cats';
 import { publishNote, saveDraft, editNote as editNoteAction } from '@/lib/actions/notes';
 import { CAT_BREEDS, CAT_PERSONALITY_TAGS, LIMITS } from '@/lib/constants';
+import { compressImageFile } from '@/lib/imageCompress';
 import { captureVideoFrame, cn, isImageFile, isVideoFile, readVideoDuration } from '@/lib/utils';
 import { useI18n } from '@/lib/i18n';
 import type { CatGender, MediaType, Note, Topic } from '@/lib/types';
@@ -94,7 +95,7 @@ export function PublishForm({ userId, initialCats, topics, breeds = [], editNote
   const [notice, setNotice] = useState<{ text: string; tone: 'green' | 'amber' | 'red' } | null>(null);
 
   /* ---------- 图片上传 ---------- */
-  function handleImagesSelected(files: FileList | null) {
+  async function handleImagesSelected(files: FileList | null) {
     if (!files) return;
     // 兼容安卓：部分文件管理器 File.type 为空，扩展名也缺失时，
     // 因 input 已限定 accept="image/*"，type 为空的直接视为图片
@@ -108,13 +109,17 @@ export function PublishForm({ userId, initialCats, topics, breeds = [], editNote
       setError(t('publish', 'imageLimitError').replace('{max}', String(LIMITS.MAX_IMAGES)));
       return;
     }
-    const oversized = valid.find((f) => f.size > LIMITS.MAX_IMAGE_SIZE);
+    // 大图在客户端压缩（>2MB 自动压缩），压缩后再校验与上传，降低存储/带宽压力
+    const processed = await Promise.all(
+      valid.slice(0, remaining).map(async (f) => ({ file: await compressImageFile(f) }))
+    );
+    const oversized = processed.find((p) => p.file.size > LIMITS.MAX_IMAGE_SIZE);
     if (oversized) {
       setError(t('publish', 'imageSizeError'));
       return;
     }
     setError('');
-    const items: ImageItem[] = valid.slice(0, remaining).map((file) => ({
+    const items: ImageItem[] = processed.map(({ file }) => ({
       id: crypto.randomUUID(),
       file,
       preview: URL.createObjectURL(file),
@@ -642,13 +647,15 @@ export function PublishForm({ userId, initialCats, topics, breeds = [], editNote
                 type="file"
                 accept="image/*"
                 className="hidden"
-                onChange={(e) => {
+                onChange={async (e) => {
                   const file = e.target.files?.[0];
                   if (file && isImageFile(file)) {
+                    // 大图客户端压缩后使用
+                    const processed = await compressImageFile(file);
                     setNewCat((c) => ({
                       ...c,
-                      avatarFile: file,
-                      avatarPreview: URL.createObjectURL(file),
+                      avatarFile: processed,
+                      avatarPreview: URL.createObjectURL(processed),
                     }));
                   }
                   e.target.value = '';

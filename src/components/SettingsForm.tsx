@@ -9,6 +9,8 @@ import { updateProfile } from '@/lib/actions/auth';
 import { Avatar } from '@/components/Avatar';
 import { useI18n } from '@/lib/i18n';
 import { isImageFile } from '@/lib/utils';
+import { compressImageFile } from '@/lib/imageCompress';
+import { LIMITS } from '@/lib/constants';
 import type { Profile } from '@/lib/types';
 
 interface SettingsFormProps {
@@ -32,16 +34,18 @@ export function SettingsForm({ profile }: SettingsFormProps) {
 
   async function handleAvatarSelected(file: File | undefined) {
     if (!file || !isImageFile(file)) return;
-    if (file.size > 5 * 1024 * 1024) {
+    // 大图客户端压缩后上传（>2MB 自动压缩）
+    const processed = await compressImageFile(file);
+    if (processed.size > LIMITS.MAX_IMAGE_SIZE) {
       setMessage({ type: 'error', text: t('settings', 'avatarSizeError') });
       return;
     }
-    setAvatarPreview(URL.createObjectURL(file));
+    setAvatarPreview(URL.createObjectURL(processed));
     setMessage(null);
 
     const client = createClient();
     try {
-      const url = await uploadAvatar(client, file, profile.id);
+      const url = await uploadAvatar(client, processed, profile.id);
       setAvatarUrl(url);
     } catch (e) {
       setMessage({ type: 'error', text: e instanceof Error ? e.message : t('settings', 'avatarUploadFailed') });
@@ -50,16 +54,18 @@ export function SettingsForm({ profile }: SettingsFormProps) {
 
   async function handleCoverSelected(file: File | undefined) {
     if (!file || !isImageFile(file)) return;
-    if (file.size > 10 * 1024 * 1024) {
+    // 大图客户端压缩后上传
+    const processed = await compressImageFile(file);
+    if (processed.size > LIMITS.MAX_IMAGE_SIZE) {
       setMessage({ type: 'error', text: t('settings', 'coverSizeError') });
       return;
     }
-    setCoverPreview(URL.createObjectURL(file));
+    setCoverPreview(URL.createObjectURL(processed));
     setMessage(null);
 
     const client = createClient();
     try {
-      const url = await uploadCover(client, file, profile.id);
+      const url = await uploadCover(client, processed, profile.id);
       setCoverUrl(url);
     } catch (e) {
       setMessage({ type: 'error', text: e instanceof Error ? e.message : t('settings', 'coverUploadFailed') });

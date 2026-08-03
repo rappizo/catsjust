@@ -103,10 +103,13 @@ function FeedMedia({
   note,
   liked,
   onDoubleTapLike,
+  active,
 }: {
   note: Note;
   liked: boolean;
   onDoubleTapLike: () => void;
+  /** 是否为当前可见（自动播放）的视频 */
+  active: boolean;
 }) {
   const images = (note.media ?? []).filter((m) => m.type === 'image');
   const [imgIndex, setImgIndex] = useState(0);
@@ -114,7 +117,9 @@ function FeedMedia({
   const lastTap = useRef(0);
 
   if (note.media_type === 'video') {
-    return <VideoPlayer src={note.media?.[0]?.url ?? ''} poster={note.media?.[0]?.poster} fill />;
+    return (
+      <VideoPlayer src={note.media?.[0]?.url ?? ''} poster={note.media?.[0]?.poster} fill autoPlay={active} />
+    );
   }
   if (images.length === 0) {
     return (
@@ -237,12 +242,15 @@ function FeedItem({
   initialLiked,
   initialFavorited,
   loggedIn,
+  active,
   onOpenComments,
 }: {
   note: Note;
   initialLiked: boolean;
   initialFavorited: boolean;
   loggedIn: boolean;
+  /** 是否为当前可见（视频自动播放）的条目 */
+  active: boolean;
   onOpenComments: () => void;
 }) {
   const router = useRouter();
@@ -283,7 +291,7 @@ function FeedItem({
 
       {/* 媒体 */}
       <div className="absolute inset-0 z-10">
-        <FeedMedia note={note} liked={liked} onDoubleTapLike={like} />
+        <FeedMedia note={note} liked={liked} onDoubleTapLike={like} active={active} />
       </div>
 
       {/* 底部信息 */}
@@ -452,13 +460,14 @@ export function VerticalFeed({
         onScroll={handleScroll}
         className="h-full snap-y snap-mandatory overflow-y-auto overscroll-y-contain"
       >
-        {notes.map((note) => (
+        {notes.map((note, i) => (
           <FeedItem
             key={note.id}
             note={note}
             initialLiked={likedMap[note.id] ?? false}
             initialFavorited={favoritedMap[note.id] ?? false}
             loggedIn={loggedIn}
+            active={i === index}
             onOpenComments={() => setCommentFor(note.id)}
           />
         ))}

@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { isSupabaseConfigured } from '@/lib/config';
+import { attachNoteRelations } from '@/lib/noteRelations';
+import type { Note } from '@/lib/types';
 
 /**
  * 首页瀑布流「加载更多」接口（游标分页）
@@ -45,7 +47,9 @@ export async function GET(request: Request) {
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
-    return NextResponse.json({ notes: data ?? [] });
+    // RPC 返回裸笔记，补齐 author / cat / topic
+    const notes = await attachNoteRelations(supabase, (data ?? []) as Note[]);
+    return NextResponse.json({ notes });
   }
 
   const isHot = sort === 'hot';

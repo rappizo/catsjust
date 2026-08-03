@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server';
 import { isSupabaseConfigured } from '@/lib/config';
 import { HomeTabs } from '@/components/HomeTabs';
 import type { CatCardData } from '@/components/CatsPlaza';
+import { attachNoteRelations } from '@/lib/noteRelations';
 import { getLocaleFromCookies } from '@/lib/i18n/cookies';
 import { getT } from '@/lib/i18n/dictionaries';
 import type { Note } from '@/lib/types';
@@ -35,7 +36,8 @@ export default async function HomePage() {
         p_limit: PAGE_SIZE,
         p_offset: 0,
       });
-      hotNotes = (recNotes ?? []) as Note[];
+      // RPC 返回裸笔记，需批量补齐 author / cat / topic
+      hotNotes = await attachNoteRelations(supabase, (recNotes ?? []) as Note[]);
     } else {
       const hotRes = await supabase
         .from('notes')

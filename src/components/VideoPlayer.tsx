@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 import { cn } from '@/lib/utils';
+import { proxyMediaUrl } from '@/lib/mediaUrl';
 
 interface VideoPlayerProps {
   src: string;
@@ -12,9 +13,10 @@ interface VideoPlayerProps {
   autoPlay?: boolean;
 }
 
-/** 视频播放器（原生控件） */
+/** 视频播放器（原生控件，src 自动走本站 /v 代理以利用 Vercel 全球边缘缓存） */
 export function VideoPlayer({ src, poster, fill = false, autoPlay = false }: VideoPlayerProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const finalSrc = proxyMediaUrl(src);
 
   // autoPlay 变化：变为可见 → 播放（优先带声，被浏览器拦截则静音重试）；不可见 → 暂停
   useEffect(() => {
@@ -48,7 +50,7 @@ export function VideoPlayer({ src, poster, fill = false, autoPlay = false }: Vid
       {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
       <video
         ref={videoRef}
-        src={src}
+        src={finalSrc}
         poster={poster ?? undefined}
         controls
         playsInline

@@ -13,6 +13,8 @@ export const metadata: Metadata = {
 const SITE_URL = 'https://www.catsjust.com';
 const DOWNLOAD_URL = `${SITE_URL}/download`;
 const APK_URL = process.env.NEXT_PUBLIC_APK_URL || '';
+/** 备用下载线路：Supabase 存储直链（CDN 线路异常时可切换） */
+const APK_FALLBACK_URL = process.env.NEXT_PUBLIC_APK_URL_FALLBACK || '';
 
 const STEPS = [
   { title: '点击下载 APK', desc: '点上方「下载安卓版」按钮，获取安装包（约 4 MB）' },
@@ -62,14 +64,24 @@ export default async function DownloadPage() {
             </span>
           </div>
           {apkAvailable ? (
-            <a
-              href={APK_URL}
-              download
-              className="flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-brand-500 to-accent-500 py-3.5 text-sm font-bold text-[#04281a] shadow-lg shadow-neon-green transition hover:brightness-110"
-            >
-              <Download className="h-5 w-5" />
-              下载安卓版（APK）
-            </a>
+            <>
+              <a
+                href={APK_URL}
+                download
+                className="flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-brand-500 to-accent-500 py-3.5 text-sm font-bold text-[#04281a] shadow-lg shadow-neon-green transition hover:brightness-110"
+              >
+                <Download className="h-5 w-5" />
+                下载安卓版（APK）
+              </a>
+              {APK_FALLBACK_URL && (
+                <a
+                  href={APK_FALLBACK_URL}
+                  className="mt-3 text-xs text-stone-400 underline-offset-2 transition hover:text-brand-500 hover:underline"
+                >
+                  下载慢？试试备用线路
+                </a>
+              )}
+            </>
           ) : (
             <div className="flex w-full flex-col items-center gap-2 rounded-2xl border border-dashed border-stone-300 py-3.5 text-sm text-stone-400">
               <span>安卓版即将上线，敬请期待</span>

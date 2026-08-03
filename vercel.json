@@ -1,0 +1,16 @@
+{
+  "rewrites": [
+    {
+      "source": "/apk/:path*",
+      "destination": "https://atphtzpdclbavrplmumk.supabase.co/storage/v1/object/public/media/apk/:path*"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/apk/:path*",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=86400" }
+      ]
+    }
+  ]
+}

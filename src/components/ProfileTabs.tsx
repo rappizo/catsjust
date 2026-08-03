@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Loader2, MessageCircle, PawPrint, Pencil, Trash2 } from 'lucide-react';
 import { cn, timeAgo } from '@/lib/utils';
+import { thumbUrl } from '@/lib/img';
 import { useI18n } from '@/lib/i18n';
 import { deleteNote } from '@/lib/actions/notes';
 import { Waterfall } from './Waterfall';
@@ -123,7 +124,7 @@ export function ProfileTabs({
                   >
                     {note?.cover_url ? (
                       // eslint-disable-next-line @next/next/no-img-element
-                      <img src={note.cover_url} alt="" className="h-12 w-12 shrink-0 rounded-xl object-cover" />
+                      <img src={thumbUrl(note.cover_url, 96)} alt="" className="h-12 w-12 shrink-0 rounded-xl object-cover" />
                     ) : (
                       <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-brand-50 text-xl">
                         {note?.media_type === 'video' ? '🎬' : '🐱'}
@@ -175,7 +176,7 @@ export function ProfileTabs({
                   {cat.avatar_url ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img
-                      src={cat.avatar_url}
+                      src={thumbUrl(cat.avatar_url, 384)}
                       alt={cat.name}
                       className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                     />
@@ -251,7 +252,7 @@ function OwnerWorksGrid({
             <Link href={`/notes/${note.id}`} className="block">
               {cover ? (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img src={cover} alt={note.title ?? ''} className="w-full object-cover" />
+                <img src={thumbUrl(cover, 640)} alt={note.title ?? ''} className="w-full object-cover" />
               ) : (
                 <div className="flex aspect-video w-full items-center justify-center bg-brand-50 text-3xl">
                   {note.media_type === 'video' ? '🎬' : '🐱'}

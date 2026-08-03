@@ -8,6 +8,7 @@ import { FollowButton } from '@/components/FollowButton';
 import { MessageButton } from '@/components/MessageButton';
 import { ProfileTabs } from '@/components/ProfileTabs';
 import { cn, formatDate } from '@/lib/utils';
+import { thumbUrl } from '@/lib/img';
 import { isSupabaseConfigured } from '@/lib/config';
 import { getLocaleFromCookies } from '@/lib/i18n/cookies';
 import { getT } from '@/lib/i18n/dictionaries';
@@ -149,7 +150,7 @@ export default async function ProfilePage({ params }: { params: { username: stri
           <div className="relative h-36 w-full sm:h-48">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src={typedProfile.cover_url}
+              src={thumbUrl(typedProfile.cover_url, 1200)}
               alt="封面"
               className="h-full w-full object-cover"
             />

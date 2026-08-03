@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { thumbUrl } from '@/lib/img';
 import type { NoteMedia } from '@/lib/types';
 
 interface MediaCarouselProps {
@@ -24,7 +25,7 @@ export function MediaCarousel({ media, title }: MediaCarouselProps) {
     <div className="relative overflow-hidden rounded-2xl bg-stone-950">
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src={current.url}
+        src={thumbUrl(current.url, 1200)}
         alt={`${title ?? '猫咪图片'} ${index + 1}`}
         className="max-h-[70vh] w-full object-contain"
       />
@@ -64,7 +65,7 @@ export function MediaCarousel({ media, title }: MediaCarouselProps) {
               )}
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={img.url} alt="" className="h-full w-full object-cover" />
+              <img src={thumbUrl(img.url, 96)} alt="" className="h-full w-full object-cover" />
             </button>
           ))}
         </div>

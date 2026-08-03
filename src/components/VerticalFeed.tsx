@@ -21,6 +21,7 @@ import { Avatar } from './Avatar';
 import { VideoPlayer } from './VideoPlayer';
 import { CommentSection } from './CommentSection';
 import { ReportDialog } from './ReportDialog';
+import { thumbUrl } from '@/lib/img';
 import type { CommentItem, Note } from '@/lib/types';
 
 interface VerticalFeedProps {
@@ -165,7 +166,7 @@ function FeedMedia({
     >
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src={current.url}
+        src={thumbUrl(current.url, 1080)}
         alt={note.title || '猫咪图片'}
         className="h-full w-full object-cover"
         draggable={false}

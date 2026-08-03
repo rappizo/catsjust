@@ -22,7 +22,7 @@ export function Avatar({ src, alt = '头像', size = 'md', className }: AvatarPr
   if (src) {
     return (
       <span className={cn('relative inline-block shrink-0 overflow-hidden rounded-full bg-stone-200', SIZES[size], className)}>
-        <Image src={src} alt={alt} fill className="object-cover" sizes="96px" unoptimized />
+        <Image src={src} alt={alt} fill className="object-cover" sizes="96px" />
       </span>
     );
   }

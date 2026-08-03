@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { Heart, Loader2, MessageCircle, Play, X } from 'lucide-react';
 import type { Note } from '@/lib/types';
 import { cn, formatCount } from '@/lib/utils';
+import { thumbUrl } from '@/lib/img';
 import { useI18n } from '@/lib/i18n';
 import { addNotInterested } from '@/lib/actions/interests';
 import { Avatar } from './Avatar';
@@ -55,7 +56,7 @@ export function NoteCard({ note, priority = false, dismissable = false }: NoteCa
         {cover ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
-            src={cover}
+            src={thumbUrl(cover, 640)}
             alt={note.title || '猫咪笔记'}
             loading={priority ? 'eager' : 'lazy'}
             className="w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"

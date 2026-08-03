@@ -4,6 +4,7 @@ import { useMemo, useState } from 'react';
 import Link from 'next/link';
 import { Image as ImageIcon, PawPrint, Search } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { thumbUrl } from '@/lib/img';
 import { useI18n } from '@/lib/i18n';
 import { Avatar } from './Avatar';
 
@@ -120,7 +121,7 @@ export function CatsPlaza({ cats, breeds }: CatsPlazaProps) {
                 {cat.avatar_url ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
-                    src={cat.avatar_url}
+                    src={thumbUrl(cat.avatar_url, 384)}
                     alt={cat.name}
                     className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                   />

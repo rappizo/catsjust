@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { FileText, Loader2, Send } from 'lucide-react';
 import { useI18n } from '@/lib/i18n';
 import { timeAgo } from '@/lib/utils';
+import { thumbUrl } from '@/lib/img';
 import { publishDraft } from '@/lib/actions/notes';
 import type { Note } from '@/lib/types';
 
@@ -42,7 +43,7 @@ export function DraftList({ drafts }: { drafts: Note[] }) {
           <div className="flex min-w-0 items-center gap-3">
             {d.cover_url ? (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={d.cover_url} alt="" className="h-12 w-12 shrink-0 rounded-xl object-cover" />
+              <img src={thumbUrl(d.cover_url, 96)} alt="" className="h-12 w-12 shrink-0 rounded-xl object-cover" />
             ) : (
               <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-stone-100 text-stone-400">
                 <FileText className="h-5 w-5" />

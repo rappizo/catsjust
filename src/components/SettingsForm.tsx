@@ -9,6 +9,7 @@ import { updateProfile } from '@/lib/actions/auth';
 import { Avatar } from '@/components/Avatar';
 import { useI18n } from '@/lib/i18n';
 import { isImageFile } from '@/lib/utils';
+import { cn } from '@/lib/utils';
 import { compressImageFile } from '@/lib/imageCompress';
 import { LIMITS } from '@/lib/constants';
 import type { Profile } from '@/lib/types';
@@ -96,32 +97,54 @@ export function SettingsForm({ profile }: SettingsFormProps) {
   }
 
   const showAvatar = avatarPreview || avatarUrl || null;
+  const showCover = coverPreview || coverUrl || null;
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      {/* 封面 */}
+      {/* 封面（仅设置过封面时显示，无封面不再显示渐变占位色块） */}
       <div className="overflow-hidden rounded-2xl border border-stone-200/60 bg-white shadow-card">
-        <div className="relative h-36 w-full bg-gradient-to-r from-brand-400 via-orange-300 to-amber-200 sm:h-44">
-          {coverPreview || coverUrl ? (
-            // eslint-disable-next-line @next/next/no-img-element
+        {showCover && (
+          <div className="relative h-36 w-full sm:h-44">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src={coverPreview || coverUrl || ''}
+              src={showCover}
               alt={t('settings', 'changeCover')}
               className="h-full w-full object-cover"
             />
-          ) : (
-            <span className="pointer-events-none absolute bottom-1 right-6 select-none text-6xl opacity-30">
-              🐱
-            </span>
-          )}
-          <button
-            type="button"
-            onClick={() => coverInputRef.current?.click()}
-            className="absolute right-3 top-3 flex items-center gap-1.5 rounded-full bg-black/40 px-3 py-1.5 text-xs font-medium text-white backdrop-blur-sm transition hover:bg-black/60"
-          >
-            <Camera className="h-3.5 w-3.5" />
-            {t('settings', 'changeCover')}
-          </button>
+            <button
+              type="button"
+              onClick={() => coverInputRef.current?.click()}
+              className="absolute right-3 top-3 flex items-center gap-1.5 rounded-full bg-black/40 px-3 py-1.5 text-xs font-medium text-white backdrop-blur-sm transition hover:bg-black/60"
+            >
+              <Camera className="h-3.5 w-3.5" />
+              {t('settings', 'changeCover')}
+            </button>
+          </div>
+        )}
+        <div className={cn('flex items-end gap-4 px-6', showCover ? 'pb-6' : 'py-6')}>
+          <span className={cn('rounded-full', showCover ? '-mt-10 border-4 border-white' : '')}>
+            <Avatar src={showAvatar} alt={nickname || '我'} size="xl" />
+          </span>
+          <div className="mb-1 flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => avatarInputRef.current?.click()}
+              className="flex items-center gap-1.5 rounded-full border border-stone-200 bg-white px-3 py-1.5 text-xs font-medium text-stone-600 transition hover:bg-stone-50"
+            >
+              <Camera className="h-3.5 w-3.5" />
+              {t('settings', 'changeAvatar')}
+            </button>
+            {!showCover && (
+              <button
+                type="button"
+                onClick={() => coverInputRef.current?.click()}
+                className="flex items-center gap-1.5 rounded-full border border-stone-200 bg-white px-3 py-1.5 text-xs font-medium text-stone-600 transition hover:bg-stone-50"
+              >
+                <Camera className="h-3.5 w-3.5" />
+                {t('settings', 'changeCover')}
+              </button>
+            )}
+          </div>
           <input
             ref={coverInputRef}
             type="file"
@@ -132,19 +155,6 @@ export function SettingsForm({ profile }: SettingsFormProps) {
               e.target.value = '';
             }}
           />
-        </div>
-        <div className="flex items-end gap-4 px-6 pb-6">
-          <span className="-mt-10 rounded-full border-4 border-white">
-            <Avatar src={showAvatar} alt={nickname || '我'} size="xl" />
-          </span>
-          <button
-            type="button"
-            onClick={() => avatarInputRef.current?.click()}
-            className="mb-1 flex items-center gap-1.5 rounded-full border border-stone-200 bg-white px-3 py-1.5 text-xs font-medium text-stone-600 transition hover:bg-stone-50"
-          >
-            <Camera className="h-3.5 w-3.5" />
-            {t('settings', 'changeAvatar')}
-          </button>
           <input
             ref={avatarInputRef}
             type="file"

@@ -261,6 +261,17 @@ function OwnerWorksGrid({
                 <p className="px-3 py-2 text-sm font-medium text-ink">{note.title}</p>
               )}
             </Link>
+            {/* 作者：头像 + 用户名 */}
+            <div className="flex items-center gap-2 px-3 pb-2">
+              <Avatar
+                src={note.author?.avatar_url}
+                alt={note.author?.nickname || note.author?.username || '我'}
+                size="sm"
+              />
+              <span className="min-w-0 flex-1 truncate text-xs text-stone-500">
+                {note.author?.nickname || note.author?.username || '我'}
+              </span>
+            </div>
             {/* 操作条：编辑 / 删除 */}
             <div className="flex items-center gap-1 border-t border-stone-100 px-2 py-1.5">
               <Link

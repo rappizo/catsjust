@@ -5,6 +5,7 @@ import { RealtimeUnreadSync } from '@/components/RealtimeUnreadSync';
 import { AppUpdateChecker } from '@/components/AppUpdateChecker';
 import { ErrorLogger } from '@/components/ErrorLogger';
 import { BannedGate } from '@/components/BannedGate';
+import { PageTransition } from '@/components/PageTransition';
 import { createClient } from '@/lib/supabase/server';
 import { isSupabaseConfigured } from '@/lib/config';
 
@@ -43,7 +44,9 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
   return (
     <div className="flex min-h-screen flex-col">
       <Navbar />
-      <main className="flex-1 pb-20">{children}</main>
+      <main className="flex-1 pb-20">
+        <PageTransition>{children}</PageTransition>
+      </main>
       <Footer />
       {userId ? (
         <RealtimeUnreadSync

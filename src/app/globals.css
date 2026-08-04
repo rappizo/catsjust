@@ -202,17 +202,3 @@ input[type='time']::-webkit-calendar-picker-indicator {
 .animate-heart-pop {
   animation: heartPop 0.7s ease-out both;
 }
-
-/* 骨架屏柔和呼吸动画（比默认 pulse 更慢更淡，减少"空白"感） */
-@keyframes pulseSoft {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.55;
-  }
-}
-.animate-pulse-soft {
-  animation: pulseSoft 1.8s ease-in-out infinite;
-}

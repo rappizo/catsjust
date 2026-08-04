@@ -21,8 +21,6 @@ interface HomeTabsProps {
   cats?: CatCardData[];
   /** 品种列表 */
   breeds?: string[];
-  /** 热门话题（按内容数排序） */
-  hotTopics?: Array<{ id: string; name: string; slug: string; count: number }>;
 }
 
 type TabKey = 'following' | 'discover' | 'cats';
@@ -35,7 +33,6 @@ export function HomeTabs({
   discoverRecommend = false,
   cats = [],
   breeds = [],
-  hotTopics = [],
 }: HomeTabsProps) {
   const { t } = useI18n();
   const [tab, setTab] = useState<TabKey>('discover');
@@ -48,23 +45,6 @@ export function HomeTabs({
 
   return (
     <div>
-      {/* 热门话题横条 */}
-      {hotTopics.length > 0 && (
-        <div className="no-scrollbar -mx-1 mb-3 flex items-center gap-2 overflow-x-auto px-1">
-          {hotTopics.map((tp) => (
-            <Link
-              key={tp.id}
-              href={`/topics/${tp.slug}`}
-              className="flex shrink-0 items-center gap-1.5 rounded-full border border-stone-200/70 bg-white px-3 py-1.5 text-xs font-medium text-stone-500 transition hover:border-brand-400 hover:text-brand-500"
-            >
-              <span className="text-amber-400">🔥</span>
-              #{tp.name}
-              <span className="text-[10px] text-stone-400">{tp.count}</span>
-            </Link>
-          ))}
-        </div>
-      )}
-
       {/* 顶部分段控件 */}
       <div className="mb-3 flex items-center justify-center gap-1">
         {tabs.map((tItem) => (

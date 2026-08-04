@@ -17,17 +17,16 @@ export const metadata: Metadata = {
   },
   appleWebApp: {
     capable: true,
-    statusBarStyle: 'black-translucent',
+    statusBarStyle: 'default',
     title: '只有猫',
   },
 };
 
-/** 移动端（尤其 iOS WebView / PWA）安全区与状态栏适配 */
+/** 移动端适配：内容保持在系统栏安全区之内（不延伸进状态栏） */
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   maximumScale: 5,
-  viewportFit: 'cover',
   themeColor: '#0a0a12',
 };
 

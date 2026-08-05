@@ -76,13 +76,13 @@ export function MediaCarousel({ media, title }: MediaCarouselProps) {
     const g = gRef.current;
 
     function goNext() {
-      if (g.animating) return;
+      if (count < 2 || g.animating) return;
       g.animating = true;
       setTrack(-2 * el.clientWidth, true);
       setTimeout(() => setIndex((i) => (i + 1) % count), 330);
     }
     function goPrev() {
-      if (g.animating) return;
+      if (count < 2 || g.animating) return;
       g.animating = true;
       setTrack(0, true);
       setTimeout(() => setIndex((i) => (i - 1 + count) % count), 330);
@@ -101,6 +101,7 @@ export function MediaCarousel({ media, title }: MediaCarouselProps) {
       g.suppressClick = false;
     }
     function onMove(e: TouchEvent) {
+      if (count < 2) return;
       const t = e.touches[0];
       if (!t) return;
       const dx = t.clientX - g.startX;
@@ -119,6 +120,7 @@ export function MediaCarousel({ media, title }: MediaCarouselProps) {
       }
     }
     function onEnd() {
+      if (count < 2) return;
       if (!g.moved) return;
       const w = el.clientWidth;
       const flick = Math.abs(g.velX) > 0.55;
@@ -215,7 +217,7 @@ export function MediaCarousel({ media, title }: MediaCarouselProps) {
       {/* 全屏查看器 */}
       {viewerOpen && (
         <ImageViewer
-          images={images.map((m) => thumbUrl(m.url, 1920))}
+          images={images.map((m) => m.url)}
           index={index}
           onChangeIndex={setIndex}
           onClose={() => setViewerOpen(false)}

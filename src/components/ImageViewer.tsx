@@ -41,6 +41,7 @@ export function ImageViewer({ images, index, onChangeIndex, onClose, title, orig
   const restRectRef = useRef<ImageRect | null>(null);
   const historyEntryRef = useRef(false);
   const closingRef = useRef(false);
+  const openingRef = useRef(false);
   const initializedIndexRef = useRef(index);
   const [curSrc, setCurSrc] = useState(() => thumbUrl(images[index] ?? '', 1200));
 
@@ -165,46 +166,61 @@ export function ImageViewer({ images, index, onChangeIndex, onClose, title, orig
     const backdrop = backdropRef.current;
     if (!image) return;
 
-    // Reset first so React Strict Mode's development effect replay measures the
-    // untransformed, full-screen image instead of the previous FLIP frame.
-    image.style.transition = 'none';
-    image.style.transform = 'translate3d(0, 0, 0) scale(1)';
-    const destination = image.getBoundingClientRect();
-    restRectRef.current = {
-      x: destination.x,
-      y: destination.y,
-      width: destination.width,
-      height: destination.height,
-    };
-    const flip = originRect ? getFlipTransform(originRect, restRectRef.current) : null;
-
-    image.style.transform = flip
-      ? `translate3d(${flip.x}px, ${flip.y}px, 0) scale(${flip.scale})`
-      : 'translate3d(0, 0, 0) scale(0.96)';
-    image.style.opacity = '1';
-
-    if (backdrop) {
-      backdrop.style.transition = 'none';
-      backdrop.style.opacity = '0';
-    }
-
     let secondFrame = 0;
-    const firstFrame = requestAnimationFrame(() => {
-      secondFrame = requestAnimationFrame(() => {
-        if (backdrop) {
-          backdrop.style.transition = 'opacity 0.28s ease';
-          backdrop.style.opacity = '1';
-        }
-        image.style.transition = 'transform 0.32s cubic-bezier(0.22, 0.61, 0.36, 1)';
-        image.style.transform = 'translate3d(0, 0, 0) scale(1)';
+    let firstFrame = 0;
+
+    const startOpening = () => {
+      if (openingRef.current || !image.naturalWidth || !image.naturalHeight) return;
+      openingRef.current = true;
+
+      // Reset first so React Strict Mode's development effect replay measures
+      // the untransformed full-screen image instead of the previous FLIP frame.
+      image.style.transition = 'none';
+      image.style.transform = 'translate3d(0, 0, 0) scale(1)';
+      const destination = image.getBoundingClientRect();
+      restRectRef.current = {
+        x: destination.x,
+        y: destination.y,
+        width: destination.width,
+        height: destination.height,
+      };
+      const flip = originRect ? getFlipTransform(originRect, restRectRef.current) : null;
+
+      image.style.transform = flip
+        ? `translate3d(${flip.x}px, ${flip.y}px, 0) scale(${flip.scale})`
+        : 'translate3d(0, 0, 0) scale(0.96)';
+      image.style.opacity = '1';
+
+      if (backdrop) {
+        backdrop.style.transition = 'none';
+        backdrop.style.opacity = '0';
+      }
+
+      firstFrame = requestAnimationFrame(() => {
+        secondFrame = requestAnimationFrame(() => {
+          if (backdrop) {
+            backdrop.style.transition = 'opacity 0.28s ease';
+            backdrop.style.opacity = '1';
+          }
+          image.style.transition = 'transform 0.32s cubic-bezier(0.22, 0.61, 0.36, 1)';
+          image.style.transform = 'translate3d(0, 0, 0) scale(1)';
+        });
       });
-    });
+    };
+
+    image.style.opacity = '0';
+    if (image.complete) startOpening();
+    else image.addEventListener('load', startOpening, { once: true });
 
     return () => {
+      image.removeEventListener('load', startOpening);
       cancelAnimationFrame(firstFrame);
       if (secondFrame) cancelAnimationFrame(secondFrame);
+      openingRef.current = false;
     };
-  }, [originRect]);
+    // The origin is captured only when this viewer opens.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useLayoutEffect(() => {
     const container = containerRef.current;
@@ -325,7 +341,7 @@ export function ImageViewer({ images, index, onChangeIndex, onClose, title, orig
         txRef.current = clamp(gesture.startTx + dx, -maxX, maxX);
         tyRef.current = clamp(gesture.startTy + dy, -maxY, maxY);
         applyCurrentTransform(scaleRef.current, txRef.current, tyRef.current);
-      } else {
+      } else if (count > 1) {
         setTrack(-viewer.clientWidth + dx);
       }
     }
@@ -340,7 +356,7 @@ export function ImageViewer({ images, index, onChangeIndex, onClose, title, orig
       if (gesture.mode === 'pan') {
         if (scaleRef.current > 1.02) {
           bounceCurrentImage();
-        } else {
+        } else if (count > 1) {
           const width = viewer.clientWidth;
           const flick = Math.abs(gesture.velX) > 0.55;
           if (gesture.moved && (gesture.finalDx < -width * 0.25 || (gesture.finalDx < -40 && flick))) {

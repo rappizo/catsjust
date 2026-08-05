@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { cn } from '@/lib/utils';
 import { thumbUrl } from '@/lib/img';
 import { ImageViewer } from './ImageViewer';
@@ -46,18 +46,23 @@ export function MediaCarousel({ media, title }: MediaCarouselProps) {
     el.style.transform = `translate3d(${px}px, 0, 0)`;
   }
 
-  // index 变化：新轨道已渲染，无动画复位到居中（视觉连续）+ 解锁
-  const mountedRef = useRef(false);
-  useEffect(() => {
-    if (!mountedRef.current) {
-      mountedRef.current = true;
-      return;
-    }
+  // Percentage transforms are relative to the track, not the viewport. Center
+  // the current slide with its actual width before the browser paints it.
+  useLayoutEffect(() => {
     const el = containerRef.current;
     if (el) setTrack(-el.clientWidth, false);
     gRef.current.animating = false;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [index]);
+
+  useLayoutEffect(() => {
+    const el = containerRef.current;
+    if (!el || typeof ResizeObserver === 'undefined') return;
+    const observer = new ResizeObserver(() => setTrack(-el.clientWidth, false));
+    observer.observe(el);
+    return () => observer.disconnect();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   if (count === 0) return null;
 
@@ -158,20 +163,24 @@ export function MediaCarousel({ media, title }: MediaCarouselProps) {
         className="relative overflow-hidden rounded-2xl bg-stone-950"
         style={{ touchAction: 'pan-y' }}
       >
-        {/* 轨道：前/当前/后 三张，-33.33% 使当前居中；不同高度图片上下居中 */}
+        {/* 前/当前/后各占容器的一屏宽；当前项由像素位移居中。 */}
         <div
           ref={trackRef}
-          className="flex items-center"
-          style={{ transform: 'translate3d(-33.333%,0,0)', willChange: 'transform' }}
+          className="flex w-full items-center"
+          style={{ transform: 'translate3d(0,0,0)', willChange: 'transform' }}
         >
           {shown.map((img, i) => (
-            <div key={`${index}-${i}`} className="flex w-full shrink-0 items-center justify-center">
+            <div
+              key={`${index}-${i}`}
+              className="flex shrink-0 items-center justify-center"
+              style={{ flexBasis: '100%' }}
+            >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={thumbUrl(img.url, 1200)}
                 alt={`${title ?? '猫咪图片'} ${((index + i - 1 + count) % count) + 1}`}
                 draggable={false}
-                className="max-h-[70vh] w-full select-none object-contain"
+                className="block max-h-[70vh] w-full select-none object-contain"
                 style={{ willChange: 'transform' }}
               />
             </div>

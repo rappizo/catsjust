@@ -1,48 +1,56 @@
 'use client';
 
+import { ArrowLeft } from 'lucide-react';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { cn } from '@/lib/utils';
 import { thumbUrl } from '@/lib/img';
 
 interface ImageViewerProps {
-  /** 大图 URL 列表 */
   images: string[];
-  /** 当前展示索引 */
   index: number;
-  onChangeIndex: (i: number) => void;
+  onChangeIndex: (index: number) => void;
   onClose: () => void;
   title?: string | null;
-  /** 触发点（点击的卡片图片）位置，用于打开/关闭的无缝缩放过渡 */
-  originRect?: { x: number; y: number; width: number; height: number } | null;
+  originRect?: ImageRect | null;
 }
 
-const clamp = (v: number, min: number, max: number) => Math.min(max, Math.max(min, v));
+type ImageRect = { x: number; y: number; width: number; height: number };
 
-/**
- * 小红书式全屏图片查看器（轨道式 + 缩放 + 无痕过渡）：
- * - 打开：先显示卡片同源 1200 图（缓存命中、零等待），从卡片位置无缝放大到全屏，
- *   同时后台预加载 1920 高清后平滑升级——毫无痕迹
- * - 切换：轨道整体滑动，旧图滑出同时新图从旁滑入（同屏切换）
- * - 缩放：双指捏合（1x~4x）+ 缩放后单指平移 + 边界回弹 + 双击放大
- * - 关闭：缩回卡片原位（FLIP）
- */
+const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
+
+function getFlipTransform(origin: ImageRect, destination: ImageRect) {
+  const scale = clamp(
+    Math.min(origin.width / destination.width, origin.height / destination.height),
+    0.05,
+    1
+  );
+
+  return {
+    scale,
+    x: origin.x + origin.width / 2 - (destination.x + destination.width / 2),
+    y: origin.y + origin.height / 2 - (destination.y + destination.height / 2),
+  };
+}
+
 export function ImageViewer({ images, index, onChangeIndex, onClose, title, originRect }: ImageViewerProps) {
+  const count = images.length;
   const containerRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const curImgRef = useRef<HTMLImageElement>(null);
-  const [curSrc, setCurSrc] = useState<string>(thumbUrl(images[index], 1200));
+  const backdropRef = useRef<HTMLDivElement>(null);
+  const restRectRef = useRef<ImageRect | null>(null);
+  const historyEntryRef = useRef(false);
+  const closingRef = useRef(false);
+  const initializedIndexRef = useRef(index);
+  const [curSrc, setCurSrc] = useState(() => thumbUrl(images[index] ?? '', 1200));
 
   const indexRef = useRef(index);
   indexRef.current = index;
-  const count = images.length;
 
   const scaleRef = useRef(1);
   const txRef = useRef(0);
   const tyRef = useRef(0);
-  const closingRef = useRef(false);
-  const mountedRef = useRef(false);
-
-  const gRef = useRef({
+  const gestureRef = useRef({
     mode: 'none' as 'none' | 'pan' | 'pinch',
     startX: 0,
     startY: 0,
@@ -55,344 +63,418 @@ export function ImageViewer({ images, index, onChangeIndex, onClose, title, orig
     lastT: 0,
     velX: 0,
     moved: false,
-    suppressClick: false,
     finalDx: 0,
     lastTapT: 0,
     animating: false,
   });
 
-  function setTrack(px: number, animate = false) {
-    const el = trackRef.current;
-    if (!el) return;
-    el.style.transition = animate ? 'transform 0.32s cubic-bezier(0.22, 0.61, 0.36, 1)' : 'none';
-    el.style.transform = `translate3d(${px}px, 0, 0)`;
+  function setTrack(offset: number, animate = false) {
+    const track = trackRef.current;
+    if (!track) return;
+    track.style.transition = animate ? 'transform 0.32s cubic-bezier(0.22, 0.61, 0.36, 1)' : 'none';
+    track.style.transform = `translate3d(${offset}px, 0, 0)`;
   }
-  function applyCur(scale: number, tx: number, ty: number, animate = false) {
-    const img = curImgRef.current;
-    if (!img) return;
-    img.style.transition = animate ? 'transform 0.3s cubic-bezier(0.22, 0.61, 0.36, 1)' : 'none';
-    img.style.transform = `translate3d(${tx}px, ${ty}px, 0) scale(${scale})`;
+
+  function applyCurrentTransform(scale: number, x: number, y: number, animate = false) {
+    const image = curImgRef.current;
+    if (!image) return;
+    image.style.transition = animate ? 'transform 0.3s cubic-bezier(0.22, 0.61, 0.36, 1)' : 'none';
+    image.style.transform = `translate3d(${x}px, ${y}px, 0) scale(${scale})`;
   }
-  function loadHi(i: number) {
-    const hi = new Image();
-    hi.src = thumbUrl(images[i], 1920);
-    hi.onload = () => {
-      if (indexRef.current === i) setCurSrc(thumbUrl(images[i], 1920));
+
+  function loadHiRes(imageIndex: number) {
+    const source = images[imageIndex];
+    if (!source) return;
+    const highResolution = new Image();
+    highResolution.src = thumbUrl(source, 1920);
+    highResolution.onload = () => {
+      if (indexRef.current === imageIndex) setCurSrc(thumbUrl(source, 1920));
     };
   }
 
-  // 打开：FLIP 从卡片位无缝放大（useLayoutEffect 在浏览器绘制前同步设初始帧，无闪跳）
-  useLayoutEffect(() => {
-    const c = containerRef.current;
-    const img = curImgRef.current;
-    if (img && c) {
-      const cw = c.clientWidth;
-      const ch = c.clientHeight;
-      let sx = 0.92;
-      let ox = 0;
-      let oy = 0;
-      if (originRect) {
-        sx = clamp(Math.min(originRect.width / cw, originRect.height / ch), 0.12, 1);
-        ox = originRect.x + originRect.width / 2 - cw / 2;
-        oy = originRect.y + originRect.height / 2 - ch / 2;
-      }
-      // 绘制前同步设置 FLIP 初始帧（卡片位小图）
-      img.style.transition = 'none';
-      img.style.transform = `translate3d(${ox}px, ${oy}px, 0) scale(${sx})`;
-      img.style.opacity = '0.5';
-      // 下一帧动画到全屏
-      const timer = setTimeout(() => {
-        img.style.transition = 'transform 0.3s cubic-bezier(0.22, 0.61, 0.36, 1), opacity 0.3s ease';
-        img.style.transform = 'translate3d(0, 0, 0) scale(1)';
-        img.style.opacity = '1';
-      }, 20);
-      return () => clearTimeout(timer);
+  function close(fromHistory = false) {
+    if (closingRef.current) return;
+    closingRef.current = true;
+
+    const image = curImgRef.current;
+    const backdrop = backdropRef.current;
+    const destination = restRectRef.current;
+    const flip = image && destination && originRect ? getFlipTransform(originRect, destination) : null;
+
+    if (backdrop) {
+      backdrop.style.transition = 'opacity 0.24s ease';
+      backdrop.style.opacity = '0';
     }
+
+    if (image && flip) {
+      image.style.transition = 'transform 0.28s cubic-bezier(0.55, 0, 0.55, 0.2)';
+      image.style.transform = `translate3d(${flip.x}px, ${flip.y}px, 0) scale(${flip.scale})`;
+    } else if (image) {
+      image.style.transition = 'opacity 0.2s ease';
+      image.style.opacity = '0';
+    }
+
+    window.setTimeout(() => {
+      if (!fromHistory && historyEntryRef.current) {
+        historyEntryRef.current = false;
+        window.history.back();
+      }
+      onClose();
+    }, flip ? 300 : 220);
+  }
+
+  function goNext() {
+    const gesture = gestureRef.current;
+    const container = containerRef.current;
+    if (!container || count < 2 || gesture.animating) return;
+    gesture.animating = true;
+    setTrack(-2 * container.clientWidth, true);
+    window.setTimeout(() => onChangeIndex((indexRef.current + 1) % count), 330);
+  }
+
+  function goPrevious() {
+    const gesture = gestureRef.current;
+    const container = containerRef.current;
+    if (!container || count < 2 || gesture.animating) return;
+    gesture.animating = true;
+    setTrack(0, true);
+    window.setTimeout(() => onChangeIndex((indexRef.current - 1 + count) % count), 330);
+  }
+
+  function bounceCurrentImage() {
+    const container = containerRef.current;
+    if (!container) return;
+    const scale = scaleRef.current;
+    const maxX = ((scale - 1) * container.clientWidth) / 2;
+    const maxY = ((scale - 1) * container.clientHeight) / 2;
+    txRef.current = clamp(txRef.current, -maxX, maxX);
+    tyRef.current = clamp(tyRef.current, -maxY, maxY);
+    applyCurrentTransform(scale, txRef.current, tyRef.current, true);
+  }
+
+  // This has to run before measuring the expanded image. Percentage translation
+  // refers to the track instead of a slide and is what caused the split image.
+  useLayoutEffect(() => {
+    const container = containerRef.current;
+    if (container) setTrack(-container.clientWidth, false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // 预加载高清（首次）
-  useEffect(() => {
-    loadHi(index);
+  useLayoutEffect(() => {
+    const image = curImgRef.current;
+    const backdrop = backdropRef.current;
+    if (!image) return;
+
+    // Reset first so React Strict Mode's development effect replay measures the
+    // untransformed, full-screen image instead of the previous FLIP frame.
+    image.style.transition = 'none';
+    image.style.transform = 'translate3d(0, 0, 0) scale(1)';
+    const destination = image.getBoundingClientRect();
+    restRectRef.current = {
+      x: destination.x,
+      y: destination.y,
+      width: destination.width,
+      height: destination.height,
+    };
+    const flip = originRect ? getFlipTransform(originRect, restRectRef.current) : null;
+
+    image.style.transform = flip
+      ? `translate3d(${flip.x}px, ${flip.y}px, 0) scale(${flip.scale})`
+      : 'translate3d(0, 0, 0) scale(0.96)';
+    image.style.opacity = '1';
+
+    if (backdrop) {
+      backdrop.style.transition = 'none';
+      backdrop.style.opacity = '0';
+    }
+
+    let secondFrame = 0;
+    const firstFrame = requestAnimationFrame(() => {
+      secondFrame = requestAnimationFrame(() => {
+        if (backdrop) {
+          backdrop.style.transition = 'opacity 0.28s ease';
+          backdrop.style.opacity = '1';
+        }
+        image.style.transition = 'transform 0.32s cubic-bezier(0.22, 0.61, 0.36, 1)';
+        image.style.transform = 'translate3d(0, 0, 0) scale(1)';
+      });
+    });
+
+    return () => {
+      cancelAnimationFrame(firstFrame);
+      if (secondFrame) cancelAnimationFrame(secondFrame);
+    };
+  }, [originRect]);
+
+  useLayoutEffect(() => {
+    const container = containerRef.current;
+    if (!container || typeof ResizeObserver === 'undefined') return;
+    const observer = new ResizeObserver(() => setTrack(-container.clientWidth, false));
+    observer.observe(container);
+    return () => observer.disconnect();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // 打开时锁定页面滚动
   useEffect(() => {
-    const prev = document.body.style.overflow;
+    loadHiRes(index);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
     return () => {
-      document.body.style.overflow = prev;
+      document.body.style.overflow = previousOverflow;
     };
   }, []);
 
-  // index 变化：轨道复位 + 重置缩放 + 预加载高清
+  // A same-URL history entry lets the device/browser back action close the
+  // viewer with the same shrink animation instead of leaving the detail page.
   useEffect(() => {
-    if (!mountedRef.current) {
-      mountedRef.current = true;
-      return;
-    }
-    const c = containerRef.current;
-    if (c) setTrack(-c.clientWidth, false);
-    gRef.current.animating = false;
+    const marker = '__catsjust_image_viewer__';
+    window.history.pushState({ ...(window.history.state ?? {}), [marker]: true }, '', window.location.href);
+    historyEntryRef.current = true;
+
+    const handlePopState = () => {
+      if (!closingRef.current && historyEntryRef.current) {
+        historyEntryRef.current = false;
+        close(true);
+      }
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useLayoutEffect(() => {
+    const container = containerRef.current;
+    if (container) setTrack(-container.clientWidth, false);
+
+    if (initializedIndexRef.current === index) return;
+    initializedIndexRef.current = index;
+    gestureRef.current.animating = false;
     scaleRef.current = 1;
     txRef.current = 0;
     tyRef.current = 0;
-    setCurSrc(thumbUrl(images[index], 1200));
-    loadHi(index);
-    const img = curImgRef.current;
-    if (img) applyCur(1, 0, 0, false);
+    setCurSrc(thumbUrl(images[index] ?? '', 1200));
+    loadHiRes(index);
+    applyCurrentTransform(1, 0, 0, false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [index]);
 
-  function goNext() {
-    if (gRef.current.animating) return;
-    gRef.current.animating = true;
-    const c = containerRef.current;
-    if (!c) return;
-    setTrack(-2 * c.clientWidth, true);
-    setTimeout(() => onChangeIndex((indexRef.current + 1) % count), 330);
-  }
-  function goPrev() {
-    if (gRef.current.animating) return;
-    gRef.current.animating = true;
-    const c = containerRef.current;
-    if (!c) return;
-    setTrack(0, true);
-    setTimeout(() => onChangeIndex((indexRef.current - 1 + count) % count), 330);
-  }
-
-  function bounce() {
-    const c = containerRef.current;
-    if (!c) return;
-    const s = scaleRef.current;
-    const maxTx = ((s - 1) * c.clientWidth) / 2;
-    const maxTy = ((s - 1) * c.clientHeight) / 2;
-    txRef.current = clamp(txRef.current, -maxTx, maxTx);
-    tyRef.current = clamp(tyRef.current, -maxTy, maxTy);
-    applyCur(s, txRef.current, tyRef.current, true);
-  }
-
-  function close() {
-    if (closingRef.current) return;
-    closingRef.current = true;
-    const c = containerRef.current;
-    const img = curImgRef.current;
-    if (img && c && originRect) {
-      const cw = c.clientWidth;
-      const ch = c.clientHeight;
-      const sx = clamp(Math.min(originRect.width / cw, originRect.height / ch), 0.12, 1);
-      const ox = originRect.x + originRect.width / 2 - cw / 2;
-      const oy = originRect.y + originRect.height / 2 - ch / 2;
-      img.style.transition = 'transform 0.26s cubic-bezier(0.55, 0, 0.55, 0.2), opacity 0.26s ease';
-      img.style.transform = `translate3d(${ox}px, ${oy}px, 0) scale(${sx})`;
-      img.style.opacity = '0';
-      setTimeout(onClose, 280);
-    } else if (img) {
-      img.style.transition = 'opacity 0.2s ease';
-      img.style.opacity = '0';
-      setTimeout(onClose, 200);
-    } else {
-      onClose();
-    }
-  }
-
-  // 手势：原生非 passive 监听
   useEffect(() => {
-    const el = containerRef.current!;
-    const g = gRef.current;
+    const container = containerRef.current;
+    if (!container) return;
+    const viewer = container;
+    const gesture = gestureRef.current;
 
-    function onStart(e: TouchEvent) {
-      const ts = e.touches;
-      g.suppressClick = false;
-      g.moved = false;
-      if (ts.length === 1) {
-        g.mode = 'pan';
-        g.startX = ts[0].clientX;
-        g.startY = ts[0].clientY;
-        g.startTx = txRef.current;
-        g.startTy = tyRef.current;
-        g.lastX = ts[0].clientX;
-        g.lastY = ts[0].clientY;
-        g.lastT = Date.now();
-        g.velX = 0;
-      } else if (ts.length === 2) {
-        g.mode = 'pinch';
-        const dx = ts[0].clientX - ts[1].clientX;
-        const dy = ts[0].clientY - ts[1].clientY;
-        g.startDist = Math.hypot(dx, dy) || 1;
-        g.startScale = scaleRef.current;
+    function onTouchStart(event: TouchEvent) {
+      const touches = event.touches;
+      gesture.moved = false;
+      if (touches.length === 1) {
+        const touch = touches[0];
+        gesture.mode = 'pan';
+        gesture.startX = touch.clientX;
+        gesture.startY = touch.clientY;
+        gesture.startTx = txRef.current;
+        gesture.startTy = tyRef.current;
+        gesture.lastX = touch.clientX;
+        gesture.lastY = touch.clientY;
+        gesture.lastT = Date.now();
+        gesture.velX = 0;
+      } else if (touches.length === 2) {
+        gesture.mode = 'pinch';
+        const dx = touches[0].clientX - touches[1].clientX;
+        const dy = touches[0].clientY - touches[1].clientY;
+        gesture.startDist = Math.hypot(dx, dy) || 1;
+        gesture.startScale = scaleRef.current;
       }
     }
 
-    function onMove(e: TouchEvent) {
-      const ts = e.touches;
-      if (ts.length === 2 && g.mode === 'pinch') {
-        e.preventDefault();
-        g.moved = true;
-        g.suppressClick = true;
-        const dx = ts[0].clientX - ts[1].clientX;
-        const dy = ts[0].clientY - ts[1].clientY;
-        const dist = Math.hypot(dx, dy) || 1;
-        const ns = clamp((g.startScale * dist) / g.startDist, 1, 4);
-        scaleRef.current = ns;
-        applyCur(ns, txRef.current, tyRef.current, false);
-      } else if (ts.length === 1 && g.mode === 'pan') {
-        const x = ts[0].clientX;
-        const y = ts[0].clientY;
-        const dx = x - g.startX;
-        const dy = y - g.startY;
-        const now = Date.now();
-        const dt = now - g.lastT;
-        if (dt > 0) g.velX = (x - g.lastX) / dt;
-        g.lastX = x;
-        g.lastY = y;
-        g.lastT = now;
-        g.finalDx = dx;
-        if (Math.abs(dx) > 6 || Math.abs(dy) > 6) {
-          g.moved = true;
-          g.suppressClick = true;
-        }
-        if (scaleRef.current > 1.02) {
-          // 缩放态：平移
-          e.preventDefault();
-          const nx = g.startTx + dx;
-          const ny = g.startTy + dy;
-          const maxTx = ((scaleRef.current - 1) * el.clientWidth) / 2;
-          const maxTy = ((scaleRef.current - 1) * el.clientHeight) / 2;
-          txRef.current = clamp(nx, -maxTx, maxTx);
-          tyRef.current = clamp(ny, -maxTy, maxTy);
-          applyCur(scaleRef.current, txRef.current, tyRef.current, false);
-        } else {
-          // 缩放=1：轨道拖动跟手
-          e.preventDefault();
-          setTrack(-el.clientWidth + dx);
-        }
-      }
-    }
-
-    function onEnd() {
-      const w = el.clientWidth;
-      if (g.mode === 'pinch') {
-        if (scaleRef.current > 1.02) bounce();
-        g.mode = 'none';
+    function onTouchMove(event: TouchEvent) {
+      const touches = event.touches;
+      if (touches.length === 2 && gesture.mode === 'pinch') {
+        event.preventDefault();
+        gesture.moved = true;
+        const dx = touches[0].clientX - touches[1].clientX;
+        const dy = touches[0].clientY - touches[1].clientY;
+        const distance = Math.hypot(dx, dy) || 1;
+        const scale = clamp((gesture.startScale * distance) / gesture.startDist, 1, 4);
+        scaleRef.current = scale;
+        applyCurrentTransform(scale, txRef.current, tyRef.current);
         return;
       }
-      if (g.mode === 'pan') {
+
+      if (touches.length !== 1 || gesture.mode !== 'pan') return;
+      const touch = touches[0];
+      const dx = touch.clientX - gesture.startX;
+      const dy = touch.clientY - gesture.startY;
+      const now = Date.now();
+      const elapsed = now - gesture.lastT;
+      if (elapsed > 0) gesture.velX = (touch.clientX - gesture.lastX) / elapsed;
+      gesture.lastX = touch.clientX;
+      gesture.lastY = touch.clientY;
+      gesture.lastT = now;
+      gesture.finalDx = dx;
+      if (Math.abs(dx) > 6 || Math.abs(dy) > 6) gesture.moved = true;
+
+      event.preventDefault();
+      if (scaleRef.current > 1.02) {
+        const maxX = ((scaleRef.current - 1) * viewer.clientWidth) / 2;
+        const maxY = ((scaleRef.current - 1) * viewer.clientHeight) / 2;
+        txRef.current = clamp(gesture.startTx + dx, -maxX, maxX);
+        tyRef.current = clamp(gesture.startTy + dy, -maxY, maxY);
+        applyCurrentTransform(scaleRef.current, txRef.current, tyRef.current);
+      } else {
+        setTrack(-viewer.clientWidth + dx);
+      }
+    }
+
+    function onTouchEnd() {
+      if (gesture.mode === 'pinch') {
+        if (scaleRef.current > 1.02) bounceCurrentImage();
+        gesture.mode = 'none';
+        return;
+      }
+
+      if (gesture.mode === 'pan') {
         if (scaleRef.current > 1.02) {
-          bounce();
+          bounceCurrentImage();
         } else {
-          const dx = g.finalDx;
-          const flick = Math.abs(g.velX) > 0.55;
-          if (g.moved && (dx < -w * 0.25 || (dx < -40 && flick && g.velX < 0))) {
+          const width = viewer.clientWidth;
+          const flick = Math.abs(gesture.velX) > 0.55;
+          if (gesture.moved && (gesture.finalDx < -width * 0.25 || (gesture.finalDx < -40 && flick))) {
             goNext();
-          } else if (g.moved && (dx > w * 0.25 || (dx > 40 && flick && g.velX > 0))) {
+          } else if (gesture.moved && (gesture.finalDx > width * 0.25 || (gesture.finalDx > 40 && flick))) {
             if (indexRef.current === 0) close();
-            else goPrev();
+            else goPrevious();
           } else {
-            setTrack(-w, true); // 回弹
+            setTrack(-width, true);
           }
         }
-        g.mode = 'none';
+        gesture.mode = 'none';
       }
-      // 双击检测
+
       const now = Date.now();
-      if (!g.moved && now - g.lastTapT < 260) {
-        const ns = scaleRef.current > 1.2 ? 1 : 2.5;
-        scaleRef.current = ns;
-        if (ns === 1) {
+      if (!gesture.moved && now - gesture.lastTapT < 260) {
+        const nextScale = scaleRef.current > 1.2 ? 1 : 2.5;
+        scaleRef.current = nextScale;
+        if (nextScale === 1) {
           txRef.current = 0;
           tyRef.current = 0;
         }
-        applyCur(ns, txRef.current, tyRef.current, true);
-        g.lastTapT = 0;
-      } else if (!g.moved) {
-        g.lastTapT = now;
+        applyCurrentTransform(nextScale, txRef.current, tyRef.current, true);
+        gesture.lastTapT = 0;
+      } else if (!gesture.moved) {
+        gesture.lastTapT = now;
       }
     }
 
-    function onClick() {
-      if (g.suppressClick) {
-        g.suppressClick = false;
-        return;
-      }
+    function onContextMenu(event: MouseEvent) {
+      if ((event.target as Element).closest('[data-image-viewer-control]')) return;
+      event.preventDefault();
       close();
     }
 
-    el.addEventListener('touchstart', onStart, { passive: true });
-    el.addEventListener('touchmove', onMove, { passive: false });
-    el.addEventListener('touchend', onEnd, { passive: true });
-    el.addEventListener('touchcancel', onEnd, { passive: true });
-    el.addEventListener('click', onClick);
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.key === 'Escape' || (event.altKey && event.key === 'ArrowLeft')) {
+        event.preventDefault();
+        close();
+      }
+    }
+
+    container.addEventListener('touchstart', onTouchStart, { passive: true });
+    container.addEventListener('touchmove', onTouchMove, { passive: false });
+    container.addEventListener('touchend', onTouchEnd, { passive: true });
+    container.addEventListener('touchcancel', onTouchEnd, { passive: true });
+    container.addEventListener('contextmenu', onContextMenu);
+    window.addEventListener('keydown', onKeyDown);
 
     return () => {
-      el.removeEventListener('touchstart', onStart);
-      el.removeEventListener('touchmove', onMove);
-      el.removeEventListener('touchend', onEnd);
-      el.removeEventListener('touchcancel', onEnd);
-      el.removeEventListener('click', onClick);
+      container.removeEventListener('touchstart', onTouchStart);
+      container.removeEventListener('touchmove', onTouchMove);
+      container.removeEventListener('touchend', onTouchEnd);
+      container.removeEventListener('touchcancel', onTouchEnd);
+      container.removeEventListener('contextmenu', onContextMenu);
+      window.removeEventListener('keydown', onKeyDown);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (count === 0) return null;
 
-  const tri = (i: number) => images[((i % count) + count) % count];
-  const shown = [tri(index - 1), tri(index), tri(index + 1)];
+  const getImage = (imageIndex: number) => images[((imageIndex % count) + count) % count];
+  const shown = [getImage(index - 1), getImage(index), getImage(index + 1)];
 
   return (
     <div
       ref={containerRef}
-      className="fixed inset-0 z-[70] overflow-hidden bg-black/95"
+      className="fixed inset-0 z-[70] overflow-hidden"
       style={{ touchAction: 'none' }}
       role="dialog"
       aria-modal="true"
       aria-label={title ?? '图片查看'}
     >
-      {/* 轨道：前/当前/后（子项宽度=容器宽，-33.33% 使当前居中） */}
+      <div
+        ref={backdropRef}
+        aria-hidden="true"
+        className="absolute inset-0 bg-black/95"
+        style={{ opacity: 0, willChange: 'opacity' }}
+      />
+
       <div
         ref={trackRef}
-        className="flex h-full"
-        style={{ transform: 'translate3d(-33.333%,0,0)', willChange: 'transform' }}
+        className="relative flex h-full w-full"
+        style={{ transform: 'translate3d(0,0,0)', willChange: 'transform' }}
       >
-        {shown.map((img, i) => (
-          <div key={`${index}-${i}`} className="flex h-full w-full shrink-0 items-center justify-center">
+        {shown.map((image, imagePosition) => (
+          <div
+            key={`${index}-${imagePosition}`}
+            className="flex h-full shrink-0 items-center justify-center"
+            style={{ flexBasis: '100%' }}
+          >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              ref={i === 1 ? curImgRef : null}
-              src={i === 1 ? curSrc : thumbUrl(img, 1200)}
-              alt={`${title ?? '图片'} ${((index + i - 1 + count) % count) + 1}`}
+              ref={imagePosition === 1 ? curImgRef : null}
+              src={imagePosition === 1 ? curSrc : thumbUrl(image, 1200)}
+              alt={`${title ?? '图片'} ${((index + imagePosition - 1 + count) % count) + 1}`}
               draggable={false}
-              className="max-h-full max-w-full select-none object-contain"
-              style={i === 1 ? { willChange: 'transform' } : undefined}
+              className="block max-h-full max-w-full select-none object-contain"
+              style={imagePosition === 1 ? { willChange: 'transform' } : undefined}
             />
           </div>
         ))}
       </div>
 
-      {/* 右上角计数 */}
-      <span className="pointer-events-none absolute right-4 top-4 rounded-full bg-black/50 px-3 py-1 text-xs font-medium text-white">
-        {index + 1} / {count}
-      </span>
+      <button
+        type="button"
+        data-image-viewer-control
+        onClick={() => close()}
+        className="absolute left-4 top-4 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-black/45 text-white transition hover:bg-black/65"
+        aria-label="返回"
+        title="返回"
+      >
+        <ArrowLeft className="h-5 w-5" />
+      </button>
 
-      {/* 底部小点 */}
       {count > 1 && (
-        <div className="pointer-events-none absolute inset-x-0 bottom-6 flex items-center justify-center gap-1.5">
-          {images.map((_, i) => (
-            <span
-              key={i}
-              className={cn(
-                'h-1.5 rounded-full transition-all duration-200',
-                i === index ? 'w-5 bg-white' : 'w-1.5 bg-white/40'
-              )}
-            />
-          ))}
-        </div>
+        <>
+          <span className="pointer-events-none absolute right-4 top-4 z-10 rounded-full bg-black/50 px-3 py-1 text-xs font-medium text-white">
+            {index + 1} / {count}
+          </span>
+          <div className="pointer-events-none absolute inset-x-0 bottom-6 z-10 flex items-center justify-center gap-1.5">
+            {images.map((_, imageIndex) => (
+              <span
+                key={imageIndex}
+                className={cn(
+                  'h-1.5 rounded-full transition-all duration-200',
+                  imageIndex === index ? 'w-5 bg-white' : 'w-1.5 bg-white/40'
+                )}
+              />
+            ))}
+          </div>
+        </>
       )}
-
-      <span className="pointer-events-none absolute bottom-16 left-1/2 -translate-x-1/2 text-xs text-white/50">
-        捏合缩放 · 双击放大 · 点击关闭
-      </span>
     </div>
   );
 }

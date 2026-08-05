@@ -23,9 +23,9 @@ type PlaybackStatus = 'idle' | 'loading' | 'ready' | 'failed';
  */
 export function VideoPlayer({ src, poster, fill = false, autoPlay = false }: VideoPlayerProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
-  // Supabase 直链优先（手机播放器兼容性最佳，用户以前可正常播放）；/v/ 代理兜底
-  const primarySource = src;
-  const proxySource = useMemo(() => proxyMediaUrl(src), [src]);
+  // /v/ 同源代理优先（Vercel 边缘响应快）；Supabase 直链兜底（超时自动切换）
+  const primarySource = useMemo(() => proxyMediaUrl(src), [src]);
+  const proxySource = src;
   const [source, setSource] = useState(primarySource);
   const [usingFallback, setUsingFallback] = useState(false);
   const [status, setStatus] = useState<PlaybackStatus>(src ? 'loading' : 'failed');
@@ -94,14 +94,17 @@ export function VideoPlayer({ src, poster, fill = false, autoPlay = false }: Vid
   handleReadyRef.current = handleReady;
   const handleErrorRef = useRef(handleError);
   handleErrorRef.current = handleError;
+  const usingFallbackRef = useRef(usingFallback);
+  usingFallbackRef.current = usingFallback;
 
-  // 兜底：某些环境 canplay/loadeddata 事件可能不派发（后台 WebView 等），
-  // 轮询 readyState >= 3 确保不卡在「加载中」
+  // 兜底：① 某些环境 canplay/loadeddata 事件不派发 → 轮询 readyState >= 3；
+  // ② 当前源加载超时（8s 无数据）→ 自动切换到备用线路，避免一直转圈
   useEffect(() => {
     const video = videoRef.current;
     if (!video || !shouldLoadSource) return;
     let cancelled = false;
     let timer = 0;
+    const startedAt = Date.now();
     const poll = () => {
       if (cancelled) return;
       if (video.error) {
@@ -110,6 +113,11 @@ export function VideoPlayer({ src, poster, fill = false, autoPlay = false }: Vid
       }
       if (video.readyState >= 3) {
         handleReadyRef.current();
+        return;
+      }
+      if (Date.now() - startedAt > 8000 && !usingFallbackRef.current) {
+        // 超时自动切备用线路（直链 <-> 代理）
+        handleErrorRef.current();
         return;
       }
       timer = window.setTimeout(poll, 400);

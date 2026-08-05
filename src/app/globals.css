@@ -166,14 +166,14 @@ input[type='time']::-webkit-calendar-picker-indicator {
 }
 
 /* 全局动画 */
+/* 注意：fadeInUp 不能带 transform —— PageTransition 用它包裹全页，
+   带 transform 的祖先会让 Chromium 无法合成渲染 <video>（画面消失但解码正常）。 */
 @keyframes fadeInUp {
   from {
     opacity: 0;
-    transform: translateY(8px);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
   }
 }
 .animate-fade-in-up {

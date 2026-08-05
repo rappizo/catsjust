@@ -158,14 +158,14 @@ export function MediaCarousel({ media, title }: MediaCarouselProps) {
         className="relative overflow-hidden rounded-2xl bg-stone-950"
         style={{ touchAction: 'pan-y' }}
       >
-        {/* 轨道：前/当前/后 三张，-33.33% 使当前居中 */}
+        {/* 轨道：前/当前/后 三张，-33.33% 使当前居中；不同高度图片上下居中 */}
         <div
           ref={trackRef}
-          className="flex"
+          className="flex items-center"
           style={{ transform: 'translate3d(-33.333%,0,0)', willChange: 'transform' }}
         >
           {shown.map((img, i) => (
-            <div key={`${index}-${i}`} className="w-full shrink-0">
+            <div key={`${index}-${i}`} className="flex w-full shrink-0 items-center justify-center">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={thumbUrl(img.url, 1200)}

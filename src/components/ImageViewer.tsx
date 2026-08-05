@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { cn } from '@/lib/utils';
 import { thumbUrl } from '@/lib/img';
 
@@ -81,38 +81,33 @@ export function ImageViewer({ images, index, onChangeIndex, onClose, title, orig
     };
   }
 
-  // 打开：FLIP 从卡片位放大 + 后台预加载高清
-  useEffect(() => {
+  // 打开：FLIP 从卡片位无缝放大（useLayoutEffect 在浏览器绘制前同步设初始帧，无闪跳）
+  useLayoutEffect(() => {
     const c = containerRef.current;
     const img = curImgRef.current;
-    const id = setTimeout(() => {
-      if (img && c) {
-        const cw = c.clientWidth;
-        const ch = c.clientHeight;
-        let sx = 0.92;
-        let ox = 0;
-        let oy = 0;
-        if (originRect) {
-          sx = clamp(Math.min(originRect.width / cw, originRect.height / ch), 0.12, 1);
-          ox = originRect.x + originRect.width / 2 - cw / 2;
-          oy = originRect.y + originRect.height / 2 - ch / 2;
-        }
-        img.style.transition = 'none';
-        img.style.transform = `translate3d(${ox}px, ${oy}px, 0) scale(${sx})`;
-        img.style.opacity = '0.5';
-        setTimeout(() => {
-          img.style.transition = 'transform 0.3s cubic-bezier(0.22, 0.61, 0.36, 1), opacity 0.3s ease';
-          img.style.transform = 'translate3d(0, 0, 0) scale(1)';
-          img.style.opacity = '1';
-        }, 20);
+    if (img && c) {
+      const cw = c.clientWidth;
+      const ch = c.clientHeight;
+      let sx = 0.92;
+      let ox = 0;
+      let oy = 0;
+      if (originRect) {
+        sx = clamp(Math.min(originRect.width / cw, originRect.height / ch), 0.12, 1);
+        ox = originRect.x + originRect.width / 2 - cw / 2;
+        oy = originRect.y + originRect.height / 2 - ch / 2;
       }
-    }, 20);
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-    return () => {
-      clearTimeout(id);
-      document.body.style.overflow = prev;
-    };
+      // 绘制前同步设置 FLIP 初始帧（卡片位小图）
+      img.style.transition = 'none';
+      img.style.transform = `translate3d(${ox}px, ${oy}px, 0) scale(${sx})`;
+      img.style.opacity = '0.5';
+      // 下一帧动画到全屏
+      const timer = setTimeout(() => {
+        img.style.transition = 'transform 0.3s cubic-bezier(0.22, 0.61, 0.36, 1), opacity 0.3s ease';
+        img.style.transform = 'translate3d(0, 0, 0) scale(1)';
+        img.style.opacity = '1';
+      }, 20);
+      return () => clearTimeout(timer);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -120,6 +115,15 @@ export function ImageViewer({ images, index, onChangeIndex, onClose, title, orig
   useEffect(() => {
     loadHi(index);
     // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // 打开时锁定页面滚动
+  useEffect(() => {
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = prev;
+    };
   }, []);
 
   // index 变化：轨道复位 + 重置缩放 + 预加载高清
@@ -345,14 +349,14 @@ export function ImageViewer({ images, index, onChangeIndex, onClose, title, orig
       aria-modal="true"
       aria-label={title ?? '图片查看'}
     >
-      {/* 轨道：前/当前/后 */}
+      {/* 轨道：前/当前/后（子项宽度=容器宽，-33.33% 使当前居中） */}
       <div
         ref={trackRef}
         className="flex h-full"
-        style={{ transform: 'translate3d(-100vw,0,0)', willChange: 'transform' }}
+        style={{ transform: 'translate3d(-33.333%,0,0)', willChange: 'transform' }}
       >
         {shown.map((img, i) => (
-          <div key={`${index}-${i}`} className="flex h-full w-screen shrink-0 items-center justify-center">
+          <div key={`${index}-${i}`} className="flex h-full w-full shrink-0 items-center justify-center">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               ref={i === 1 ? curImgRef : null}

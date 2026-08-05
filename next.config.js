@@ -10,6 +10,19 @@ const nextConfig = {
       },
     ],
   },
+  // 媒体代理（本地 dev / next start 也生效；生产由 vercel.json 处理，二者配置一致）
+  async rewrites() {
+    return [
+      {
+        source: '/apk/:path*',
+        destination: 'https://atphtzpdclbavrplmumk.supabase.co/storage/v1/object/public/media/apk/:path*',
+      },
+      {
+        source: '/v/:path*',
+        destination: 'https://atphtzpdclbavrplmumk.supabase.co/storage/v1/object/public/media/:path*',
+      },
+    ];
+  },
 };
 
 module.exports = nextConfig;

@@ -23,8 +23,9 @@ type PlaybackStatus = 'idle' | 'loading' | 'ready' | 'failed';
  */
 export function VideoPlayer({ src, poster, fill = false, autoPlay = false }: VideoPlayerProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const primarySource = src;
-  const proxySource = useMemo(() => proxyMediaUrl(src), [src]);
+  // /v/ 同源代理优先（Vercel 全球边缘 + Cloudflare，国内可播）；Supabase 直链兜底
+  const primarySource = useMemo(() => proxyMediaUrl(src), [src]);
+  const proxySource = src;
   const [source, setSource] = useState(primarySource);
   const [usingFallback, setUsingFallback] = useState(false);
   const [status, setStatus] = useState<PlaybackStatus>(src ? 'loading' : 'failed');

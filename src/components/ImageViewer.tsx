@@ -18,30 +18,14 @@ type ImageRect = { x: number; y: number; width: number; height: number };
 
 const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
 
-function getFlipTransform(origin: ImageRect, destination: ImageRect) {
-  const scale = clamp(
-    Math.min(origin.width / destination.width, origin.height / destination.height),
-    0.05,
-    1
-  );
-
-  return {
-    scale,
-    x: origin.x + origin.width / 2 - (destination.x + destination.width / 2),
-    y: origin.y + origin.height / 2 - (destination.y + destination.height / 2),
-  };
-}
-
 export function ImageViewer({ images, index, onChangeIndex, onClose, title, originRect }: ImageViewerProps) {
   const count = images.length;
   const containerRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const curImgRef = useRef<HTMLImageElement>(null);
   const backdropRef = useRef<HTMLDivElement>(null);
-  const restRectRef = useRef<ImageRect | null>(null);
   const historyEntryRef = useRef(false);
   const closingRef = useRef(false);
-  const openingRef = useRef(false);
   const initializedIndexRef = useRef(index);
   const [curSrc, setCurSrc] = useState(() => thumbUrl(images[index] ?? '', 1200));
 
@@ -99,17 +83,25 @@ export function ImageViewer({ images, index, onChangeIndex, onClose, title, orig
 
     const image = curImgRef.current;
     const backdrop = backdropRef.current;
-    const destination = restRectRef.current;
-    const flip = image && destination && originRect ? getFlipTransform(originRect, destination) : null;
+    const container = containerRef.current;
 
     if (backdrop) {
       backdrop.style.transition = 'opacity 0.24s ease';
       backdrop.style.opacity = '0';
     }
 
-    if (image && flip) {
-      image.style.transition = 'transform 0.28s cubic-bezier(0.55, 0, 0.55, 0.2)';
-      image.style.transform = `translate3d(${flip.x}px, ${flip.y}px, 0) scale(${flip.scale})`;
+    // FLIP 缩回：用容器比例估算（不依赖图片加载完成），必定缩放缩回
+    let hasFlip = false;
+    if (image && container && originRect) {
+      const cw = container.clientWidth;
+      const ch = container.clientHeight;
+      const sx = clamp(Math.min(originRect.width / cw, originRect.height / ch), 0.12, 1);
+      const ox = originRect.x + originRect.width / 2 - cw / 2;
+      const oy = originRect.y + originRect.height / 2 - ch / 2;
+      image.style.transition = 'transform 0.28s cubic-bezier(0.55, 0, 0.55, 0.2), opacity 0.28s ease';
+      image.style.transform = `translate3d(${ox}px, ${oy}px, 0) scale(${sx})`;
+      image.style.opacity = '0';
+      hasFlip = true;
     } else if (image) {
       image.style.transition = 'opacity 0.2s ease';
       image.style.opacity = '0';
@@ -121,7 +113,7 @@ export function ImageViewer({ images, index, onChangeIndex, onClose, title, orig
         window.history.back();
       }
       onClose();
-    }, flip ? 300 : 220);
+    }, hasFlip ? 300 : 220);
   }
 
   function goNext() {
@@ -153,71 +145,44 @@ export function ImageViewer({ images, index, onChangeIndex, onClose, title, orig
     applyCurrentTransform(scale, txRef.current, tyRef.current, true);
   }
 
-  // This has to run before measuring the expanded image. Percentage translation
-  // refers to the track instead of a slide and is what caused the split image.
-  useLayoutEffect(() => {
-    const container = containerRef.current;
-    if (container) setTrack(-container.clientWidth, false);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
+  // 打开动画：立即播放 FLIP（不等图片加载，图片内容随动画呈现，无黑屏等待）
   useLayoutEffect(() => {
     const image = curImgRef.current;
     const backdrop = backdropRef.current;
-    if (!image) return;
+    const container = containerRef.current;
+    if (!image || !container) return;
 
-    let secondFrame = 0;
-    let firstFrame = 0;
+    const cw = container.clientWidth;
+    const ch = container.clientHeight;
+    let sx = 0.96;
+    let ox = 0;
+    let oy = 0;
+    if (originRect) {
+      sx = clamp(Math.min(originRect.width / cw, originRect.height / ch), 0.12, 1);
+      ox = originRect.x + originRect.width / 2 - cw / 2;
+      oy = originRect.y + originRect.height / 2 - ch / 2;
+    }
+    // 绘制前同步设置 FLIP 初始帧（卡片位小图，半透明）
+    image.style.transition = 'none';
+    image.style.transform = `translate3d(${ox}px, ${oy}px, 0) scale(${sx})`;
+    image.style.opacity = '0.6';
+    if (backdrop) {
+      backdrop.style.transition = 'none';
+      backdrop.style.opacity = '0';
+    }
 
-    const startOpening = () => {
-      if (openingRef.current || !image.naturalWidth || !image.naturalHeight) return;
-      openingRef.current = true;
-
-      // Reset first so React Strict Mode's development effect replay measures
-      // the untransformed full-screen image instead of the previous FLIP frame.
-      image.style.transition = 'none';
+    // 下一帧动画到全屏（图片内容随加载呈现，不影响动画）
+    const timer = setTimeout(() => {
+      image.style.transition = 'transform 0.32s cubic-bezier(0.22, 0.61, 0.36, 1), opacity 0.32s ease';
       image.style.transform = 'translate3d(0, 0, 0) scale(1)';
-      const destination = image.getBoundingClientRect();
-      restRectRef.current = {
-        x: destination.x,
-        y: destination.y,
-        width: destination.width,
-        height: destination.height,
-      };
-      const flip = originRect ? getFlipTransform(originRect, restRectRef.current) : null;
-
-      image.style.transform = flip
-        ? `translate3d(${flip.x}px, ${flip.y}px, 0) scale(${flip.scale})`
-        : 'translate3d(0, 0, 0) scale(0.96)';
       image.style.opacity = '1';
-
       if (backdrop) {
-        backdrop.style.transition = 'none';
-        backdrop.style.opacity = '0';
+        backdrop.style.transition = 'opacity 0.28s ease';
+        backdrop.style.opacity = '1';
       }
+    }, 20);
 
-      firstFrame = requestAnimationFrame(() => {
-        secondFrame = requestAnimationFrame(() => {
-          if (backdrop) {
-            backdrop.style.transition = 'opacity 0.28s ease';
-            backdrop.style.opacity = '1';
-          }
-          image.style.transition = 'transform 0.32s cubic-bezier(0.22, 0.61, 0.36, 1)';
-          image.style.transform = 'translate3d(0, 0, 0) scale(1)';
-        });
-      });
-    };
-
-    image.style.opacity = '0';
-    if (image.complete) startOpening();
-    else image.addEventListener('load', startOpening, { once: true });
-
-    return () => {
-      image.removeEventListener('load', startOpening);
-      cancelAnimationFrame(firstFrame);
-      if (secondFrame) cancelAnimationFrame(secondFrame);
-      openingRef.current = false;
-    };
+    return () => clearTimeout(timer);
     // The origin is captured only when this viewer opens.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

@@ -54,7 +54,7 @@ export default async function PublishPage({
     supabase.from('breeds').select('name').order('name'),
   ]);
 
-  // 编辑模式：加载自己的笔记
+  // 编辑模式：加载自己的笔记（含已发布——编辑后重新送审，审核通过覆盖原内容）
   let editNote: Note | null = null;
   if (editId) {
     const { data: note } = await supabase
@@ -63,7 +63,7 @@ export default async function PublishPage({
       .eq('id', editId)
       .eq('author_id', user.id)
       .maybeSingle();
-    if (note && note.status !== 'published') editNote = note as Note;
+    if (note) editNote = note as Note;
   }
 
   return (

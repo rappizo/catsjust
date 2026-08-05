@@ -20,6 +20,7 @@ import { createCat } from '@/lib/actions/cats';
 import { publishNote, saveDraft, editNote as editNoteAction } from '@/lib/actions/notes';
 import { CAT_BREEDS, CAT_PERSONALITY_TAGS, LIMITS } from '@/lib/constants';
 import { compressImageFile } from '@/lib/imageCompress';
+import { thumbUrl } from '@/lib/img';
 import { captureVideoFrame, cn, isImageFile, isVideoFile, readVideoDuration } from '@/lib/utils';
 import { compressVideoFile, VIDEO_COMPRESS_THRESHOLD } from '@/lib/videoCompress';
 import { useI18n } from '@/lib/i18n';
@@ -214,11 +215,11 @@ export function PublishForm({ userId, initialCats, topics, breeds = [], editNote
     if (submitting) return;
     setError('');
 
-    if (mediaType === 'image' && images.length === 0) {
+    if (!isEditing && mediaType === 'image' && images.length === 0) {
       setError(t('publish', 'needImageError'));
       return;
     }
-    if (mediaType === 'video' && !video) {
+    if (!isEditing && mediaType === 'video' && !video) {
       setError(t('publish', 'needVideoError'));
       return;
     }
@@ -384,7 +385,37 @@ export function PublishForm({ userId, initialCats, topics, breeds = [], editNote
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      {!isEditing && (
+      {isEditing ? (
+        /* 编辑模式：展示当前媒体（编辑不改媒体，仅改标题/正文/话题重新送审） */
+        <section className="rounded-2xl border border-stone-200/60 bg-white p-4 shadow-card">
+          <h3 className="mb-3 text-sm font-semibold text-ink">
+            {editNote?.media_type === 'video'
+              ? t('publish', 'uploadVideo')
+              : t('publish', 'uploadImages').replace('{max}', String(LIMITS.MAX_IMAGES))}
+            <span className="ml-2 text-xs font-normal text-stone-400">编辑不修改图片/视频</span>
+          </h3>
+          {editNote?.media_type === 'video' ? (
+            <video
+              src={editNote.media?.[0]?.url}
+              poster={editNote.media?.[0]?.poster ?? undefined}
+              className="max-h-72 w-full rounded-xl bg-stone-950"
+              controls
+              preload="metadata"
+            />
+          ) : (
+            <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
+              {(editNote?.media ?? [])
+                .filter((m) => m.type === 'image')
+                .map((m, i) => (
+                  <div key={m.url + i} className="aspect-square overflow-hidden rounded-xl bg-stone-100">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={thumbUrl(m.url, 640)} alt="" className="h-full w-full object-contain" />
+                  </div>
+                ))}
+            </div>
+          )}
+        </section>
+      ) : (
         <>
       {/* 媒体类型切换 */}
       <div className="grid grid-cols-2 gap-2 rounded-2xl bg-stone-100 p-1.5">
@@ -432,12 +463,13 @@ export function PublishForm({ userId, initialCats, topics, breeds = [], editNote
                   setDragIndex(null);
                 }}
                 className={cn(
-                  'group relative aspect-square cursor-grab overflow-hidden rounded-xl border-2',
+                  'group relative aspect-square cursor-grab overflow-hidden rounded-xl border-2 bg-stone-100',
                   dragIndex === i ? 'border-brand-400 opacity-60' : 'border-transparent'
                 )}
               >
+                {/* 完整展示图片，不裁切 */}
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={img.preview} alt="" className="h-full w-full object-cover" />
+                <img src={img.preview} alt="" className="h-full w-full object-contain" />
                 {i === 0 && (
                   <span className="absolute left-1.5 top-1.5 rounded bg-brand-500 px-1.5 py-0.5 text-[10px] font-semibold text-[#04281a]">
                     {t('publish', 'coverLabel')}
@@ -548,8 +580,6 @@ export function PublishForm({ userId, initialCats, topics, breeds = [], editNote
       )}
       </>
       )}
-
-      {/* 标题与正文 */}
       <section className="space-y-4 rounded-2xl border border-stone-200/60 bg-white p-4 shadow-card">
         <div>
           <label htmlFor="title" className="mb-1.5 block text-sm font-semibold text-ink">

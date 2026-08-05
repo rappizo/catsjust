@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 
 import androidx.activity.OnBackPressedCallback;
@@ -23,6 +24,15 @@ public class MainActivity extends BridgeActivity {
         flags &= ~View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
         flags &= ~View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR;
         window.getDecorView().setSystemUiVisibility(flags);
+
+        // 始终加载最新线上内容：禁用 HTTP 缓存并清理，避免旧页面/旧 JS
+        // 导致的功能问题（如视频播放仍走旧逻辑）。站点 HTML 本身 no-store，
+        // 这里再兜底保证 WebView 每次导航都重新获取。
+        WebView webView = getBridge() != null ? getBridge().getWebView() : null;
+        if (webView != null) {
+            webView.clearCache(true);
+            webView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
+        }
 
         // 返回手势/按键：WebView 有历史则回退上一页，无历史才退出 App
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {

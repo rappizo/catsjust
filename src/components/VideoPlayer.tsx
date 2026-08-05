@@ -90,6 +90,37 @@ export function VideoPlayer({ src, poster, fill = false, autoPlay = false }: Vid
     setNeedsManualPlay(false);
   }
 
+  const handleReadyRef = useRef(handleReady);
+  handleReadyRef.current = handleReady;
+  const handleErrorRef = useRef(handleError);
+  handleErrorRef.current = handleError;
+
+  // 兜底：某些环境 canplay/loadeddata 事件可能不派发（后台 WebView 等），
+  // 轮询 readyState >= 3 确保不卡在「加载中」
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video || !shouldLoadSource) return;
+    let cancelled = false;
+    let timer = 0;
+    const poll = () => {
+      if (cancelled) return;
+      if (video.error) {
+        handleErrorRef.current();
+        return;
+      }
+      if (video.readyState >= 3) {
+        handleReadyRef.current();
+        return;
+      }
+      timer = window.setTimeout(poll, 400);
+    };
+    timer = window.setTimeout(poll, 600);
+    return () => {
+      cancelled = true;
+      clearTimeout(timer);
+    };
+  }, [source, retryKey, shouldLoadSource]);
+
   function retry() {
     setUsingFallback(false);
     setSource(primarySource);

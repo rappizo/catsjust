@@ -67,6 +67,7 @@ export default async function NotePage({ params }: { params: { id: string } }) {
       .from('notes')
       .select('*, author:profiles(*), cat:cats(*), topic:topics(*)')
       .eq('status', 'published')
+      .eq('media_type', 'video')
       .order('created_at', { ascending: false })
       .limit(30);
 

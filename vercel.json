@@ -3,10 +3,6 @@
     {
       "source": "/apk/:path*",
       "destination": "https://atphtzpdclbavrplmumk.supabase.co/storage/v1/object/public/media/apk/:path*"
-    },
-    {
-      "source": "/v/:path*",
-      "destination": "https://atphtzpdclbavrplmumk.supabase.co/storage/v1/object/public/media/:path*"
     }
   ],
   "headers": [
@@ -14,12 +10,6 @@
       "source": "/apk/:path*",
       "headers": [
         { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
-      ]
-    },
-    {
-      "source": "/v/:path*",
-      "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=86400, stale-while-revalidate=604800" }
       ]
     }
   ]

@@ -17,10 +17,6 @@ const nextConfig = {
         source: '/apk/:path*',
         destination: 'https://atphtzpdclbavrplmumk.supabase.co/storage/v1/object/public/media/apk/:path*',
       },
-      {
-        source: '/v/:path*',
-        destination: 'https://atphtzpdclbavrplmumk.supabase.co/storage/v1/object/public/media/:path*',
-      },
     ];
   },
 };

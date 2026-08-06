@@ -1,11 +1,13 @@
 package com.catsjust.app;
 
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.window.OnBackInvokedDispatcher;
 
 import androidx.activity.OnBackPressedCallback;
 
@@ -34,18 +36,30 @@ public class MainActivity extends BridgeActivity {
             webView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
         }
 
-        // 返回手势/按键：WebView 有历史则回退上一页，无历史才退出 App
+        // 统一的返回处理：WebView 有历史则回退上一页，无历史才退出 App
+        Runnable backAction = () -> {
+            WebView wv = getBridge() != null ? getBridge().getWebView() : null;
+            if (wv != null && wv.canGoBack()) {
+                wv.goBack();
+            } else {
+                finish();
+            }
+        };
+
+        // 预测性返回（Android 13+ 的右滑手势）：当 targetSdk >= 35 时，manifest 里的
+        // enableOnBackInvokedCallback=false 会被系统忽略，预测性返回强制开启，
+        // 右滑手势走 OnBackInvokedDispatcher。必须显式注册回调，
+        // 否则右滑会绕过 canGoBack 逻辑直接退出 App。
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            getOnBackInvokedDispatcher().registerOnBackInvokedCallback(
+                    OnBackInvokedDispatcher.PRIORITY_DEFAULT, backAction::run);
+        }
+
+        // 传统返回（返回键 / 预测性返回未启用时的右滑）：WebView 有历史则回退，无历史才退出
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                WebView webView = getBridge() != null ? getBridge().getWebView() : null;
-                if (webView != null && webView.canGoBack()) {
-                    webView.goBack();
-                } else {
-                    // 交给默认处理（退出 / 回到桌面）
-                    setEnabled(false);
-                    getOnBackPressedDispatcher().onBackPressed();
-                }
+                backAction.run();
             }
         });
     }

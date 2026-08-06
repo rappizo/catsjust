@@ -16,7 +16,9 @@ interface VideoPlayerProps {
 export function VideoPlayer({ src, poster, fill = false, autoPlay = false }: VideoPlayerProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  // autoPlay 变化：变为可见 → 播放；不可见 → 暂停
+  // autoPlay 变化：变为可见 → 先尝试带声播放（桌面浏览器允许），
+  // 被浏览器拦截（如手机端不允许带声自动播放）→ 才回退为静音播放；
+  // 不可见 → 暂停
   useEffect(() => {
     const v = videoRef.current;
     if (!v) return;
@@ -24,8 +26,23 @@ export function VideoPlayer({ src, poster, fill = false, autoPlay = false }: Vid
       v.pause();
       return;
     }
-    const p = v.play();
-    if (p) p.catch(() => {});
+    let cancelled = false;
+    (async () => {
+      try {
+        await v.play();
+      } catch {
+        if (cancelled) return;
+        v.muted = true;
+        try {
+          await v.play();
+        } catch {
+          /* 忽略播放失败 */
+        }
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
   }, [autoPlay, src]);
 
   return (
@@ -37,8 +54,6 @@ export function VideoPlayer({ src, poster, fill = false, autoPlay = false }: Vid
         poster={poster ?? undefined}
         controls
         playsInline
-        autoPlay={autoPlay}
-        muted={autoPlay}
         preload="auto"
         className={fill ? 'h-full w-full object-contain' : 'max-h-[70vh] w-full'}
       >

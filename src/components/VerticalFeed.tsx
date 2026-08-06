@@ -324,7 +324,7 @@ function FeedItem({
       </div>
 
       {/* 右侧操作栏 */}
-      <div className="absolute bottom-16 right-2 z-20">
+      <div className="absolute bottom-16 right-1 z-20">
         <div className="flex flex-col items-center gap-5">
           <FeedActions
             liked={liked}
@@ -344,6 +344,7 @@ function FeedItem({
             targetUserId={note.author_id}
             variant="dark"
             label="举报"
+            className="mb-4"
           />
         </div>
       </div>

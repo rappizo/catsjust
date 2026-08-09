@@ -1,0 +1,49 @@
+{
+  "expo": {
+    "name": "只有猫",
+    "slug": "catsjust",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "scheme": "catsjust",
+    "userInterfaceStyle": "dark",
+    "newArchEnabled": true,
+    "splash": {
+      "backgroundColor": "#0a0a12",
+      "resizeMode": "contain"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.catsjust.app"
+    },
+    "android": {
+      "package": "com.catsjust.app",
+      "edgeToEdgeEnabled": true,
+      "adaptiveIcon": {
+        "backgroundColor": "#0a0a12"
+      }
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-secure-store",
+        {
+          "configureAndroidBackup": true,
+          "faceIDPermission": "允许「只有猫」使用面容 ID 保护登录状态。"
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "允许「只有猫」访问相册，用于发布猫咪照片和视频。",
+          "cameraPermission": "允许「只有猫」使用相机拍摄猫咪。"
+        }
+      ],
+      "expo-asset",
+      "expo-video",
+      "expo-notifications"
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}

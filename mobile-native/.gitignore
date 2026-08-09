@@ -1,0 +1,30 @@
+# dependencies
+node_modules/
+
+# Expo
+.expo/
+dist/
+web-build/
+expo-env.d.ts
+
+# native builds（Expo 生成目录不入库，构建时 prebuild 重新生成；含签名配置）
+/android/
+/ios/
+*.orig.*
+*.jks
+*.p8
+*.p12
+*.key
+*.keystore
+*.mobileprovision
+
+# macOS
+.DS_Store
+
+# env（本地密钥，勿提交）
+.env
+.env.local
+
+# debug
+npm-debug.*
+yarn-debug.*

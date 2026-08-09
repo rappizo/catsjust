@@ -2,7 +2,9 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import QRCode from 'qrcode';
 import { Check, Download, Smartphone, ShieldAlert } from 'lucide-react';
-import { APP_VERSION } from '@/lib/version';
+
+/** 当前分发版本（原生 App，独立于套壳 APP_VERSION） */
+const NATIVE_APP_VERSION = '1.0.0';
 
 export const metadata: Metadata = {
   title: '下载 App · 只有猫',
@@ -17,15 +19,15 @@ const APK_URL = process.env.NEXT_PUBLIC_APK_URL || '';
 const APK_FALLBACK_URL = process.env.NEXT_PUBLIC_APK_URL_FALLBACK || '';
 
 const STEPS = [
-  { title: '点击下载 APK', desc: '点上方「下载安卓版」按钮，获取安装包（约 4 MB）' },
+  { title: '点击下载 APK', desc: '点上方「下载安卓版」按钮，获取安装包（约 35 MB）' },
   { title: '允许安装未知来源', desc: '安卓系统会提示「禁止安装未知应用」，点击「设置」→ 允许来自此来源的安装' },
   { title: '安装并打开', desc: '安装完成后打开「只有猫」，登录账号即可开始云吸猫' },
 ];
 
 const FAQS = [
   { q: '为什么需要允许未知来源？', a: '「只有猫」未上架应用商店，属于独立分发，安卓系统会默认拦截非商店应用，需手动放行。安装包由官方发布，可放心安装。' },
-  { q: 'App 与网站内容同步吗？', a: '完全同步。App 是网站的封装壳，登录同一账号后，作品、消息、推荐全部实时一致。' },
-  { q: '有 iOS 版吗？', a: 'iOS 版正在规划中，暂可通过浏览器访问 www.catsjust.com 获得同等体验。' },
+  { q: 'App 与网站内容同步吗？', a: '完全同步。App 为原生开发，与网站共享同一云端，登录同一账号后，作品、消息、推荐全部实时一致。' },
+  { q: '有 iOS 版吗？', a: 'iOS 版正在准备中，暂可通过浏览器访问 www.catsjust.com 获得同等体验。' },
 ];
 
 export default async function DownloadPage() {
@@ -58,7 +60,7 @@ export default async function DownloadPage() {
         <div className="flex flex-col items-center justify-center rounded-3xl border border-stone-200/60 bg-white p-6 text-center shadow-card">
           <div className="mb-4 flex items-center gap-2 text-sm text-stone-400">
             <Smartphone className="h-4 w-4" />
-            最新版 · v{APP_VERSION}
+            最新版 · v{NATIVE_APP_VERSION}
             <span className="rounded-full bg-brand-500/15 px-2 py-0.5 text-[11px] font-medium text-brand-600">
               正式版
             </span>

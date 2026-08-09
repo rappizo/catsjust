@@ -19,7 +19,7 @@ if (!url || !key) {
 }
 
 const APK_PATH = 'mobile-native/android/app/build/outputs/apk/release/app-release.apk';
-const STORAGE_PATH = 'apk/catsjust-native-v1.0.0-release.apk';
+const STORAGE_PATH = 'apk/catsjust-native-v1.0.1-release.apk';
 
 if (!fs.existsSync(APK_PATH)) {
   console.error('APK not found:', APK_PATH);
@@ -40,6 +40,7 @@ if (error) {
 }
 
 const { data } = sb.storage.from('media').getPublicUrl(STORAGE_PATH);
+const fileName = STORAGE_PATH.split('/').pop();
 console.log('APK public URL:', data.publicUrl);
-console.log('Vercel proxy URL: https://www.catsjust.com/apk/catsjust-native-v1.0.0-release.apk');
+console.log('Vercel proxy URL: https://www.catsjust.com/apk/' + fileName);
 console.log('size MB:', (file.length / 1024 / 1024).toFixed(2));

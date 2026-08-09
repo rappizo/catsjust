@@ -1,26 +1,47 @@
-import * as Notifications from 'expo-notifications';
 import Constants from 'expo-constants';
 import { Platform } from 'react-native';
 import { getSupabase } from '@/core/supabase';
 
-// 前台收到通知时也显示横幅
-Notifications.setNotificationHandler({
-  handleNotification: async () => ({
-    shouldShowBanner: true,
-    shouldShowList: true,
-    shouldPlaySound: true,
-    shouldSetBadge: false,
-  }),
-});
+type NotificationsModule = typeof import('expo-notifications');
+
+let notificationsModule: NotificationsModule | null = null;
+
+/**
+ * 惰性加载 expo-notifications。
+ * 重要：不静态 import —— 部分设备（如无 Google 服务的新机型）在启动时初始化
+ * 该原生模块可能崩溃，延迟到真正需要（登录注册推送）时才加载，且失败静默。
+ */
+async function getNotifications(): Promise<NotificationsModule | null> {
+  if (!notificationsModule) {
+    try {
+      notificationsModule = await import('expo-notifications');
+      notificationsModule.setNotificationHandler({
+        handleNotification: async () => ({
+          shouldShowBanner: true,
+          shouldShowList: true,
+          shouldPlaySound: true,
+          shouldSetBadge: false,
+        }),
+      });
+    } catch {
+      return null;
+    }
+  }
+  return notificationsModule;
+}
 
 /**
  * 注册推送 token：
- * 1) 请求系统通知权限
- * 2) 获取 Expo Push Token（需 EAS projectId；无则跳过，优雅降级）
- * 3) 存入 push_tokens 表（RLS 本人；同 token 换账号则更新归属）
+ * 1) 惰性加载 notifications（不阻塞启动）
+ * 2) 请求系统通知权限
+ * 3) 获取 Expo Push Token（需 EAS projectId；无则跳过，优雅降级）
+ * 4) 存入 push_tokens 表（RLS 本人；同 token 换账号则更新归属）
  */
 export async function registerPushToken(): Promise<void> {
   try {
+    const Notifications = await getNotifications();
+    if (!Notifications) return;
+
     const { status } = await Notifications.getPermissionsAsync();
     if (status !== 'granted') {
       const req = await Notifications.requestPermissionsAsync();

@@ -1,9 +1,8 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { router, Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import * as Notifications from 'expo-notifications';
 import { AuthProvider } from '@/features/auth/AuthProvider';
 import { UnreadProvider } from '@/features/messages/UnreadProvider';
 import { AppUpdateChecker } from '@/components/AppUpdateChecker';
@@ -20,17 +19,33 @@ const queryClient = new QueryClient({
 
 export default function RootLayout() {
   // 推送点击深链：私信 → 聊天室；其他通知 → 消息中心
+  // 动态加载 expo-notifications，避免启动时初始化原生模块（部分设备崩溃）
+  const cleanupRef = useRef<(() => void) | null>(null);
   useEffect(() => {
-    const sub = Notifications.addNotificationResponseReceivedListener((response) => {
-      const data = (response.notification.request.content.data ?? {}) as Record<string, unknown>;
-      const type = data.type;
-      if (type === 'dm' && typeof data.conversationId === 'string') {
-        router.push(`/messages/${data.conversationId}`);
-      } else {
-        router.push('/(tabs)/messages');
+    let disposed = false;
+    (async () => {
+      try {
+        const Notifications = await import('expo-notifications');
+        if (disposed) return;
+        const sub = Notifications.addNotificationResponseReceivedListener((response) => {
+          const data = (response.notification.request.content.data ?? {}) as Record<string, unknown>;
+          const type = data.type;
+          if (type === 'dm' && typeof data.conversationId === 'string') {
+            router.push(`/messages/${data.conversationId}`);
+          } else {
+            router.push('/(tabs)/messages');
+          }
+        });
+        cleanupRef.current = () => sub.remove();
+      } catch {
+        /* 通知模块不可用则忽略（不影响启动） */
       }
-    });
-    return () => sub.remove();
+    })();
+    return () => {
+      disposed = true;
+      cleanupRef.current?.();
+      cleanupRef.current = null;
+    };
   }, []);
 
   return (

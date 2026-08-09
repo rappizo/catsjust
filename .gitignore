@@ -50,6 +50,7 @@ public/ffmpeg/ffmpeg-core.wasm
 # 词典生成日志
 scripts/gen-log.txt
 !.env.local.example
+!.env.example
 
 # ---- Capacitor Android App (mobile/) ----
 mobile/node_modules/

@@ -4,7 +4,7 @@ import QRCode from 'qrcode';
 import { Check, Download, Smartphone, ShieldAlert } from 'lucide-react';
 
 /** 当前分发版本（原生 App，独立于套壳 APP_VERSION） */
-const NATIVE_APP_VERSION = '1.2.0';
+const NATIVE_APP_VERSION = '0.3.0';
 
 export const metadata: Metadata = {
   title: '下载 App · 只有猫',

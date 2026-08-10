@@ -73,7 +73,7 @@ export function NoteCard({ note }: { note: Note }) {
 const styles = StyleSheet.create({
   card: {
     backgroundColor: colors.card,
-    borderRadius: radii.lg,
+    borderRadius: radii.sm,
     borderWidth: 1,
     borderColor: colors.cardBorder,
     overflow: 'hidden',

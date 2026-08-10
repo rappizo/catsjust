@@ -13,6 +13,8 @@ export const colors = {
   inkMuted: '#8a8aa3',
   /** 卡片底 */
   card: '#14141f',
+  /** 卡片描边（深色下让圆角轮廓清晰） */
+  cardBorder: '#2b2b44',
   /** 分割线 */
   border: '#23233a',
 

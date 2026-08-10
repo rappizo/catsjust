@@ -19,7 +19,7 @@ if (!url || !key) {
 }
 
 const APK_PATH = 'mobile-native/android/app/build/outputs/apk/release/app-release.apk';
-const STORAGE_PATH = 'apk/catsjust-native-v1.1.1-release.apk';
+const STORAGE_PATH = 'apk/catsjust-native-v1.2.0-release.apk';
 
 if (!fs.existsSync(APK_PATH)) {
   console.error('APK not found:', APK_PATH);

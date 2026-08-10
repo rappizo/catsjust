@@ -8,8 +8,9 @@ import type { Note } from '@/core/types';
 /**
  * 封面宽高比：用 note id 哈希制造瀑布流错落感。
  * 说明：服务端未存图片宽高，N1 改为真实宽高（首次加载后缓存到本地）。
+ * 导出供 FeedScreen 估算卡片高度、做瀑布流列分配。
  */
-function coverAspect(id: string): number {
+export function coverAspect(id: string): number {
   let h = 0;
   for (let i = 0; i < id.length; i++) h = (h * 31 + id.charCodeAt(i)) >>> 0;
   return 0.75 + (h % 6) * 0.08; // 0.75 ~ 1.15
@@ -72,9 +73,11 @@ export function NoteCard({ note }: { note: Note }) {
 const styles = StyleSheet.create({
   card: {
     backgroundColor: colors.card,
-    borderRadius: radii.md,
+    borderRadius: radii.lg,
+    borderWidth: 1,
+    borderColor: colors.cardBorder,
     overflow: 'hidden',
-    marginBottom: 8,
+    marginBottom: 4,
     ...shadows.card,
   },
   cardPressed: {

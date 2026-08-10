@@ -1,11 +1,12 @@
 import { Redirect, Tabs } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import type { ColorValue } from 'react-native';
 import { useAuth } from '@/features/auth/AuthProvider';
 import { useUnread } from '@/features/messages/UnreadProvider';
 import { colors } from '@/core/theme';
 
 function tabIcon(icon: keyof typeof Ionicons.glyphMap) {
-  return ({ color, size }: { color: string; size: number }) => (
+  return ({ color, size }: { color: ColorValue; size: number }) => (
     <Ionicons name={icon} size={size} color={color} />
   );
 }

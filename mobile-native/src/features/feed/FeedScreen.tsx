@@ -8,7 +8,7 @@ import {
   View,
 } from 'react-native';
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { MasonryFlashList } from '@shopify/flash-list';
+import { FlashList } from '@shopify/flash-list';
 import { useAuth } from '@/features/auth/AuthProvider';
 import { fetchFeed, type FeedKind } from './api';
 import { NoteCard } from '@/components/NoteCard';
@@ -18,11 +18,21 @@ interface FeedScreenProps {
   kind: FeedKind;
 }
 
-/**
- * 信息流（MasonryFlashList 瀑布流）。
- * - 游客：recommend 自动降级为 hot（对齐 Web 首页逻辑）
- * - 上拉加载更多、下拉刷新（推荐流带 shuffle 扰动）
- */
+/** 瀑布流双列行：每行两个卡片（flash-list 2.x 已移除 MasonryFlashList） */
+interface FeedRow {
+  left?: FeedNote;
+  right?: FeedNote;
+}
+
+type FeedNote = Awaited<ReturnType<typeof fetchFeed>>['notes'][number];
+
+function pairNotes(notes: FeedNote[]): FeedRow[] {
+  const rows: FeedRow[] = [];
+  for (let i = 0; i < notes.length; i += 2) {
+    rows.push({ left: notes[i], right: notes[i + 1] });
+  }
+  return rows;
+}
 export function FeedScreen({ kind }: FeedScreenProps) {
   const { user } = useAuth();
   // 未登录时推荐流降级为热度流
@@ -47,6 +57,7 @@ export function FeedScreen({ kind }: FeedScreenProps) {
   });
 
   const notes = data?.pages.flatMap((p) => p.notes) ?? [];
+  const rows = pairNotes(notes);
 
   const onEndReached = useCallback(() => {
     if (hasNextPage && !isFetchingNextPage) void fetchNextPage();
@@ -77,12 +88,19 @@ export function FeedScreen({ kind }: FeedScreenProps) {
   }
 
   return (
-    <MasonryFlashList
-      data={notes}
-      keyExtractor={(item) => item.id}
-      renderItem={({ item }) => <NoteCard note={item} />}
-      numColumns={2}
-      estimatedItemSize={260}
+    <FlashList
+      data={rows}
+      keyExtractor={(item) => `${item.left?.id ?? 'x'}-${item.right?.id ?? 'x'}`}
+      renderItem={({ item }) => (
+        <View style={styles.row}>
+          <View style={styles.col}>
+            {item.left ? <NoteCard note={item.left} /> : null}
+          </View>
+          <View style={styles.col}>
+            {item.right ? <NoteCard note={item.right} /> : null}
+          </View>
+        </View>
+      )}
       contentContainerStyle={styles.listContent}
       onEndReached={onEndReached}
       onEndReachedThreshold={0.5}
@@ -111,6 +129,14 @@ export function FeedScreen({ kind }: FeedScreenProps) {
 }
 
 const styles = StyleSheet.create({
+  row: {
+    flexDirection: 'row',
+    gap: spacing.sm,
+    marginBottom: spacing.sm,
+  },
+  col: {
+    flex: 1,
+  },
   listContent: {
     paddingHorizontal: spacing.sm,
     paddingTop: spacing.sm,

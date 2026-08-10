@@ -2,7 +2,7 @@
   "expo": {
     "name": "只有猫",
     "slug": "catsjust",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "orientation": "portrait",
     "scheme": "catsjust",
     "userInterfaceStyle": "dark",
@@ -17,7 +17,7 @@
     },
     "android": {
       "package": "com.catsjust.app",
-      "edgeToEdgeEnabled": true,
+      "versionCode": 4,
       "adaptiveIcon": {
         "backgroundColor": "#0a0a12"
       }
@@ -40,7 +40,8 @@
       ],
       "expo-asset",
       "expo-video",
-      "expo-notifications"
+      "expo-notifications",
+      "expo-font"
     ],
     "experiments": {
       "typedRoutes": true

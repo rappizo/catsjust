@@ -53,7 +53,7 @@ export default function RootLayout() {
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
           <UnreadProvider>
-            <StatusBar style="light" backgroundColor={colors.bg} />
+            <StatusBar style="light" />
             <Stack
               screenOptions={{
                 headerShown: false,

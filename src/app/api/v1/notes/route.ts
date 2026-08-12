@@ -9,8 +9,9 @@ import { createNoteService, type CreateNoteInput } from '@/lib/noteService';
  * Body: { title, content, media: [{url,type,poster?}], mediaType, coverUrl, catId?, topicId? }
  */
 export async function POST(request: Request) {
-  const supabase = createClient();
   const token = request.headers.get('authorization')?.replace(/^Bearer\s+/i, '');
+  // Bearer token 注入 client：后续写操作以用户身份走 RLS（否则 anon 会被 notes RLS 拦截）
+  const supabase = createClient(token || undefined);
   const {
     data: { user },
   } = token ? await supabase.auth.getUser(token) : await supabase.auth.getUser();

@@ -1,7 +1,12 @@
 import { createServerClient, type CookieOptions } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 
-export function createClient() {
+/**
+ * 创建 Supabase 服务端客户端。
+ * @param bearerToken 可选：原生 App 通过 Authorization: Bearer <access_token> 认证时传入。
+ *   token 会注入到所有请求的 Authorization header，使 PostgREST 写操作以用户身份走 RLS。
+ */
+export function createClient(bearerToken?: string) {
   const cookieStore = cookies();
 
   return createServerClient(
@@ -22,6 +27,9 @@ export function createClient() {
           }
         },
       },
+      global: bearerToken
+        ? { headers: { Authorization: `Bearer ${bearerToken}` } }
+        : undefined,
     }
   );
 }

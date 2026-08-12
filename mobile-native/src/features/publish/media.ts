@@ -1,5 +1,5 @@
 import * as ImageManipulator from 'expo-image-manipulator';
-import * as FileSystem from 'expo-file-system';
+import { File } from 'expo-file-system';
 import * as Crypto from 'expo-crypto';
 import { getSupabase } from '@/core/supabase';
 
@@ -24,8 +24,9 @@ export interface PickedMedia {
  */
 export async function compressImage(uri: string): Promise<{ uri: string; width: number; height: number }> {
   try {
-    const info = await FileSystem.getInfoAsync(uri);
-    if (!info.exists || (info.size ?? 0) <= COMPRESS_THRESHOLD) {
+    // SDK 57：旧 getInfoAsync 运行时已 throw，改用 File.size 获取大小
+    const size = new File(uri).size ?? 0;
+    if (size <= COMPRESS_THRESHOLD) {
       // 小图：仅读取尺寸
       const probe = await ImageManipulator.manipulateAsync(uri, [], { compress: 1 });
       return { uri, width: probe.width, height: probe.height };
@@ -61,11 +62,11 @@ export async function uploadMedia(
   const ext = extFor(media.mimeType, media.type);
   const key = `${userId}/${folder}/${Crypto.randomUUID()}.${ext}`;
 
-  // RN 本地文件 → Blob → Storage 直传
-  const response = await fetch(media.uri);
-  const blob = await response.blob();
+  // SDK 57：RN fetch 不支持 file:// URI，改用 File.bytes() 读字节直传
+  const file = new File(media.uri);
+  const bytes = await file.bytes();
 
-  const { error } = await supabase.storage.from('media').upload(key, blob, {
+  const { error } = await supabase.storage.from('media').upload(key, bytes, {
     contentType: media.mimeType || (media.type === 'image' ? 'image/jpeg' : 'video/mp4'),
     cacheControl: '3600',
   });

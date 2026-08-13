@@ -1,8 +1,11 @@
+import { useRef } from 'react';
 import { Image } from 'expo-image';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
+import { useQueryClient } from '@tanstack/react-query';
 import { colors, radii, shadows } from '@/core/theme';
 import { resolveMediaUrl } from '@/core/mediaUrl';
+import { setPendingCoverTransition } from '@/core/coverTransition';
 import type { Note } from '@/core/types';
 
 /**
@@ -19,26 +22,53 @@ export function coverAspect(id: string): number {
 /** 瀑布流卡片（对齐 Web NoteCard：封面 + 标题 + 作者行 + 🐾猫名/品种标签） */
 export function NoteCard({ note }: { note: Note }) {
   const router = useRouter();
-  const cover = resolveMediaUrl(note.media?.[0]?.url ?? note.cover_url);
+  const queryClient = useQueryClient();
+  const coverRef = useRef<View>(null);
   const isVideo = note.media_type === 'video';
+  // 封面 URL：视频笔记用 cover_url（expo-image 无法解码 mp4），图片笔记用第一张图；
+  // 与详情页同源 → 缓存命中 + 无缝过渡
+  const cover = resolveMediaUrl(isVideo ? note.cover_url : note.media?.[0]?.url ?? note.cover_url);
   const authorName = note.author?.nickname || note.author?.username || '';
   const catName = note.cat?.name;
   const breed = note.cat?.breed;
   const aspect = coverAspect(note.id);
 
+  const openNote = () => {
+    // 预填详情页缓存（列表已有完整 note）：消灭打开时的 loading
+    queryClient.setQueryData(['note', note.id], note);
+    const push = () => router.push(`/note/${note.id}`);
+    if (cover) {
+      coverRef.current?.measureInWindow((x, y, width, height) => {
+        if (width > 0 && height > 0) {
+          setPendingCoverTransition({
+            noteId: note.id,
+            coverUrl: cover,
+            isVideo,
+            from: { x, y, width, height },
+          });
+        }
+        push();
+      });
+    } else {
+      push();
+    }
+  };
+
   return (
     <Pressable
       style={({ pressed }) => [styles.card, pressed && styles.cardPressed]}
-      onPress={() => router.push(`/note/${note.id}`)}
+      onPress={openNote}
     >
       {cover ? (
-        <Image
-          source={{ uri: cover }}
-          style={[styles.cover, { aspectRatio: aspect }]}
-          contentFit="cover"
-          transition={150}
-          cachePolicy="memory-disk"
-        />
+        <View ref={coverRef} collapsable={false} style={[styles.cover, { aspectRatio: aspect }]}>
+          <Image
+            source={{ uri: cover }}
+            style={styles.coverImage}
+            contentFit="cover"
+            transition={150}
+            cachePolicy="memory-disk"
+          />
+        </View>
       ) : (
         <View style={[styles.cover, styles.coverPlaceholder, { aspectRatio: aspect }]} />
       )}
@@ -86,6 +116,10 @@ const styles = StyleSheet.create({
   cover: {
     width: '100%',
     backgroundColor: '#1b1b2a',
+  },
+  coverImage: {
+    width: '100%',
+    height: '100%',
   },
   coverPlaceholder: {
     backgroundColor: '#1b1b2a',

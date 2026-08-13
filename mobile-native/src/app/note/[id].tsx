@@ -152,7 +152,6 @@ export default function NoteDetailScreen() {
   const mediaRef = useRef<View>(null);
   const [mediaLayoutReady, setMediaLayoutReady] = useState(false);
   const [overlay, setOverlay] = useState<OverlaySpec | null>(null);
-  const closingRef = useRef(false);
 
   const { data: note, isLoading } = useQuery({
     queryKey: ['note', id],
@@ -188,34 +187,53 @@ export default function NoteDetailScreen() {
     return () => clearTimeout(t);
   }, [coverTransition, mediaLayoutReady]);
 
-  // 关闭动画：从当前媒体区 rect 缩回卡片 rect，动画完成后返回列表
+  // 关闭动画：从当前媒体区 rect 缩回卡片 rect，动画完成后返回列表。
+  // 保底：600ms 强制返回——测量不回调/动画被中断等任何异常都绝不锁死返回。
+  const closingRef = useRef(false);
+  const forceBackTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   const goBack = useCallback(() => {
     if (closingRef.current) return;
     closingRef.current = true;
-    const finish = () => router.back();
+    const finish = () => {
+      if (forceBackTimer.current) clearTimeout(forceBackTimer.current);
+      router.back();
+    };
+    forceBackTimer.current = setTimeout(finish, 600);
     if (!coverTransition || !mediaRef.current) {
       finish();
       return;
     }
-    mediaRef.current.measureInWindow((x, y, width, height) => {
-      if (width <= 0 || height <= 0) {
-        finish();
-        return;
-      }
-      // 媒体区已滚出屏幕：不做缩回动画，直接返回
-      const screenH = Dimensions.get('window').height;
-      if (y + height < 0 || y > screenH) {
-        finish();
-        return;
-      }
-      setOverlay({
-        url: coverTransition.coverUrl,
-        from: { x, y, width, height },
-        to: coverTransition.from,
-        onDone: finish,
+    try {
+      mediaRef.current.measureInWindow((x, y, width, height) => {
+        if (width <= 0 || height <= 0) {
+          finish();
+          return;
+        }
+        // 媒体区已滚出屏幕：不做缩回动画，直接返回
+        const screenH = Dimensions.get('window').height;
+        if (y + height < 0 || y > screenH) {
+          finish();
+          return;
+        }
+        setOverlay({
+          url: coverTransition.coverUrl,
+          from: { x, y, width, height },
+          to: coverTransition.from,
+          onDone: finish,
+        });
       });
-    });
+    } catch {
+      finish();
+    }
   }, [coverTransition, router]);
+
+  useEffect(
+    () => () => {
+      if (forceBackTimer.current) clearTimeout(forceBackTimer.current);
+    },
+    []
+  );
 
   // Android 硬件返回同样走关闭动画
   useEffect(() => {
